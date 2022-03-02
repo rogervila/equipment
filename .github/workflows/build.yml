@@ -25,9 +25,9 @@ jobs:
         run: |
           export PROJECT_PATH=$(pwd)
           echo $PROJECT_PATH
+          ls ${PROJECT_PATH}
           python -m pip install --upgrade pip
-          pip install coverage
-          pip install runtype
+          pip install coverage runtype wheel twine setuptools
           pip install -r ${PROJECT_PATH}/equipment/framework/requirements.txt
           pip install -r ${PROJECT_PATH}/equipment/project/requirements.txt
           pip install -r ${PROJECT_PATH}/equipment/console/requirements.txt
