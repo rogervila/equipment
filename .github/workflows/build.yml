@@ -8,9 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: /app
+
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
@@ -45,9 +43,8 @@ jobs:
           args: >
             -Dsonar.organization=rogervila-github
             -Dsonar.projectKey=rogervila_equipment
-            -Dsonar.python.coverage.reportPaths=coverage.xml
             -Dsonar.sources=.
-            -Dsonar.exclusions=equipment/framework/tests/**,equipment/project/tests/**
-            -Dsonar.test.exclusions=equipment/framework/tests/**,equipment/project/tests/**
-            -Dsonar.tests=equipment/framework/tests/,equipment/project/tests/
+            -Dsonar.exclusions=**/tests/**
+            -Dsonar.test.exclusions=**/tests/**
+            -Dsonar.tests=equipment/console/tests/,equipment/framework/tests/,equipment/project/tests/
             -Dsonar.verbose=true
