@@ -1,12 +1,12 @@
 from importlib import import_module
 from typing import NoReturn
-from sys import exit as _exit
+from sys import exit as _exit, modules
 from pprint import pformat
 from dependency_injector.containers import Container
 
 
-def app() -> Container:
-    module = import_module('app.App.Container')
+def app(name: str = 'app.App.Container') -> Container:
+    module = import_module(name) if name not in modules else modules[name]
     return module.Container
 
 

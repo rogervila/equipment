@@ -2,13 +2,13 @@ import unittest
 from uuid import uuid4
 from equipment.framework.Log.AbstractLog import AbstractLog
 from equipment.framework.Log.NoneLog import NoneLog
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_NoneLog(BaseTest):
     def setUp(self):
         super().setUp()
-        self.log = NoneLog(self.app.config)
+        self.log = NoneLog(self.app.config())
 
     def test_extends_from_abstract_log(self):
         with self.app.log.override(self.log):

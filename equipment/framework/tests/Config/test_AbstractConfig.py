@@ -1,6 +1,6 @@
 import unittest
 from equipment.framework.Config.AbstractConfig import AbstractConfig
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_LocalConfig(BaseTest):

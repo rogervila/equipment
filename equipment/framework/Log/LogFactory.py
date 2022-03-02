@@ -2,6 +2,7 @@ from equipment.framework.Config.AbstractConfig import AbstractConfig
 from equipment.framework.Log.AbstractLog import AbstractLog
 from equipment.framework.Log.GELFLog import GELFLog
 from equipment.framework.Log.LocalLog import LocalLog
+from equipment.framework.Log.ConsoleLog import ConsoleLog
 from equipment.framework.Log.NoneLog import NoneLog
 from icecream import ic
 
@@ -12,6 +13,8 @@ class LogFactory(AbstractLog):
 
         if driver_name == 'local':
             self.driver = LocalLog(config)
+        elif driver_name == 'console':
+            self.driver = ConsoleLog(config)
         elif driver_name == 'gelf':
             self.driver = GELFLog(config)
         elif driver_name == 'none':

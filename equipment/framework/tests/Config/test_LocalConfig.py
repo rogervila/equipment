@@ -1,8 +1,9 @@
 import unittest
+from os import sep
 from uuid import uuid4
+from equipment.framework.tests.BaseTest import BaseTest
 from equipment.framework.Config.AbstractConfig import AbstractConfig
 from equipment.framework.Config.LocalConfig import LocalConfig
-from tests.BaseTest import BaseTest
 
 
 class test_LocalConfig(BaseTest):
@@ -10,7 +11,7 @@ class test_LocalConfig(BaseTest):
         super().setUp()
         self.app.config.override(LocalConfig(
             self.app.environment(),
-            '_stubs/config'
+            f'tests{sep}_stubs{sep}config'
         ))
 
     def test_extends_from_abstract_config(self):

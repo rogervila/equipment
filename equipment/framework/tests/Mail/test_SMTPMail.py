@@ -1,10 +1,10 @@
 import unittest
 from unittest.mock import patch
 import mail1
-from equipment.framework.Mail.AbstractEmail import AbstractEmail
+from equipment.framework.Mail.Email.HTMLEmailFactory import HTMLEmailFactory
 from equipment.framework.Mail.AbstractMail import AbstractMail
 from equipment.framework.Mail.SMTPMail import SMTPMail
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_SMTPMail(BaseTest):
@@ -24,7 +24,7 @@ class test_SMTPMail(BaseTest):
     def test_email_success(self):
         with self.app.mail.override(self.mail):
             with patch.object(mail1, 'send', return_value=None):
-                class MyEmail(AbstractEmail):
+                class MyEmail(HTMLEmailFactory):
                     subject = 'My Email Subject'
                     text = 'My Email Text'
                     html = '<p>My Email <b>HTML</b></p>'
@@ -41,7 +41,7 @@ class test_SMTPMail(BaseTest):
     def test_email_failure(self):
         with self.app.mail.override(self.mail):
             with patch.object(mail1, 'send', side_effect=Exception()):
-                class MyEmail(AbstractEmail):
+                class MyEmail(HTMLEmailFactory):
                     subject = 'My Email Subject'
                     text = 'My Email Text'
                     html = '<p>My Email <b>HTML</b></p>'

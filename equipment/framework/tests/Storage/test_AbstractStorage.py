@@ -1,6 +1,6 @@
 import unittest
 from equipment.framework.Storage.AbstractStorage import AbstractStorage
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_AbstractStorage(BaseTest):

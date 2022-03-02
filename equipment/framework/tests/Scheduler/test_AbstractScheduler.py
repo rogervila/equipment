@@ -1,6 +1,6 @@
 import unittest
 from equipment.framework.Scheduler.AbstractScheduler import AbstractScheduler
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_AbstractScheduler(BaseTest):

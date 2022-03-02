@@ -4,7 +4,7 @@ from tempfile import gettempdir
 from uuid import uuid4
 from equipment.framework.Log.AbstractLog import AbstractLog
 from equipment.framework.Log.LocalLog import LocalLog
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_LocalLog(BaseTest):

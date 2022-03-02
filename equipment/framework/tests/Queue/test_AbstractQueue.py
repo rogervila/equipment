@@ -1,7 +1,7 @@
 import unittest
 from datetime import datetime
 from equipment.framework.Queue.AbstractQueue import AbstractQueue
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_AbstractQueue(BaseTest):

@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 from redis import Redis
 from equipment.framework.Connection.AbstractConnection import AbstractConnection
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_RedisConnection(BaseTest):

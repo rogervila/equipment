@@ -1,6 +1,6 @@
 import unittest
 from equipment.framework.Connection.AbstractConnection import AbstractConnection
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_AbstractConnection(BaseTest):

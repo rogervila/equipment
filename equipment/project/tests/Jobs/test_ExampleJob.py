@@ -1,7 +1,7 @@
 import unittest
 from equipment.framework.Jobs.AbstractJob import AbstractJob
 from equipment.framework.Jobs.ExampleJob import ExampleJob
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_ExampleJob(BaseTest):

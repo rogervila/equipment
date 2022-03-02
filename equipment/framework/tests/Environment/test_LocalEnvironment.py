@@ -1,7 +1,7 @@
 import unittest
 from equipment.framework.Environment.AbstractEnvironment import AbstractEnvironment
 from equipment.framework.Environment.LocalEnvironment import LocalEnvironment
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_LocalEnvironment(BaseTest):

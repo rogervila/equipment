@@ -3,9 +3,9 @@ from os import sep
 from uuid import uuid4
 import boto3
 from moto import mock_s3
+from equipment.framework.tests.BaseTest import BaseTest
 from equipment.framework.Storage.AbstractStorage import AbstractStorage
 from equipment.framework.Storage.S3Storage import S3Storage
-from tests.BaseTest import BaseTest
 
 
 class test_S3Storage(BaseTest):

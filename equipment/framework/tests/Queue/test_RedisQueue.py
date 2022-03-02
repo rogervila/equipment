@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 from equipment.framework.Queue.AbstractQueue import AbstractQueue
 from equipment.framework.Queue.RedisQueue import RedisQueue
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_RedisQueue(BaseTest):

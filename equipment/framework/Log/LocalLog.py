@@ -1,7 +1,5 @@
 import logging
-from logging import StreamHandler
 from logging.handlers import TimedRotatingFileHandler
-from sys import stdout
 from equipment.framework.Log.NativeLog import NativeLog
 
 
@@ -13,8 +11,7 @@ class LocalLog(NativeLog):
                 when='D',
                 interval=1,
                 delay=self.config.get('LOG_LOCAL', 'delay')
-            ),
-            StreamHandler(stdout)
+            )
         ]
 
     def get_level(self) -> int:

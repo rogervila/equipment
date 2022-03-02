@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch
 import neo4j
 from equipment.framework.Connection.AbstractConnection import AbstractConnection
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_Neo4JConnection(BaseTest):

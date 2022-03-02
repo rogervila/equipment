@@ -1,6 +1,6 @@
 import unittest
 from equipment.framework.Log.AbstractLog import AbstractLog
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_AbstractLog(BaseTest):

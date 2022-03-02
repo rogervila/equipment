@@ -1,7 +1,7 @@
 import unittest
 from faker import Faker
 from equipment.framework.Environment.LocalEnvironment import LocalEnvironment
-from app.App.Container import Container
+from equipment.framework.helpers import app
 
 
 class BaseTest(unittest.TestCase):
@@ -12,7 +12,7 @@ class BaseTest(unittest.TestCase):
         self.faker = Faker()
 
         # Initialize app
-        self.app = Container()
+        self.app = app()
 
         # Override environment
         self.app.environment.override(LocalEnvironment('.env.test'))

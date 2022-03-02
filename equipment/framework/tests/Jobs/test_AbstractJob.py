@@ -1,15 +1,15 @@
 import unittest
 from equipment.framework.Jobs.AbstractJob import AbstractJob
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.helpers import app
 
 
 class test_AbstractJob(BaseTest):
-    def test_abstract_methods(self):
+    def test_dispatch(self):
         class TestJob(AbstractJob):
             pass
 
-        with self.assertRaises(NotImplementedError):
-            TestJob().run(1, 2, 3)
+        self.assertIsNone(TestJob().dispatchWithContainer(app('equipment.framework.App.Container'), 1, 2, 3))  # nopep8
 
 
 if __name__ == '__main__':

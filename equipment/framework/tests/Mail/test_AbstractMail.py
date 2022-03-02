@@ -1,7 +1,7 @@
 import unittest
-from equipment.framework.Mail.AbstractEmail import AbstractEmail
+from equipment.framework.Mail.Email.HTMLEmailFactory import HTMLEmailFactory
 from equipment.framework.Mail.AbstractMail import AbstractMail
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_AbstractMail(BaseTest):
@@ -10,7 +10,7 @@ class test_AbstractMail(BaseTest):
             pass
 
         with self.assertRaises(NotImplementedError):
-            class MyEmail(AbstractEmail):
+            class MyEmail(HTMLEmailFactory):
                 subject = 'My Email Subject'
                 text = 'My Email Text'
                 html = '<p>My Email <b>HTML</b></p>'

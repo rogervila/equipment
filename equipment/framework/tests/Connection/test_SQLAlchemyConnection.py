@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 from equipment.framework.Connection.SQLAlchemyConnection import SQLAlchemyConnection
-from tests.BaseTest import BaseTest
+from equipment.framework.tests.BaseTest import BaseTest
 
 
 class test_SQLAlchemyConnection(BaseTest):
