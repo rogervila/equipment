@@ -6,6 +6,7 @@ from shutil import move, copyfile, copytree, ignore_patterns
 from tempfile import gettempdir
 from datetime import datetime
 from codecs import open as _open
+from pkg_resources import get_distribution
 
 
 class NewCommand(AbstractCommand):
@@ -70,7 +71,12 @@ class NewCommand(AbstractCommand):
         with _open(requirements_file, 'r') as f:
             data = f.read()
 
-        data = data.replace('-e ../../', 'equipment')
+        try:
+            replaced = f'equipment=={get_distribution("equipment").version}'
+        except:
+            replaced = 'equipment'
+
+        data = data.replace('-e ../../', replaced)
 
         with _open(requirements_file, 'w') as f:
             f.write(data)
