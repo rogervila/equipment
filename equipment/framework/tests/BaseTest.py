@@ -1,7 +1,7 @@
 from os import sep
 import unittest
 from equipment.framework.helpers import app
-from equipment.framework.Log.ConsoleLog import ConsoleLog
+from equipment.framework.Log.NoneLog import NoneLog
 from equipment.framework.Config.LocalConfig import LocalConfig
 
 
@@ -19,7 +19,7 @@ class BaseTest(unittest.TestCase):
         ))
 
         # Override logger
-        self.app.log.override(ConsoleLog(config=self.app.config()))
+        self.app.log.override(NoneLog(config=self.app.config()))
 
 
 if __name__ == '__main__':

@@ -18,32 +18,30 @@ class test_SQLiteConnection(BaseTest):
         )
 
     def test_extends_from_abstract_Connection(self):
-        with self.app.sql.override(self.sql):
-            self.assertTrue(
-                isinstance(self.app.sql(), AbstractConnection)
-            )
+        self.assertTrue(
+            isinstance(self.sql, AbstractConnection)
+        )
 
     def test_returns_instance(self):
-        with self.app.sql.override(self.sql):
-            self.assertTrue(
-                isinstance(
-                    self.app.sql().factory(),
-                    sqlalchemy.engine.base.Engine
-                )
+        self.assertTrue(
+            isinstance(
+                self.sql.factory(),
+                sqlalchemy.engine.base.Engine
             )
+        )
 
     def test_connection_works(self):
         with patch.object(sqlalchemy, 'create_engine', return_value={}):
             self.assertTrue(
-                self.app.sql().connect()
+                self.sql.connect()
             )
 
     def test_connection_fails(self):
         with patch.object(sqlalchemy, 'create_engine', return_value={}):
-            self.app.sql().log.debug = MagicMock(side_effect=Exception())
+            self.sql.log.debug = MagicMock(side_effect=Exception())
 
             self.assertFalse(
-                self.app.sql().connect()
+                self.sql.connect()
             )
 
 

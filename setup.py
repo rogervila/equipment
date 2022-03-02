@@ -26,6 +26,7 @@ setup(
     download_url='https://github.com/rogervila/equipment/archive/CURRENT_VERSION.tar.gz',
     keywords=['equipment', 'application scaffolding', 'framework'],
     install_requires=install_requires,
+    tests_require=['coverage', 'runtype'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
