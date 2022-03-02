@@ -1,6 +1,6 @@
 -e ../../
 alembic==1.7.6 # Remove if SQLAlchemy is not used
-boto3==1.20.53 # Remove if AWS is not used (affects "ses" email driver and "s3" storage and email drivers)
+boto3==1.21.10 # Remove if AWS is not used (affects "ses" email driver and "s3" storage and email drivers)
 flask==2.0.2 # Remove if web server is not used
 mail1==4.1.0 # Remove if "smtp" email driver is not used
 mysqlclient==2.1.0 # Remove mysqlclient if MySQL is not used
