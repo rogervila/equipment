@@ -6,7 +6,7 @@ html2text==2020.1.16
 icecream==2.1.1
 jinja-markdown==1.210911
 Jinja2==3.0.3
-moto[all]==3.0.3
+moto[all]==3.0.5
 parent-import==0.0.1
 premailer==3.10.0
 py_dto==0.4.0
