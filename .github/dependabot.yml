@@ -17,7 +17,13 @@ updates:
     schedule:
       interval: "daily"
 
-  # Maintain Equipment dependencies
+  # Maintain console dependencies
+  - package-ecosystem: pip
+    directory: "/equipment/console"
+    schedule:
+      interval: "daily"
+
+  # Maintain project dependencies
   - package-ecosystem: pip
     directory: "/equipment/project"
     schedule:
