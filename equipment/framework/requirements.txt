@@ -3,7 +3,7 @@ coverage==6.3.1
 dependency-injector==4.38.0
 Faker==12.3.0
 html2text==2020.1.16
-icecream==2.1.1
+icecream==2.1.2
 jinja-markdown==1.210911
 Jinja2==3.0.3
 moto[all]==3.0.3
