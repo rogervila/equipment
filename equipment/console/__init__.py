@@ -4,6 +4,7 @@ from equipment.console.Commands.NewCommand import NewCommand
 
 
 @click.group()
+@click.version_option()
 def main() -> None:
     pass
 
