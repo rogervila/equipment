@@ -1,8 +1,13 @@
 import sys
 from setuptools import setup
 
+install_requires = []
+
+with open('equipment/console/requirements.txt', 'r', encoding='utf-8') as f:
+    install_requires.extend(f.read().splitlines())
+
 with open('equipment/framework/requirements.txt', 'r', encoding='utf-8') as f:
-    install_requires = f.read().splitlines()
+    install_requires.extend(f.read().splitlines())
 
 with open('README.md', 'r', encoding='utf-8') as f:
     long_description = f.read()
