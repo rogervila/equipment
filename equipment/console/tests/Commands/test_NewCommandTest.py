@@ -2,7 +2,7 @@ import unittest
 from equipment.console.Commands.NewCommand import NewCommand
 
 
-class test_WelcomeMail(unittest.TestCase):
+class test_NewCommandTest(unittest.TestCase):
     def test_command_returns_none(self):
         self.assertIsNone(NewCommand('foo').run())
 
