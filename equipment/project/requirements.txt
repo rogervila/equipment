@@ -1,0 +1,15 @@
+-e ../../
+alembic==1.7.6 # Remove if SQLAlchemy is not used
+boto3==1.20.53 # Remove if AWS is not used (affects "ses" email driver and "s3" storage and email drivers)
+flask==2.0.2 # Remove if web server is not used
+mail1==4.1.0 # Remove if "smtp" email driver is not used
+mysqlclient==2.1.0 # Remove mysqlclient if MySQL is not used
+neomodel==4.0.8 # Remove neomodel if Neo4J is not used
+psycopg2-binary==2.9.3 # Remove psycopg2-binary if PostgreSQL is not used
+pygelf==0.4.2 # Remove if "gelf" log driver is not used
+pymongo==4.0.1 # Remove pymongo if MongoDB is not used
+pyodbc==4.0.32 # Remove pymongo if SQLServer is not used
+redis==4.1.3 # Remove if redis is not used (affects "redis" queue driver and RedisConnection)
+rq==1.10.1 # Remove if "redis" queue driver is not used
+sqlalchemy==1.4.31 # Remove if SQL connections are not used
+waitress==2.0.0 # Remove if web server is not used
