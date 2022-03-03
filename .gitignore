@@ -1,3 +1,10 @@
 *__pycache__*
+*.pyc
+*.env
+*.coverage
+*.cache
+*.log
+
 *.egg-info
-.coverage
+build/
+dist/
