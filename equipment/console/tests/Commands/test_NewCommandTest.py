@@ -1,5 +1,5 @@
 import unittest
-from shutil import move
+from shutil import move, rmtree
 from os import getcwd, sep
 from os.path import isdir, isfile
 from tempfile import gettempdir
@@ -30,6 +30,8 @@ class test_NewCommandTest(unittest.TestCase):
 
         with _open(requirements_file, 'r') as f:
             self.assertTrue('equipment==' in f.read())
+
+        rmtree(full_path, ignore_errors=True)
 
 
 if __name__ == '__main__':
