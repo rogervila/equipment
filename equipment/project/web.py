@@ -2,10 +2,13 @@
 
 from datetime import datetime
 from flask import Flask
+from flask_wtf.csrf import CSRFProtect
 from app.App.Container import Container
 
 
 app = Flask(__name__)
+csrf = CSRFProtect(app)
+
 app.container = Container()
 
 log = app.container.log()

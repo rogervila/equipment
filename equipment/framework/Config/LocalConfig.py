@@ -46,5 +46,5 @@ class LocalConfig(AbstractConfig):
 
         try:
             return eval(real_value)
-        except:
+        except Exception:
             return real_value
