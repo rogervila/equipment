@@ -34,6 +34,7 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.8',
     ],
+    include_package_data=True,
     entry_points={
         # Install a script as "equipment", and as "equipment3", and as "equipment3.x"
         'console_scripts': [
