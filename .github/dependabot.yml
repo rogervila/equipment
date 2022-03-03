@@ -9,22 +9,22 @@ updates:
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
 
   # Maintain framework dependencies
   - package-ecosystem: pip
     directory: "/equipment/framework"
     schedule:
-      interval: "daily"
+      interval: "weekly"
 
   # Maintain console dependencies
   - package-ecosystem: pip
     directory: "/equipment/console"
     schedule:
-      interval: "daily"
+      interval: "weekly"
 
   # Maintain project dependencies
   - package-ecosystem: pip
     directory: "/equipment/project"
     schedule:
-      interval: "daily"
+      interval: "weekly"
