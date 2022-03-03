@@ -6,7 +6,7 @@ from equipment.console.Commands.NewCommand import NewCommand
 @click.group()
 @click.version_option()
 def main() -> None:
-    pass
+    pass  # @click decorators handle the commands defined on this file
 
 
 @main.command()

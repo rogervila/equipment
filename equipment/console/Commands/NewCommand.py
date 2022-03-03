@@ -73,7 +73,8 @@ class NewCommand(AbstractCommand):
 
         try:
             replaced = f'equipment=={get_distribution("equipment").version}'
-        except:
+        except Exception as e:
+            echo(style(f'WARNING: could not get equipment version. Error: "{str(e)}"', fg='yellow'))  # nopep8
             replaced = 'equipment'
 
         data = data.replace('-e ../../', replaced)
