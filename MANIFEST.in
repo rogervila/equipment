@@ -1,0 +1,16 @@
+include .gitignore
+include .pylintrc
+include LICENSE
+include MANIFEST.in
+include README.md
+include setup.py
+
+recursive-include .github *
+recursive-include equipment *
+
+global-exclude *.pyc
+global-exclude *.coverage
+global-exclude *.cache
+global-exclude *.log
+global-exclude *.env
+global-exclude *.sqlite
