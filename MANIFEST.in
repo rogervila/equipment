@@ -8,6 +8,8 @@ include setup.py
 recursive-include .github *
 recursive-include equipment *
 
+recursive-exclude website *
+
 global-exclude *.pyc
 global-exclude *.coverage
 global-exclude *.cache
