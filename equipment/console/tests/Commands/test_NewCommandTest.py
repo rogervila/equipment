@@ -5,11 +5,22 @@ from os.path import isdir, isfile
 from tempfile import gettempdir
 from datetime import datetime
 from codecs import open as _open
+from click.testing import CliRunner
 from equipment.console.Commands.NewCommand import NewCommand
+from equipment.console import new
 
 
 class test_NewCommandTest(unittest.TestCase):
-    def test_command(self):
+    def test_command_invoke(self):
+        project = '__pycache__'  # ensure it is always ignored
+
+        runner = CliRunner()
+        result = runner.invoke(new, [project])
+        self.assertTrue(result.exit_code == 0)
+
+        rmtree(f'{getcwd()}{sep}{project}', ignore_errors=True)
+
+    def test_command_class(self):
         project = '__pycache__'  # ensure it is always ignored
         full_path = f'{getcwd()}{sep}{project}'
 
