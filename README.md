@@ -8,7 +8,7 @@ The root of your next python project
 
 ## Docs
 
-Project documentation is placed on [the wiki](https://github.com/rogervila/equipment/wiki)
+Visit the [documentation website](https://equipment-python.vercel.app)
 
 ## License
 
