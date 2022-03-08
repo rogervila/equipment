@@ -1,5 +1,6 @@
 from os import sep
 import unittest
+from faker import Faker
 from equipment.framework.helpers import app
 from equipment.framework.Log.NoneLog import NoneLog
 from equipment.framework.Config.LocalConfig import LocalConfig
@@ -8,6 +9,9 @@ from equipment.framework.Config.LocalConfig import LocalConfig
 class BaseTest(unittest.TestCase):
     def setUp(self):
         super().setUp()
+
+        # Global faker instance
+        self.faker = Faker()
 
         # Initialize app
         self.app = app('equipment.framework.App.Container')
