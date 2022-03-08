@@ -13,4 +13,4 @@ pyodbc==4.0.32 # Remove if SQLServer is not used
 redis==4.1.4 # Remove if Redis is not used (affects "redis" queue driver and RedisConnection)
 rq==1.10.1 # Remove if "Redis" queue driver is not used
 sqlalchemy==1.4.31 # Remove if SQL connections are not used
-waitress==2.0.0 # Remove if web server is not used
+waitress==2.1.0 # Remove if web server is not used
