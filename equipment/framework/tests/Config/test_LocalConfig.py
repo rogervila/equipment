@@ -20,7 +20,9 @@ class test_LocalConfig(BaseTest):
         )
 
     def test_it_reads_local_config_files(self):
-        content = 'MyApp'
+        content = self.faker.name()
+        self.assertIsInstance(content, str)
+
         self.app.config().set('APP', 'name', content)
         result = self.app.config().get('APP', 'name')
 
