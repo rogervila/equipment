@@ -33,7 +33,7 @@ export default function Home() {
       description="Equipment is a python framework to create python applications that can be integrated to other popular tools.">
       <HomepageHeader />
       <main>
-        {/* <HomepageFeatures /> */}
+        <HomepageFeatures />
       </main>
     </Layout>
   );

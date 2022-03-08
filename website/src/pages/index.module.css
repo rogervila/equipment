@@ -8,6 +8,11 @@
   text-align: center;
   position: relative;
   overflow: hidden;
+  background: url('https://res.cloudinary.com/protagonist/image/upload/f_auto,dpr_auto,b_black,o_60/equipment-background') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 @media screen and (max-width: 996px) {

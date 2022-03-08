@@ -8,8 +8,8 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Equipment can be easily installed and
+        used to get your Python application up and running quickly.
       </>
     ),
   },
@@ -18,29 +18,30 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Equipment provides basic infrastructure layer tools like Configuration, Storage, Database Connections,
+        Scheduled tasks, Queue management among others to let you focus on your business.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Powered by Python',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Equipment can be easily integrated with other python tools like Flask (for website applications), SQLAlchemy (for Databse management), among others.
       </>
     ),
   },
 ];
 
-function Feature({Svg, title, description}) {
+function Feature({ Svg, title, description }) {
   return (
     <div className={clsx('col col--4')}>
+      {/*
       <div className="text--center">
         <Svg className={styles.featureSvg} role="img" />
       </div>
+      */}
       <div className="text--center padding-horiz--md">
         <h3>{title}</h3>
         <p>{description}</p>
