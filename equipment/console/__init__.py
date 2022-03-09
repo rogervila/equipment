@@ -4,8 +4,9 @@ import sys
 from inspect import getmembers
 from os import getcwd
 import click
-from equipment.framework.helpers import module
+from equipment.console.Commands.MakeJobCommand import MakeJobCommand
 from equipment.console.Commands.NewCommand import NewCommand
+from equipment.framework.helpers import module
 
 
 @click.group()
@@ -18,6 +19,17 @@ def main() -> None:
 @click.argument('name')
 def new(name):
     NewCommand(name).run()
+
+
+@main.group()
+def make() -> None:
+    pass  # @click decorators handle the commands defined on this file
+
+
+@make.command()
+@click.argument('name')
+def job(name):
+    MakeJobCommand(name).run()
 
 
 # Add project commands if available
