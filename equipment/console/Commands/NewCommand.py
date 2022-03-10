@@ -1,12 +1,12 @@
-from os import getcwd, sep
-from os.path import dirname, join, abspath, isdir, isfile
-from click import confirm, echo, style
-from equipment.console.Commands.AbstractCommand import AbstractCommand
-from shutil import move, copyfile, copytree, ignore_patterns
-from tempfile import gettempdir
-from datetime import datetime
 from codecs import open as _open
+from datetime import datetime
+from os import getcwd, sep
+from os.path import abspath, dirname, isdir, isfile, join
+from shutil import copyfile, copytree, ignore_patterns, move
+from tempfile import gettempdir
+from click import confirm, echo, style
 from pkg_resources import get_distribution
+from equipment.console.Commands.AbstractCommand import AbstractCommand
 
 
 class NewCommand(AbstractCommand):
@@ -20,12 +20,13 @@ class NewCommand(AbstractCommand):
         self.name = name
 
     def run(self, *args, **kwargs) -> None:
-        self.source = abspath(join(dirname(__file__), '../../project'))
+        self.source = abspath(join(dirname(__file__), f'..{sep}..{sep}project'))  # nopep8
         self.destination = f'{getcwd()}{sep}{self.name}'
         self.already_exists = isdir(self.destination)
         self.confirmation = confirm(f'Directory "{self.destination}" already exists. Do you want to override it?') if self.already_exists else True  # nopep8
 
         if not self.confirmation:
+            echo(style('Skip', fg='yellow'))
             return None
 
         self._handle_existing_directory()
