@@ -1,17 +1,18 @@
 from codecs import open as _open
-from datetime import datetime
 from os import getcwd, sep
-from os.path import abspath, dirname, isdir, isfile, join
-from shutil import copyfile, copytree, ignore_patterns, move
-from tempfile import gettempdir
+from os.path import abspath, dirname, isfile, join
+from pathlib import Path
 from click import confirm, echo, style
 from equipment.console.Commands.AbstractCommand import AbstractCommand
-from pathlib import Path
 
 
 class MakeJobCommand(AbstractCommand):
     name: str
     replacement: str
+    jobs_path: str
+    destination: str
+    source: str
+    confirmation: bool
 
     def __init__(self, name: str, replacement: str = '_REPLACEME_') -> None:
         self.name = name
@@ -20,21 +21,34 @@ class MakeJobCommand(AbstractCommand):
     def run(self, *args, **kwargs) -> None:
         echo(style(f'Creating {self.name} job...', fg='green'))
 
-        jobs_path = f'{getcwd()}{sep}app{sep}Jobs'
+        self.jobs_path = f'{getcwd()}{sep}app{sep}Jobs'
+        self.source = abspath(join(dirname(__file__), f'..{sep}stubs{sep}Job.py'))  # nopep8
+        self.destination = f'{self.jobs_path}{sep}{self.name}.py'
+        self.confirmation = confirm(f'Directory "{self.destination}" already exists. Do you want to override it?') if isfile(self.destination) else True  # nopep8
 
-        Path(jobs_path).mkdir(parents=True, exist_ok=True)
-
-        destination = f'{jobs_path}{sep}{self.name}.py'
-
-        confirmation = confirm(f'Directory "{destination}" already exists. Do you want to override it?') if isfile(destination) else True  # nopep8
-
-        if not confirmation:
+        if not self.confirmation:
             echo(style('Skip', fg='yellow'))
             return None
 
-        copyfile(
-            abspath(join(dirname(__file__), f'..{sep}stubs{sep}Job.py')),
-            destination
-        )
+        self._ensureJobsDirectory()
+        self._createFile()
 
         echo(style('Done!', fg='green'))
+
+    def _ensureJobsDirectory(self) -> None:
+        Path(self.jobs_path).mkdir(parents=True, exist_ok=True)
+
+        init_file = f'{self.jobs_path}{sep}__init__.py'
+
+        if not isfile(init_file):
+            with _open(init_file, 'w') as f:
+                f.write('')
+
+    def _createFile(self) -> None:
+        content = ''
+
+        with _open(self.source, 'r') as source:
+            content = source.read()
+
+        with _open(self.destination, 'w') as destination:
+            destination.write(content.replace(self.replacement, self.name))

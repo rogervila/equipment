@@ -38,11 +38,13 @@ project_commands_module = module('app.Commands', print_exception=False)
 
 if project_commands_module is not None:
     for member in getmembers(project_commands_module):
-        if isinstance(member[1], click.Command):
-            try:
-                main.add_command(getattr(project_commands_module, member[0]))
-            except Exception:
-                pass
+        if not isinstance(member[1], click.Command):
+            continue
+
+        try:
+            main.add_command(getattr(project_commands_module, member[0]))
+        except Exception:
+            pass  # Error messages here do not provide any value and break the console developer experience
 
 if __name__ == '__main__':
     main()
