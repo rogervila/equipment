@@ -7,6 +7,9 @@ from dependency_injector.containers import Container
 
 def app(name: str = 'app.App.Container') -> Container:
     resolved_module = module(name)
+
+    raise_if(resolved_module is None, ImportError(name=name))
+
     return resolved_module.Container
 
 
@@ -16,6 +19,16 @@ def module(name: str, print_exception: bool = False) -> Any:
     except Exception as e:
         print_if(print_exception, e)
         return None
+
+
+def raise_if(condition: bool, exception: Exception) -> None:
+    if condition:
+        raise exception
+
+
+def raise_unless(condition: bool, exception: Exception) -> None:
+    if not condition:
+        raise exception
 
 
 def print_if(condition: bool, *args, **kwargs) -> None:

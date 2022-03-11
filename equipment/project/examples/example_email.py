@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-from app.App.Container import Container
+from equipment.framework import Equipment
 from app.Mail.WelcomeEmail import WelcomeEmail
 
-app = Container()
+app = Equipment()
 
 
 app.log().info(

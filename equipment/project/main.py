@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-from app.App.Container import Container
+from equipment.framework import Equipment
 
-app = Container()
+app = Equipment()
 
 app.log().info(
     f'''
