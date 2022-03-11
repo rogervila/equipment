@@ -1,11 +1,9 @@
 ---
 slug: welcome
-title: Welcome
+title: Welcome to Equipment, the root of your next Python project
 authors: [rogervila]
 tags: []
 ---
-
-# Welcome to Equipment, the root of your next Python project
 
 Equipment is a Python framework focused on the developer experience. Its goal is to avoid repeating basic application setups like handling configuration files or configuring database connections.
 
