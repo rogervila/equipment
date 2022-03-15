@@ -1,6 +1,9 @@
-<p align="center"><img src="https://i.ibb.co/qWng9kZ/wrench.png" alt="Equipment python framework" height="200" /></p>
+<p align="center"><img src="https://rogervila.es/static/img/equipment-logo.png" alt="Equipment python framework" height="200" /></p>
 
 [![PyPI version](https://badge.fury.io/py/equipment.svg)](https://badge.fury.io/py/equipment)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=rogervila_equipment&metric=alert_status)](https://sonarcloud.io/dashboard?id=rogervila_equipment)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=rogervila_equipment&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=rogervila_equipment)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rogervila_equipment&metric=coverage)](https://sonarcloud.io/dashboard?id=rogervila_equipment)
 
 # Equipment
 

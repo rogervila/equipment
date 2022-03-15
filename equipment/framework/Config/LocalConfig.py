@@ -3,6 +3,7 @@ import os
 from typing import Any, Optional
 from configparser import RawConfigParser
 from equipment.framework.Config.AbstractConfig import AbstractConfig
+from equipment.framework.helpers import base_path
 from equipment.framework.Environment.AbstractEnvironment import AbstractEnvironment
 
 
@@ -14,7 +15,7 @@ class LocalConfig(AbstractConfig):
         self.env_prefix = 'env:'
         self.path = os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            os.getcwd() + os.sep + relative_path
+            str(base_path(relative_path))
         )
 
     def load(self) -> None:
