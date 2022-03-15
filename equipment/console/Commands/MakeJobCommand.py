@@ -1,5 +1,5 @@
+import os
 from codecs import open as _open
-from os import getcwd, sep
 from os.path import abspath, dirname, isfile, join
 from pathlib import Path
 from click import confirm, echo, style
@@ -21,9 +21,9 @@ class MakeJobCommand(AbstractCommand):
     def run(self, *args, **kwargs) -> None:
         echo(style(f'Creating {self.name} job...', fg='green'))
 
-        self.jobs_path = f'{getcwd()}{sep}app{sep}Jobs'
-        self.source = abspath(join(dirname(__file__), f'..{sep}stubs{sep}Job.py'))  # nopep8
-        self.destination = f'{self.jobs_path}{sep}{self.name}.py'
+        self.jobs_path = f'{os.getcwd()}{os.sep}app{os.sep}Jobs'
+        self.source = abspath(join(dirname(__file__), f'..{os.sep}stubs{os.sep}Job.py'))  # nopep8
+        self.destination = f'{self.jobs_path}{os.sep}{self.name}.py'
         self.confirmation = confirm(f'Directory "{self.destination}" already exists. Do you want to override it?') if isfile(self.destination) else True  # nopep8
 
         if not self.confirmation:
@@ -38,7 +38,7 @@ class MakeJobCommand(AbstractCommand):
     def _ensureJobsDirectory(self) -> None:
         Path(self.jobs_path).mkdir(parents=True, exist_ok=True)
 
-        init_file = f'{self.jobs_path}{sep}__init__.py'
+        init_file = f'{self.jobs_path}{os.sep}__init__.py'
 
         if not isfile(init_file):
             with _open(init_file, 'w') as f:

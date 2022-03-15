@@ -1,15 +1,17 @@
 import unittest
+import os
+from unittest.mock import patch
 from shutil import rmtree
-from os import getcwd, sep
 from os.path import isfile
 from click.testing import CliRunner
 from equipment.console.Commands.MakeJobCommand import MakeJobCommand
 from equipment.console import job
+from equipment.console.tests.BaseTest import BaseTest
 
 
-class test_MakeJobCommand(unittest.TestCase):
+class test_MakeJobCommand(BaseTest):
     def _cleanup(self) -> None:
-        rmtree(f'{getcwd()}{sep}app', ignore_errors=True)
+        rmtree(f'{self.tests_path}{os.sep}app', ignore_errors=True)
 
     def setUp(self) -> None:
         super().setUp()
@@ -22,17 +24,19 @@ class test_MakeJobCommand(unittest.TestCase):
     def test_command_invoke(self):
         name = '__pycache__'  # ensure it is always ignored
 
-        runner = CliRunner()
-        result = runner.invoke(job, [name])
-        self.assertTrue(result.exit_code == 0)
+        with patch.object(os, 'getcwd', return_value=self.tests_path):
+            runner = CliRunner()
+            result = runner.invoke(job, [name])
+            self.assertTrue(result.exit_code == 0)
 
     def test_command_class(self):
         name = '__pycache__'  # ensure it is always ignored
-        full_path = f'{getcwd()}{sep}app{sep}Jobs{sep}{name}.py'
+        full_path = f'{self.tests_path}{os.sep}app{os.sep}Jobs{os.sep}{name}.py'
 
         self.assertFalse(isfile(full_path))
 
-        self.assertIsNone(MakeJobCommand(name).run())
+        with patch.object(os, 'getcwd', return_value=self.tests_path):
+            self.assertIsNone(MakeJobCommand(name).run())
 
         self.assertTrue(isfile(full_path))
 
