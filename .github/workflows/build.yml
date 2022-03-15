@@ -49,7 +49,7 @@ jobs:
             -Dsonar.sources=.
             -Dsonar.python.version=3.10
             -Dsonar.python.coverage.reportPaths=coverage.xml
-            -Dsonar.exclusions=**/tests/**,**/*.html,**/*.js,**/*.css,**/stubs/**,**/_stubs/**,**/examples/**
-            -Dsonar.test.exclusions=**/tests/**,**/*.html,**/*.js,**/*.css,**/stubs/**,**/_stubs/**,**/examples/**
+            -Dsonar.exclusions=**/tests/**,**/*.html,**/*.js,**/*.css,**/stubs/**,**/_stubs/**,**/examples/**,**/project/main.py
+            -Dsonar.test.exclusions=**/tests/**,**/*.html,**/*.js,**/*.css,**/stubs/**,**/_stubs/**,**/examples/**,**/project/main.py
             -Dsonar.tests=equipment/console/tests/,equipment/framework/tests/,equipment/project/tests/
             -Dsonar.verbose=true
