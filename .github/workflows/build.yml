@@ -15,6 +15,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v3
         with:
@@ -45,6 +47,7 @@ jobs:
             -Dsonar.organization=rogervila-github
             -Dsonar.projectKey=rogervila_equipment
             -Dsonar.sources=.
+            -Dsonar.python.version=3.10
             -Dsonar.python.coverage.reportPaths=coverage.xml
             -Dsonar.exclusions=**/tests/**,**/*.html,**/stubs/**,**/_stubs/**
             -Dsonar.test.exclusions=**/tests/**,**/*.html,**/stubs/**,**/_stubs/**
