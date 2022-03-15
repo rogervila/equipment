@@ -42,7 +42,7 @@ jobs:
           args: >
             -Dsonar.organization=rogervila-github
             -Dsonar.projectKey=rogervila_equipment
-            -Dsonar.sources=./coverage.xml
+            -Dsonar.sources=coverage.xml
             -Dsonar.python.coverage.reportPaths=
             -Dsonar.exclusions=**/tests/**,**/*.html,**/stubs/**,**/_stubs/**
             -Dsonar.test.exclusions=**/tests/**,**/*.html,**/stubs/**,**/_stubs/**
