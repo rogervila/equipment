@@ -5,6 +5,7 @@
 *.cache
 *.log
 
+.tox/
 *.egg-info
 build/
 dist/

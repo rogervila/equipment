@@ -27,6 +27,7 @@ jobs:
           cd ${PROJECT_PATH}/equipment/project && pip install -r requirements.txt
           cd ${PROJECT_PATH} && coverage run -m unittest discover
           cd ${PROJECT_PATH} && coverage xml -i
+          sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' coverage.xml
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
