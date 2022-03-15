@@ -29,3 +29,10 @@ jobs:
           cd ${PROJECT_PATH}/equipment/project && pip install -r requirements.txt
           cd ${PROJECT_PATH} && coverage run -m unittest discover
           cd ${PROJECT_PATH} && coverage xml -i
+      - name: Get PR author
+        id: get_author
+        run: echo ::set-output name=AUTHOR::${{ github.event.pull_request.user.login }}
+      - name: SonarCloud Scan
+        if: ${{ matrix.python-version == '3.10'}}
+        run: |
+          echo ${{ steps.get_author.outputs.AUTHOR }}
