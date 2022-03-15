@@ -1,10 +1,11 @@
-from os import getcwd, sep
+from os import sep
 from equipment.framework.Mail.Email.Email import Email
 from equipment.framework.Mail.Email.EmailFactory import EmailFactory
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from jinja_markdown import MarkdownExtension
 from premailer import transform
 from html2text import html2text
+from equipment.framework.helpers import base_path
 
 
 class HTMLEmailFactory(EmailFactory):
@@ -19,7 +20,7 @@ class HTMLEmailFactory(EmailFactory):
     def reload(self) -> None:
         self.jinja = Environment(
             loader=FileSystemLoader(
-                f'{getcwd()}{sep}resources{sep}views{sep}emails'
+                str(base_path(f'resources{sep}views{sep}emails'))
             ),
             autoescape=select_autoescape()
         )

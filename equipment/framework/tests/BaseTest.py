@@ -1,4 +1,4 @@
-from os import sep
+import os
 import unittest
 from faker import Faker
 from equipment.framework.helpers import app
@@ -10,6 +10,9 @@ class BaseTest(unittest.TestCase):
     def setUp(self):
         super().setUp()
 
+        # Access tests base path
+        self.tests_path = os.path.dirname(os.path.abspath(__file__))
+
         # Global faker instance
         self.faker = Faker()
 
@@ -19,7 +22,7 @@ class BaseTest(unittest.TestCase):
         # Override config
         self.app.config.override(LocalConfig(
             self.app.environment(),
-            f'tests{sep}_stubs{sep}config'
+            f'tests{os.sep}_stubs{os.sep}config'
         ))
 
         # Override logger

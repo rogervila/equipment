@@ -5,6 +5,9 @@
 *.cache
 *.log
 
+.tox/
 *.egg-info
 build/
 dist/
+
+coverage.xml
