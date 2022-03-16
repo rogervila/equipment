@@ -3,7 +3,11 @@
 from app.Jobs.ExampleJob import ExampleJob
 
 print('''
-Instead of loading the app Container on main.py, you can use Jobs directly, since they already load the Container
+
+Instead of loading the equipment
+you can may Jobs that already
+load the framework
+
 ''')
 
 ExampleJob.dispatchSync('Running job')

@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-from equipment.framework import Equipment
+from equipment.framework import equipment
 import matplotlib.pyplot as plt
 import numpy as np
 
-app = Equipment()
+app = equipment()
 
 app.log().info(
     f'''

@@ -1,12 +1,12 @@
 import unittest
 from equipment.framework.tests.BaseTest import BaseTest
-from equipment.framework import Equipment
+from equipment.framework import equipment
 
 
 class test_equipment(BaseTest):
     def test_equipment_function(self):
         self.assertIsNotNone(
-            Equipment('equipment.framework.App.Container')
+            equipment('equipment.framework.App.Container')
         )
 
 

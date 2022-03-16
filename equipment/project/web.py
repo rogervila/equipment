@@ -3,16 +3,16 @@
 from datetime import datetime
 from flask import Flask
 from flask_wtf.csrf import CSRFProtect
-from app.App.Container import Container
+from equipment.framework import equipment
 
 
 app = Flask(__name__)
 csrf = CSRFProtect(app)
 
-app.container = Container()
+app.equipment = equipment()
 
-log = app.container.log()
-config = app.container.config()
+log = app.equipment.log()
+config = app.equipment.config()
 
 log.info(
     f'''

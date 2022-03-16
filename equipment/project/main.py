@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-from equipment.framework import Equipment
+from equipment.framework import equipment
 
-app = Equipment()
+app = equipment()
 
 app.log().info(
     f'''
