@@ -65,6 +65,7 @@ const config = {
             label: 'Tutorial',
           },
           { to: '/blog', label: 'Blog', position: 'left' },
+          { to: 'https://equipment-python.vercel.app/api/index.html', label: 'API', position: 'right' },
           {
             href: 'https://github.com/rogervila/equipment',
             label: 'GitHub',
