@@ -6,23 +6,19 @@ sidebar_position: 1
 
 > WIP
 
-## Quick start
+## Why Equipment
 
-Let's discover **Equipment in less than 5 minutes**.
+Equipment is a Python framework focused on the developer experience. Its goal is to avoid repeating basic application setups like handling configuration files or configuring database connections.
 
-```sh
-# Install equipment globally
-pip install equipment
+Equipment scales with your project. It does not force you to follow any specific development strategy, so it can be used with simple scripts and big applications.
 
-# Create a new project
+Equipment is simple to extend and modify, which makes it very flexible to fit any project requirement. It can be easily integrated with other Python frameworks and tools.
 
-equipment new my-app
+Developers with any Python skills can work with Equipment. Do not hesitate to [reach us](https://github.com/rogervila/equipment/discussions) to provide feedback, raise issues, and collaborate with the project.
 
-# Install your project dependencies
-cd my app
-pip install -r requirements.txt
 
-# Run you application
-py main.py
-```
+## Under the hood
 
+Instead of reinventing the wheel, Equipment combines already existing python libraries, leveraging their APIs to improve the developer experience by avoiding unnecessary steps like extra configurations or dependencies installation.
+
+Equipment documentation provides a "Under the hood" section for all features that rely on external libraries to provide transparency and the necessary information to extend or modify the integration with the framework.

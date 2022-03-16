@@ -8,12 +8,12 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'Equipment',
   tagline: 'The root of your next python project',
-  url: 'https://rogervila.es',
+  url: 'https://equipment-python.vercel.app',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'rogervila/equipment', // Usually your GitHub org/user name.
+  organizationName: 'rogervila', // Usually your GitHub org/user name.
   projectName: 'equipment', // Usually your repo name.
 
   presets: [
