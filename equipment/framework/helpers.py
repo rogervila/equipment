@@ -24,8 +24,8 @@ def base_path(join: Optional[str] = None, container: Optional[Container] = None)
     if container is None:
         container = app()
 
-    # We assume containers always leave under ./App/Container
-    return Path(getfile(container)).parent.parent.absolute().joinpath(
+    # We assume containers always leave under ./app/App/Container
+    return Path(getfile(container)).parent.parent.parent.absolute().joinpath(
         join if join is not None else ''
     )
 
