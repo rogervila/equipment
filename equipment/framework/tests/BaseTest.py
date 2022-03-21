@@ -22,7 +22,7 @@ class BaseTest(unittest.TestCase):
         # Override config
         self.app.config.override(LocalConfig(
             self.app.environment(),
-            f'tests{os.sep}_stubs{os.sep}config'
+            f'framework{os.sep}tests{os.sep}_stubs{os.sep}config'
         ))
 
         # Override logger

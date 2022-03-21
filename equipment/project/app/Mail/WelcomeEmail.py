@@ -3,7 +3,7 @@ from equipment.framework.Mail.Email.HTMLEmailFactory import HTMLEmailFactory
 
 
 class WelcomeEmail(HTMLEmailFactory):
-    user_name = None
+    user_name = None  # type: str
     registration_link = 'https://example.com'
 
     def make(self) -> Email:
