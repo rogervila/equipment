@@ -11,7 +11,7 @@ class test_LocalConfig(BaseTest):
         super().setUp()
         self.app.config.override(LocalConfig(
             self.app.environment(),
-            f'tests{sep}_stubs{sep}config'
+            f'framework{sep}tests{sep}_stubs{sep}config'
         ))
 
     def test_extends_from_abstract_config(self):
