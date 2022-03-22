@@ -30,7 +30,7 @@ jobs:
           cd ${PROJECT_PATH}/equipment/framework && pip install -r requirements.txt
           cd ${PROJECT_PATH}/equipment/console && pip install -r requirements.txt
           cd ${PROJECT_PATH}/equipment/project && pip install -r requirements.txt
-          cd ${PROJECT_PATH} && py -m unittest discover -s equipment/project/
+          cd ${PROJECT_PATH} && python -m unittest discover -s equipment/project/
           cd ${PROJECT_PATH} && coverage run -m unittest discover -p '**Test.py'
           cd ${PROJECT_PATH} && coverage xml -i
           sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' coverage.xml
