@@ -1,6 +1,6 @@
 import unittest
-from tests.BaseTest import BaseTest
 from app.Mail.WelcomeEmail import WelcomeEmail
+from tests.BaseTest import BaseTest
 
 
 class test_WelcomeMail(BaseTest):
