@@ -1,9 +1,9 @@
 import unittest
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 from equipment.framework.helpers import raise_if
 
 
-class RaseIfHelperTest(BaseTest):
+class RaseIfHelperTest(TestCase):
     def test_true(self):
         with self.assertRaises(ImportError):
             raise_if(True, ImportError('foo'))

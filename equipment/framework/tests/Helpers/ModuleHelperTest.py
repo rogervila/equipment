@@ -1,11 +1,11 @@
 import unittest
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 from equipment.framework.helpers import module
 
 
-class ModuleHelperTest(BaseTest):
+class ModuleHelperTest(TestCase):
     def test_module_helper_returns_module(self):
-        result = module('equipment.framework.tests.BaseTest')
+        result = module('equipment.framework.tests.TestCase')
         self.assertIsNotNone(result)
 
     def test_module_helper_returns_none_when_module_not_found(self):

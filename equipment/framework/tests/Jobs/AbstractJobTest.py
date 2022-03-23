@@ -1,10 +1,10 @@
 import unittest
 from equipment.framework.Jobs.AbstractJob import AbstractJob
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 from equipment.framework.helpers import app
 
 
-class AbstractJobTest(BaseTest):
+class AbstractJobTest(TestCase):
     def test_dispatch(self):
         class TestJob(AbstractJob):
             pass

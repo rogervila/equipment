@@ -6,10 +6,10 @@ from os.path import isfile
 from click.testing import CliRunner
 from equipment.console.Commands.MakeJobCommand import MakeJobCommand
 from equipment.console import job
-from equipment.console.tests.BaseTest import BaseTest
+from equipment.console.tests.TestCase import TestCase
 
 
-class MakeJobCommandTest(BaseTest):
+class MakeJobCommandTest(TestCase):
     def _cleanup(self) -> None:
         rmtree(f'{self.tests_path}{os.sep}app', ignore_errors=True)
 

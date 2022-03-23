@@ -1,12 +1,12 @@
 import unittest
 from os import sep
 from uuid import uuid4
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 from equipment.framework.Config.AbstractConfig import AbstractConfig
 from equipment.framework.Config.LocalConfig import LocalConfig
 
 
-class LocalConfigTest(BaseTest):
+class LocalConfigTest(TestCase):
     def setUp(self):
         super().setUp()
         self.app.config.override(LocalConfig(

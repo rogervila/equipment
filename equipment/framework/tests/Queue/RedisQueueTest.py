@@ -2,10 +2,10 @@ import unittest
 from unittest.mock import MagicMock
 from equipment.framework.Queue.AbstractQueue import AbstractQueue
 from equipment.framework.Queue.RedisQueue import RedisQueue
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class RedisQueueTest(BaseTest):
+class RedisQueueTest(TestCase):
     def setUp(self):
         super().setUp()
         self.queue = RedisQueue(

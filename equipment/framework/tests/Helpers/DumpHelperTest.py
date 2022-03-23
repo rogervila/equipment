@@ -1,10 +1,10 @@
 import unittest
 from unittest.mock import patch
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 from equipment.framework.helpers import dump
 
 
-class DumpHelperTest(BaseTest):
+class DumpHelperTest(TestCase):
     @patch('pprint.pformat')
     # pylint: disable=unused-argument
     def test_dump(self, mock_pformat):

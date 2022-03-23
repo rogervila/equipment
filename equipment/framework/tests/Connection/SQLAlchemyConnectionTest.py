@@ -1,10 +1,10 @@
 import unittest
 from unittest.mock import MagicMock
 from equipment.framework.Connection.SQLAlchemyConnection import SQLAlchemyConnection
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class SQLAlchemyConnectionTest(BaseTest):
+class SQLAlchemyConnectionTest(TestCase):
     def setUp(self):
         super().setUp()
         self.sql = SQLAlchemyConnection(

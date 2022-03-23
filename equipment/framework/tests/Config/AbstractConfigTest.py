@@ -1,9 +1,9 @@
 import unittest
 from equipment.framework.Config.AbstractConfig import AbstractConfig
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class AbstractConfigTest(BaseTest):
+class AbstractConfigTest(TestCase):
     def test_abstract_methods(self):
         class TestConfig(AbstractConfig):
             pass

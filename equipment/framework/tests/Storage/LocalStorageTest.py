@@ -3,10 +3,10 @@ import unittest
 from uuid import uuid4
 from equipment.framework.Storage.AbstractStorage import AbstractStorage
 from equipment.framework.Storage.LocalStorage import LocalStorage
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class LocalStorageTest(BaseTest):
+class LocalStorageTest(TestCase):
     def setUp(self):
         super().setUp()
 

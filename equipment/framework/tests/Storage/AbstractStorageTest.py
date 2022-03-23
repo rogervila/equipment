@@ -1,9 +1,9 @@
 import unittest
 from equipment.framework.Storage.AbstractStorage import AbstractStorage
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class AbstractStorageTest(BaseTest):
+class AbstractStorageTest(TestCase):
     def test_abstract_methods(self):
         class TestStorage(AbstractStorage):
             pass

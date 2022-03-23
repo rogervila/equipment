@@ -9,10 +9,10 @@ from unittest.mock import patch
 from click.testing import CliRunner
 from equipment.console.Commands.NewCommand import NewCommand
 from equipment.console import new
-from equipment.console.tests.BaseTest import BaseTest
+from equipment.console.tests.TestCase import TestCase
 
 
-class NewCommandTest(BaseTest):
+class NewCommandTest(TestCase):
     def test_command_invoke(self):
         project = '__pycache__'  # ensure it is always ignored
         print(f'{self.tests_path}{os.sep}{project}')

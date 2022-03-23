@@ -2,10 +2,10 @@ import unittest
 from uuid import uuid4
 from equipment.framework.Log.AbstractLog import AbstractLog
 from equipment.framework.Log.NoneLog import NoneLog
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class NoneLogTest(BaseTest):
+class NoneLogTest(TestCase):
     def setUp(self):
         super().setUp()
         self.log = NoneLog(self.app.config())

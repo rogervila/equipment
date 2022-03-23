@@ -4,7 +4,7 @@ from equipment.framework.Environment.LocalEnvironment import LocalEnvironment
 from equipment.framework.helpers import app
 
 
-class BaseTest(unittest.TestCase):
+class TestCase(unittest.TestCase):
     def setUp(self):
         super().setUp()
 

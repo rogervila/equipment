@@ -4,10 +4,10 @@ from moto import mock_ses
 from equipment.framework.Mail.Email.HTMLEmailFactory import HTMLEmailFactory
 from equipment.framework.Mail.AbstractMail import AbstractMail
 from equipment.framework.Mail.SESMail import SESMail
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class SESMailTest(BaseTest):
+class SESMailTest(TestCase):
     def setUp(self):
         super().setUp()
         self.mail = SESMail(

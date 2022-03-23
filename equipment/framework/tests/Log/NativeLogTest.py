@@ -1,10 +1,10 @@
 import unittest
 from equipment.framework.Log.AbstractLog import AbstractLog
 from equipment.framework.Log.NativeLog import NativeLog
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class NativeLogTest(BaseTest):
+class NativeLogTest(TestCase):
     def test_extends_from_abstract_log(self):
         with self.app.log.override(NativeLog(config=self.app.config())):
             self.assertTrue(

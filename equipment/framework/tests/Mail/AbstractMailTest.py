@@ -1,10 +1,10 @@
 import unittest
 from equipment.framework.Mail.Email.HTMLEmailFactory import HTMLEmailFactory
 from equipment.framework.Mail.AbstractMail import AbstractMail
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class AbstractMailTest(BaseTest):
+class AbstractMailTest(TestCase):
     def test_abstract_methods(self):
         class TestMail(AbstractMail):
             pass

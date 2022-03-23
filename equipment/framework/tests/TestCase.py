@@ -6,7 +6,7 @@ from equipment.framework.Log.NoneLog import NoneLog
 from equipment.framework.Config.LocalConfig import LocalConfig
 
 
-class BaseTest(unittest.TestCase):
+class TestCase(unittest.TestCase):
     def setUp(self):
         super().setUp()
 

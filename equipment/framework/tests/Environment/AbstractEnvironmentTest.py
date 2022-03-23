@@ -1,9 +1,9 @@
 import unittest
 from equipment.framework.Environment.AbstractEnvironment import AbstractEnvironment
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class AbstractEnvironmentTest(BaseTest):
+class AbstractEnvironmentTest(TestCase):
     def test_abstract_methods(self):
         class TestEnvironment(AbstractEnvironment):
             pass

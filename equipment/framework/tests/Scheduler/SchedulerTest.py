@@ -4,10 +4,10 @@ from unittest.mock import patch
 import schedule
 from equipment.framework.Scheduler.AbstractScheduler import AbstractScheduler
 from equipment.framework.Scheduler.Scheduler import Scheduler
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class SchedulerTest(BaseTest):
+class SchedulerTest(TestCase):
     def setUp(self):
         super().setUp()
 

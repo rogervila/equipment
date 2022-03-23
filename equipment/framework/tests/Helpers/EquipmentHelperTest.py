@@ -1,9 +1,9 @@
 import unittest
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 from equipment.framework import equipment
 
 
-class EquipmentHelperTest(BaseTest):
+class EquipmentHelperTest(TestCase):
     def test_equipment_function(self):
         self.assertIsNotNone(
             equipment('equipment.framework.App.Container')

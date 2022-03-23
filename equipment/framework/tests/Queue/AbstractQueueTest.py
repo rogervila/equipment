@@ -1,10 +1,10 @@
 import unittest
 from datetime import datetime
 from equipment.framework.Queue.AbstractQueue import AbstractQueue
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class AbstractQueueTest(BaseTest):
+class AbstractQueueTest(TestCase):
     def test_abstract_methods(self):
         class TestQueue(AbstractQueue):
             pass

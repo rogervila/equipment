@@ -1,9 +1,9 @@
 import unittest
 from equipment.framework.Log.AbstractLog import AbstractLog
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class AbstractLogTest(BaseTest):
+class AbstractLogTest(TestCase):
     def test_abstract_methods(self):
         class TestLog(AbstractLog):
             pass

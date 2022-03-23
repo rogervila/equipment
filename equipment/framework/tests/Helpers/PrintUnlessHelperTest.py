@@ -1,10 +1,10 @@
 import unittest
 from unittest.mock import patch
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 from equipment.framework.helpers import print_unless
 
 
-class PrintUnlessHelperTest(BaseTest):
+class PrintUnlessHelperTest(TestCase):
     @patch('builtins.print')
     def test_true(self, mock_print):
         print_unless(False, 'foo')

@@ -1,10 +1,10 @@
 import unittest
 from equipment.framework.Environment.AbstractEnvironment import AbstractEnvironment
 from equipment.framework.Environment.LocalEnvironment import LocalEnvironment
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class LocalEnvironmentTest(BaseTest):
+class LocalEnvironmentTest(TestCase):
     def setUp(self):
         super().setUp()
         self.env = LocalEnvironment()

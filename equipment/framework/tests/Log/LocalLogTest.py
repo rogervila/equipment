@@ -4,10 +4,10 @@ from tempfile import gettempdir
 from uuid import uuid4
 from equipment.framework.Log.AbstractLog import AbstractLog
 from equipment.framework.Log.LocalLog import LocalLog
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class LocalLogTest(BaseTest):
+class LocalLogTest(TestCase):
     def setUp(self):
         super().setUp()
         self.path = str(gettempdir()) + os.path.sep + \

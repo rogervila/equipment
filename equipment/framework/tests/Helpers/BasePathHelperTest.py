@@ -1,11 +1,11 @@
 import unittest
 import os
 from pathlib import Path
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 from equipment.framework.helpers import base_path
 
 
-class BasePathHelperTest(BaseTest):
+class BasePathHelperTest(TestCase):
     def test_base_path_returns_path_instance(self):
         result = base_path('foo', self.app)
 

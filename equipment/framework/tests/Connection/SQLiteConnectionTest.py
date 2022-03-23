@@ -3,10 +3,10 @@ from unittest.mock import MagicMock, patch
 import sqlalchemy
 from equipment.framework.Connection.AbstractConnection import AbstractConnection
 from equipment.framework.Connection.SQLiteConnection import SQLiteConnection
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class SQLiteConnectionTest(BaseTest):
+class SQLiteConnectionTest(TestCase):
     def setUp(self):
         super().setUp()
         config = self.app.config()

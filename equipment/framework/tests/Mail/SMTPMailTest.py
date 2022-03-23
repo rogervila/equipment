@@ -4,10 +4,10 @@ import mail1
 from equipment.framework.Mail.Email.HTMLEmailFactory import HTMLEmailFactory
 from equipment.framework.Mail.AbstractMail import AbstractMail
 from equipment.framework.Mail.SMTPMail import SMTPMail
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class SMTPMailTest(BaseTest):
+class SMTPMailTest(TestCase):
     def setUp(self):
         super().setUp()
         self.mail = SMTPMail(

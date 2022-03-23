@@ -2,11 +2,11 @@ import unittest
 from unittest.mock import MagicMock
 from redis import Redis
 from equipment.framework.Connection.AbstractConnection import AbstractConnection
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 from equipment.framework.Connection.RedisConnection import RedisConnection
 
 
-class RedisConnectionTest(BaseTest):
+class RedisConnectionTest(TestCase):
     def setUp(self):
         super().setUp()
         self.redis = RedisConnection(self.app.config(), self.app.log())

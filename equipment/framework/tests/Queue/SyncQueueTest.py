@@ -2,10 +2,10 @@ import unittest
 from datetime import datetime
 from equipment.framework.Queue.AbstractQueue import AbstractQueue
 from equipment.framework.Queue.SyncQueue import SyncQueue
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class SyncQueueTest(BaseTest):
+class SyncQueueTest(TestCase):
     def setUp(self):
         super().setUp()
         self.queue = SyncQueue(

@@ -1,9 +1,9 @@
 import unittest
 from equipment.framework.Scheduler.AbstractScheduler import AbstractScheduler
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class AbstractSchedulerTest(BaseTest):
+class AbstractSchedulerTest(TestCase):
     def test_abstract_methods(self):
         class TestScheduler(AbstractScheduler):
             pass

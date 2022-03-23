@@ -3,10 +3,10 @@ from unittest.mock import patch
 import neo4j
 from equipment.framework.Connection.AbstractConnection import AbstractConnection
 from equipment.framework.Connection.Neo4JConnection import Neo4JConnection
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class Neo4JConnectionTest(BaseTest):
+class Neo4JConnectionTest(TestCase):
     def setUp(self):
         super().setUp()
         self.neo4j = Neo4JConnection(self.app.config(), self.app.log())

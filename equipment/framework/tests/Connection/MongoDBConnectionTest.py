@@ -3,10 +3,10 @@ from unittest.mock import MagicMock, patch
 import pymongo
 from equipment.framework.Connection.AbstractConnection import AbstractConnection
 from equipment.framework.Connection.MongoDBConnection import MongoDBConnection
-from equipment.framework.tests.BaseTest import BaseTest
+from equipment.framework.tests.TestCase import TestCase
 
 
-class MongoDBConnectionTest(BaseTest):
+class MongoDBConnectionTest(TestCase):
     def setUp(self):
         super().setUp()
         self.mongo = MongoDBConnection(self.app.config(), self.app.log())
