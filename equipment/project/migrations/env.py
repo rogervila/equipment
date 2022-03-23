@@ -2,9 +2,10 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
-from equipment.framework import equipment
+from parent_import import parentdir
 
-app = equipment()
+Container = parentdir.app.App.Container.Container
+app = Container()
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
