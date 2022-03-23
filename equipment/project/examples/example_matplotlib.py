@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-from app.App.Container import Container
+from equipment.framework import equipment
 import matplotlib.pyplot as plt
 import numpy as np
 
-app = Container()
+app = equipment()
 
 app.log().info(
     f'''

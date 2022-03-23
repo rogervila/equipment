@@ -1,9 +1,9 @@
 import unittest
-from tests.BaseTest import BaseTest
 from app.Mail.WelcomeEmail import WelcomeEmail
+from tests.TestCase import TestCase
 
 
-class test_WelcomeMail(BaseTest):
+class test_WelcomeMail(TestCase):
     def test_welcome_email(self):
         user_name = self.faker.name()
 

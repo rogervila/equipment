@@ -1,10 +1,10 @@
 import unittest
 from equipment.framework.Jobs.AbstractJob import AbstractJob
 from app.Jobs.ExampleJob import ExampleJob
-from equipment.framework.tests.BaseTest import BaseTest
+from tests.TestCase import TestCase
 
 
-class test_ExampleJob(BaseTest):
+class test_ExampleJob(TestCase):
     def test_extends_from_abstract_job(self):
         self.assertTrue(
             isinstance(ExampleJob(), AbstractJob)

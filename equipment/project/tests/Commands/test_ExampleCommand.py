@@ -1,13 +1,13 @@
 import unittest
 from click.testing import CliRunner
-from app.Commands import example
+from equipment.project.app.Commands.commands import example
 from app.Commands.ExampleCommand import ExampleCommand
-from equipment.framework.tests.BaseTest import BaseTest
+from tests.TestCase import TestCase
 
 # Check: https://click.palletsprojects.com/en/8.0.x/testing/#testing-click-applications
 
 
-class test_ExampleCommand(BaseTest):
+class test_ExampleCommand(TestCase):
     def test_command_invoke(self):
         runner = CliRunner()
         result = runner.invoke(example)

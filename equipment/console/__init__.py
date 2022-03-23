@@ -34,7 +34,10 @@ def job(name):
 
 # Add project commands if available
 sys.path.append(getcwd())
-project_commands_module = module('app.Commands', print_exception=False)
+project_commands_module = module(
+    'app.Commands.commands',
+    print_exception=False
+)
 
 if project_commands_module is not None:
     for member in getmembers(project_commands_module):

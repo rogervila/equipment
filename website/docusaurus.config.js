@@ -1,17 +1,6 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-
-// <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-// <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-// <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-// <link rel="manifest" href="/site.webmanifest">
-// <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-// <meta name="msapplication-TileColor" content="#00aba9">
-// <meta name="theme-color" content="#ffffff">
-
-
-
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
@@ -19,12 +8,12 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'Equipment',
   tagline: 'The root of your next python project',
-  url: 'https://rogervila.es',
+  url: 'https://equipment-python.vercel.app',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'rogervila/equipment', // Usually your GitHub org/user name.
+  organizationName: 'rogervila', // Usually your GitHub org/user name.
   projectName: 'equipment', // Usually your repo name.
 
   presets: [
@@ -50,6 +39,15 @@ const config = {
     ],
   ],
 
+  plugins: [
+    [
+      require.resolve("@cmfcmf/docusaurus-search-local"),
+      {
+        // Options here
+      },
+    ],
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -67,6 +65,7 @@ const config = {
             label: 'Tutorial',
           },
           { to: '/blog', label: 'Blog', position: 'left' },
+          { to: 'https://equipment-python.vercel.app/api/index.html', label: 'API', position: 'right' },
           {
             href: 'https://github.com/rogervila/equipment',
             label: 'GitHub',
