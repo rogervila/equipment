@@ -16,3 +16,9 @@ class AbstractStorage(abc.ABC):
 
     def remove(self, file: str) -> bool:
         raise NotImplementedError
+
+    def move(self, source: str, destination: str) -> bool:
+        raise NotImplementedError
+
+    def list(self, path: str) -> list:
+        raise NotImplementedError

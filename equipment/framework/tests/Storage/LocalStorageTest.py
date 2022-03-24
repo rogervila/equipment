@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import unittest
 from uuid import uuid4
@@ -32,8 +33,29 @@ class LocalStorageTest(TestCase):
 
         self.assertTrue(self.app.storage().exists(file))
         self.assertEqual(self.app.storage().read(file), content)
-        self.assertTrue(self.app.storage().remove(file))
-        self.assertFalse(self.app.storage().exists(file))
+
+        new_file = os.path.splitext(file)[0] + \
+            datetime.now().strftime('.%Y-%m-%d_%H_%M_%S') + '.txt'
+
+        self.assertTrue(self.app.storage().move(file, new_file))
+        self.assertTrue(self.app.storage().remove(new_file))
+        self.assertFalse(self.app.storage().exists(new_file))
+
+        os.rmdir(self.app.storage().path(path))
+
+    def test_list_files_in_directory(self):
+        path = str(uuid4())
+        files = [path + os.path.sep + str(uuid4()) + '.txt' for _ in range(10)]
+        content = str(uuid4())
+
+        for file in files:
+            self.app.storage().write(file, content)
+
+        self.assertIsInstance(self.app.storage().list(path), list)
+        self.assertEqual(len(self.app.storage().list(path)), 10)
+
+        for file in files:
+            self.app.storage().remove(file)
 
         os.rmdir(self.app.storage().path(path))
 

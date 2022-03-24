@@ -10,11 +10,16 @@ class LocalStorage(AbstractStorage):
         self.config = config
         self.log = log
 
-    def path(self, file: str) -> str:
+    def base_path(self) -> str:
         return os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             '../../',
-            self.config.get('STORAGE_LOCAL', 'path'),
+            self.config.get('STORAGE_LOCAL', 'path')
+        )
+
+    def path(self, file: str) -> str:
+        return os.path.join(
+            self.base_path(),
             file
         )
 
@@ -54,3 +59,23 @@ class LocalStorage(AbstractStorage):
         except Exception as e:
             self.log.error(e, exc_info=True)
             return False
+
+    def move(self, source: str, destination: str) -> bool:
+        try:
+            os.rename(
+                self.path(source),
+                self.path(destination)
+            )
+            return True
+        except Exception as e:
+            self.log.error(e, exc_info=True)
+            return False
+
+    def list(self, path: str) -> list:
+        path = os.path.join(self.base_path(), path)
+
+        if not os.path.isdir(path):
+            raise NotADirectoryError(path + ' is not a directory')
+
+        return [file for file in os.listdir(
+            path) if os.path.isfile(os.path.join(path, file))]
