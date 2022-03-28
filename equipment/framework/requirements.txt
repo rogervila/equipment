@@ -1,6 +1,6 @@
 cachier==1.5.4
 coverage==6.3.2
-dependency-injector==4.38.0
+dependency-injector==4.39.0
 Faker==13.3.2
 html2text==2020.1.16
 icecream==2.1.2
