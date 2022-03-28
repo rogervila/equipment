@@ -1,7 +1,7 @@
 cachier==1.5.4
 coverage==6.3.2
 dependency-injector==4.38.0
-Faker==13.3.2
+Faker==13.3.4
 html2text==2020.1.16
 icecream==2.1.2
 jinja-markdown==1.210911
