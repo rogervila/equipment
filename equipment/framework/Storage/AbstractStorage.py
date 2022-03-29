@@ -2,6 +2,9 @@ import abc
 
 
 class AbstractStorage(abc.ABC):
+    def base_path(self) -> str:
+        raise NotImplementedError
+
     def path(self, file: str) -> str:
         raise NotImplementedError
 
@@ -15,4 +18,10 @@ class AbstractStorage(abc.ABC):
         raise NotImplementedError
 
     def remove(self, file: str) -> bool:
+        raise NotImplementedError
+
+    def move(self, source: str, destination: str) -> bool:
+        raise NotImplementedError
+
+    def list(self, path: str) -> list:
         raise NotImplementedError
