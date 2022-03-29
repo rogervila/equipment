@@ -2,6 +2,9 @@ import abc
 
 
 class AbstractStorage(abc.ABC):
+    def base_path(self) -> str:
+        raise NotImplementedError
+
     def path(self, file: str) -> str:
         raise NotImplementedError
 

@@ -75,7 +75,6 @@ class LocalStorage(AbstractStorage):
         path = os.path.join(self.base_path(), path)
 
         if not os.path.isdir(path):
-            raise NotADirectoryError(path + ' is not a directory')
+            raise NotADirectoryError(f'{path} is not a directory')
 
-        return [file for file in os.listdir(
-            path) if os.path.isfile(os.path.join(path, file))]
+        return [file for file in os.listdir(path) if os.path.isfile(os.path.join(path, file))]  # nopep8
