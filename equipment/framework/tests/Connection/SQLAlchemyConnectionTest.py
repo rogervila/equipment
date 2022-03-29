@@ -1,5 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
+
+from sqlalchemy.orm.session import Session
 from equipment.framework.Connection.SQLAlchemyConnection import SQLAlchemyConnection
 from equipment.framework.tests.TestCase import TestCase
 
@@ -24,6 +26,12 @@ class SQLAlchemyConnectionTest(TestCase):
             self.sql.url(),
             'foo'
         )
+
+    def test_session_method(self):
+        self.sql.engine = MagicMock()
+        self.sql.connection = 'foo'
+
+        self.assertIsInstance(self.sql.session(), Session)
 
 
 if __name__ == '__main__':
