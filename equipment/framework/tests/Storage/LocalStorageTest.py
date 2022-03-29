@@ -34,10 +34,10 @@ class LocalStorageTest(TestCase):
         self.assertTrue(self.app.storage().exists(file))
         self.assertEqual(self.app.storage().read(file), content)
 
-        new_file = os.path.splitext(file)[0] + \
-            datetime.now().strftime('.%Y-%m-%d_%H_%M_%S') + '.txt'
+        new_file = os.path.splitext(file)[0] + datetime.now().strftime('.%Y-%m-%d_%H_%M_%S') + '.txt'   # nopep8
 
         self.assertTrue(self.app.storage().move(file, new_file))
+        self.assertTrue(self.app.storage().exists(new_file))
         self.assertTrue(self.app.storage().remove(new_file))
         self.assertFalse(self.app.storage().exists(new_file))
 
@@ -48,11 +48,13 @@ class LocalStorageTest(TestCase):
         files = [path + os.path.sep + str(uuid4()) + '.txt' for _ in range(10)]
         content = str(uuid4())
 
+        number_of_files = 10
+
         for file in files:
             self.app.storage().write(file, content)
 
         self.assertIsInstance(self.app.storage().list(path), list)
-        self.assertEqual(len(self.app.storage().list(path)), 10)
+        self.assertEqual(len(self.app.storage().list(path)), number_of_files)
 
         for file in files:
             self.app.storage().remove(file)
