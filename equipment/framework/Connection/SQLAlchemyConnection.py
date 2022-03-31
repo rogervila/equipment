@@ -1,4 +1,6 @@
 from sqlalchemy import engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.session import Session
 from equipment.framework.Config.AbstractConfig import AbstractConfig
 from equipment.framework.Connection.AbstractConnection import AbstractConnection
 from equipment.framework.Log.AbstractLog import AbstractLog
@@ -29,3 +31,8 @@ class SQLAlchemyConnection(AbstractConnection):
     def factory(self) -> engine.base.Engine:
         self.load()
         return self.engine
+
+    def session(self) -> Session:
+        self.load()
+        _session = sessionmaker(bind=self.engine)
+        return _session()
