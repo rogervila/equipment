@@ -34,5 +34,5 @@ class SQLAlchemyConnection(AbstractConnection):
 
     def session(self) -> Session:
         self.load()
-        s = sessionmaker(bind=self.engine)
-        return s()
+        _session = sessionmaker(bind=self.engine)
+        return _session()
