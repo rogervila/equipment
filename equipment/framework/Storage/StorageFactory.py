@@ -32,3 +32,9 @@ class StorageFactory(AbstractStorage):
 
     def remove(self, file: str) -> bool:
         return self.driver.remove(file)
+
+    def move(self, source: str, destination: str) -> bool:
+        return self.driver.move(source, destination)
+
+    def list(self, path: str) -> bool:
+        return self.driver.list(path)
