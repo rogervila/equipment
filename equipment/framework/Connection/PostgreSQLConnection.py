@@ -11,7 +11,9 @@ class PostgreSQLConnection(SQLAlchemyConnection):
 
     def connect(self) -> bool:
         try:
-            self.connection = '''postgresql+psycopg2://{username}:{password}@{host}:{port}/{db}'''.format(
+            # pylint: disable=consider-using-f-string
+            self.connection = '''{schema}://{username}:{password}@{host}:{port}/{db}'''.format(
+                schema=self.config.get(self.name, 'schema'),
                 username=self.config.get(self.name, 'username'),
                 password=self.config.get(self.name, 'password'),
                 host=self.config.get(self.name, 'host'),
