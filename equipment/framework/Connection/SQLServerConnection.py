@@ -11,12 +11,15 @@ class SQLServerConnection(SQLAlchemyConnection):
 
     def connect(self) -> bool:
         try:
-            self.connection = '''mssql+pyodbc://{username}:{password}@{host}:{port}/{db}?driver=ODBC+Driver+17+for+SQL+Server'''.format(
+            # pylint: disable=consider-using-f-string
+            self.connection = '''{schema}://{username}:{password}@{host}:{port}/{db}?driver={driver}'''.format(
+                schema=self.config.get(self.name, 'schema'),
                 username=self.config.get(self.name, 'username'),
                 password=self.config.get(self.name, 'password'),
                 host=self.config.get(self.name, 'host'),
                 port=self.config.get(self.name, 'port'),
                 db=self.config.get(self.name, 'db'),
+                driver=self.config.get(self.name, 'driver'),
             )
 
             self.engine = create_engine(self.connection)

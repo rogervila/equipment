@@ -11,7 +11,9 @@ class MySQLConnection(SQLAlchemyConnection):
 
     def connect(self) -> bool:
         try:
-            self.connection = '''mysql+mysqldb://{username}:{password}@{host}:{port}/{db}?charset={charset}'''.format(
+            # pylint: disable=consider-using-f-string
+            self.connection = '''{schema}://{username}:{password}@{host}:{port}/{db}?charset={charset}'''.format(
+                schema=self.config.get(self.name, 'schema'),
                 username=self.config.get(self.name, 'username'),
                 password=self.config.get(self.name, 'password'),
                 host=self.config.get(self.name, 'host'),
