@@ -22,7 +22,8 @@ class Neo4JConnection(AbstractConnection):
         try:
             self.driver = GraphDatabase.driver(
                 # pylint: disable=consider-using-f-string
-                uri='''neo4j://{host}:{port}'''.format(
+                uri='''{schema}://{host}:{port}'''.format(
+                    schema=self.config.get(self.name, 'schema'),
                     host=self.config.get(self.name, 'host'),
                     port=self.config.get(self.name, 'port'),
                 ),

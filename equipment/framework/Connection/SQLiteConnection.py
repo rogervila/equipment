@@ -13,6 +13,7 @@ class SQLiteConnection(SQLAlchemyConnection):
 
     def connect(self) -> bool:
         try:
+            schema = self.config.get(self.name, 'schema')
             path = self.config.get(self.name, 'path')
             db = path if path == self.memory else os.path.join(
                 os.path.dirname(os.path.realpath(__file__)),
@@ -23,7 +24,7 @@ class SQLiteConnection(SQLAlchemyConnection):
             if db != self.memory and not os.path.isfile(db):
                 raise FileNotFoundError(db)
 
-            self.connection = 'sqlite:///' + db
+            self.connection = f'{schema}:///{db}'
             self.engine = create_engine(self.connection)
 
             self.log.debug(self.engine)
