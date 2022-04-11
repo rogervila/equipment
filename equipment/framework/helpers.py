@@ -10,7 +10,7 @@ from equipment.framework.Exceptions.ContainerModuleNotFound import ContainerModu
 
 def app(name: str = 'app.App.Container', autodiscover: bool = True) -> Container:
     resolved_module = module(name)
-    
+
     # Fallback framework module
     if autodiscover and resolved_module is None:
         resolved_module = module('equipment.framework.App.Container')
@@ -20,12 +20,16 @@ def app(name: str = 'app.App.Container', autodiscover: bool = True) -> Container
     return resolved_module.Container
 
 
-def base_path(join: Optional[str] = None, container: Optional[Container] = None) -> Path:
+def base_path(join: Optional[str] = None, container: Optional[Container] = None, rootfile: str = '.equipment') -> Path:
     if container is None:
         container = app()
 
-    # We assume containers always leave under ./app/App/Container
-    return Path(getfile(container)).parent.parent.parent.absolute().joinpath(
+    path = Path(getfile(container))
+
+    while not path.joinpath(rootfile).exists():
+        path = path.parent
+
+    return path.absolute().joinpath(
         join if join is not None else ''
     )
 
