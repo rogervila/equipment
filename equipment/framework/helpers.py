@@ -1,26 +1,29 @@
 from importlib import import_module
 from inspect import getfile
 from pathlib import Path
-from typing import Any, NoReturn, Optional
+from typing import TYPE_CHECKING, Any, NoReturn, Optional
 from sys import exit as _exit, modules as _modules
 from pprint import pformat
-from dependency_injector.containers import Container
 from equipment.framework.Exceptions.ContainerModuleNotFound import ContainerModuleNotFound
 
+if TYPE_CHECKING:
+    from equipment.framework.App.Container import Container
 
-def app(name: str = 'app.App.Container', autodiscover: bool = True) -> Container:
+
+def app(name: str = 'app.App.Container', autodiscover: bool = True) -> 'Container':
+    framework_container = module('equipment.framework.App.Container')
     resolved_module = module(name)
 
     # Fallback framework module
     if autodiscover and resolved_module is None:
-        resolved_module = module('equipment.framework.App.Container')
+        resolved_module = framework_container
 
-    raise_if(resolved_module is None, ContainerModuleNotFound(name))
+    raise_unless(isinstance(resolved_module, framework_container.__class__), ContainerModuleNotFound(name))  # nopep8
 
     return resolved_module.Container
 
 
-def base_path(join: Optional[str] = None, container: Optional[Container] = None, rootfile: str = '.equipment') -> Path:
+def base_path(join: Optional[str] = None, container: Optional['Container'] = None, rootfile: str = '.equipment') -> Path:
     if container is None:
         container = app()
 
