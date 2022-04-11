@@ -11,7 +11,7 @@ class LocalConfigTest(TestCase):
         super().setUp()
         self.app.config.override(LocalConfig(
             self.app.environment(),
-            f'framework{sep}tests{sep}_stubs{sep}config'
+            f'tests{sep}_stubs{sep}config'
         ))
 
     def test_extends_from_abstract_config(self):
@@ -40,6 +40,8 @@ class LocalConfigTest(TestCase):
     def test_it_reads_correct_types(self):
         section = str(uuid4())
         self.app.config().load()
+
+        # pylint: disable=consider-using-f-string
         self.app.config().config.read_string('''
         [{section}]
         should_be_none = None
