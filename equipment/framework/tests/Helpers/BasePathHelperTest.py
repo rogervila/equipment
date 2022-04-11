@@ -1,5 +1,4 @@
 import unittest
-import os
 from pathlib import Path
 from equipment.framework.tests.TestCase import TestCase
 from equipment.framework.helpers import base_path
@@ -16,11 +15,7 @@ class BasePathHelperTest(TestCase):
         result = base_path('', self.app)
 
         self.assertIsInstance(result, Path)
-        self.assertTrue(str(result).endswith('equipment'))
-
-        self.assertTrue(os.path.isdir(str(result.joinpath('console'))))
-        self.assertTrue(os.path.isdir(str(result.joinpath('project'))))
-        self.assertTrue(os.path.isdir(str(result.joinpath('framework'))))
+        self.assertTrue(result.joinpath('.equipment').is_file())
 
 
 if __name__ == '__main__':
