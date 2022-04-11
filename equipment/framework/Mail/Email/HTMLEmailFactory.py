@@ -1,11 +1,12 @@
 from os import sep
-from equipment.framework.Mail.Email.Email import Email
-from equipment.framework.Mail.Email.EmailFactory import EmailFactory
+from typing import Optional
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from jinja_markdown import MarkdownExtension
 from premailer import transform
 from html2text import html2text
 from equipment.framework.helpers import base_path
+from equipment.framework.Mail.Email.Email import Email
+from equipment.framework.Mail.Email.EmailFactory import EmailFactory
 
 
 class HTMLEmailFactory(EmailFactory):
@@ -27,12 +28,13 @@ class HTMLEmailFactory(EmailFactory):
 
         self.jinja.add_extension(MarkdownExtension)
 
-    # pylint: disable=dangerous-default-value
-    def render(self, template: str, parameters: dict = {}) -> None:
+    def render(self, template: str, parameters: Optional[dict] = None) -> None:
         self.load()
 
         self.html = transform(
-            (self.jinja.get_template(template)).render(parameters)
+            (self.jinja.get_template(template)).render(
+                parameters if parameters is not None else {}
+            )
         )
 
         self.text = html2text(self.html)
