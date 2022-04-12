@@ -14,8 +14,7 @@ class EmailFactory(abc.ABC):
     attachments = None  # type: dict
     encoding = None  # type: str
 
-    # pylint: disable=dangerous-default-value
-    def render(self, template: str, parameters: dict = {}) -> None:
+    def render(self, template: str, parameters: Optional[dict] = None) -> None:
         raise NotImplementedError
 
     def make(self) -> Email:

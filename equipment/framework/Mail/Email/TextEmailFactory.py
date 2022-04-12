@@ -1,18 +1,20 @@
+from typing import Optional
+from html2text import html2text
 from equipment.framework.Mail.Email.Email import Email
 from equipment.framework.Mail.Email.HTMLEmailFactory import HTMLEmailFactory
-from html2text import html2text
 
 
 class TextEmailFactory(HTMLEmailFactory):
     text = None  # type: str
     html = None  # type: None
 
-    # pylint: disable=dangerous-default-value
-    def render(self, template: str, parameters: dict = {}) -> None:
+    def render(self, template: str, parameters: Optional[dict] = None) -> None:
         self.load()
 
         self.text = html2text(
-            self.jinja.get_template(template).render(parameters)
+            self.jinja.get_template(template).render(
+                parameters if parameters is not None else {}
+            )
         )
 
     def make(self) -> Email:

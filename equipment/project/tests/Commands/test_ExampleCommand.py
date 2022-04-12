@@ -1,6 +1,6 @@
 import unittest
 from click.testing import CliRunner
-from equipment.project.app.Commands.commands import example
+from app.Commands.commands import example
 from app.Commands.ExampleCommand import ExampleCommand
 from tests.TestCase import TestCase
 
