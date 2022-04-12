@@ -1,5 +1,4 @@
 -e ../../
-alembic==1.7.7 # Remove if SQLAlchemy is not used
 boto3==1.21.29 # Remove if AWS is not used (affects "ses" email and "s3" storage drivers)
 flask==2.1.0 # Remove if web server is not used
 Flask-WTF==1.0.0 # Remove if web server is not used

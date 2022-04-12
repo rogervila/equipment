@@ -18,12 +18,13 @@ depends_on = None
 
 def upgrade():
     op.create_table(
-        'example',
+        'products',
         sa.Column('id', sa.Integer, primary_key=True),
         sa.Column('name', sa.String(50), nullable=False),
         sa.Column('description', sa.Unicode(200)),
+        sa.Column('price', sa.Integer, default=0, nullable=False),
     )
 
 
 def downgrade():
-    op.drop_table('example')
+    op.drop_table('products')

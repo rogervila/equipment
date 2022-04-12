@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 
+# pylint: disable=redefined-outer-name
+
 import sys
 from inspect import getmembers
 from os import getcwd
 import click
+from equipment.console.Commands.DatabaseMigrateCommand import DatabaseMigrateCommand
 from equipment.console.Commands.MakeJobCommand import MakeJobCommand
 from equipment.console.Commands.NewCommand import NewCommand
 from equipment.framework.helpers import module
@@ -17,7 +20,7 @@ def main() -> None:
 
 @main.command()
 @click.argument('name')
-def new(name):
+def new(name: str) -> None:
     NewCommand(name).run()
 
 
@@ -28,7 +31,7 @@ def make() -> None:
 
 @make.command()
 @click.argument('name')
-def job(name):
+def job(name: str) -> None:
     MakeJobCommand(name).run()
 
 
@@ -38,16 +41,15 @@ def database() -> None:
 
 
 @database.command()
-@click.option('--seed', flag_value='seed')
-def migrate(seed):
-    print('migrate wip')
-
-    if not seed is None:
-        print('seed wip')
+@click.option('--seed', flag_value=True, default=False)
+@click.option('--no-interaction', flag_value=True, default=False)
+def migrate(seed: bool, no_interaction: bool) -> None:
+    DatabaseMigrateCommand(seed, no_interaction).run()
 
 
 @database.command()
-def seed():
+@click.option('--no-interaction', flag_value=True, default=False)
+def seed(no_interaction: bool) -> None:
     print('seed wip')
 
 
