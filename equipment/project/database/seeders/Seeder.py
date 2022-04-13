@@ -3,7 +3,6 @@ from .ProductSeeder import ProductSeeder
 
 
 class Seeder(AbstractSeeder):
-    @staticmethod
-    def seed() -> None:
-        ProductSeeder.seed()
+    def seed(self) -> None:
+        ProductSeeder().seed()
         # Add more seeders here

@@ -11,7 +11,7 @@ class DatabaseSeedCommand(AbstractCommand):
         self.no_interaction = no_interaction
 
     def run(self, *args, **kwargs) -> None:
-        echo(style('Seeding...', fg='green'))
+        echo(style('Running seeders...', fg='green'))
         self.confirmation = True if self.no_interaction else confirm('Do you want to run seeders?')  # nopep8
 
         if not self.confirmation:
@@ -24,4 +24,6 @@ class DatabaseSeedCommand(AbstractCommand):
             echo(style('<database.seeders.Seeder> not found. Skip', fg='yellow'))
             return None
 
-        seeder.Seeder.seed()
+        seeder.Seeder().seed()
+
+        echo(style('Running seeders done!', fg='green'))

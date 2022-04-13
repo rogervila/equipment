@@ -4,7 +4,11 @@ from app.Models.Product import Product
 
 
 class ProductSeeder(AbstractSeeder):
-    @staticmethod
-    def seed() -> None:
+    def seed(self) -> None:
         product = factory(Product).make()
-        print(product)
+
+        with self.app.sql().session() as session:
+            session.add(product)
+            session.commit()
+
+            # print(session.query(Product).count())

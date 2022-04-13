@@ -1,4 +1,5 @@
 from click import confirm, echo, style
+from click.core import Context
 from alembic import command
 from alembic.config import Config
 from equipment.console.Commands.AbstractCommand import AbstractCommand
@@ -6,12 +7,14 @@ from equipment.framework.helpers import base_path
 
 
 class DatabaseMigrateCommand(AbstractCommand):
+    ctx: Context
     seed: bool
     no_interaction: bool
     fresh: bool
     confirmation: bool
 
-    def __init__(self, seed: bool = False, fresh: bool = False, no_interaction: bool = False) -> None:
+    def __init__(self, ctx: Context, seed: bool = False, fresh: bool = False, no_interaction: bool = False) -> None:
+        self.ctx = ctx
         self.seed = seed
         self.fresh = fresh
         self.no_interaction = no_interaction
@@ -32,3 +35,8 @@ class DatabaseMigrateCommand(AbstractCommand):
             command.downgrade(config, 'base')
 
         command.upgrade(config, 'head')
+
+        echo(style('Running migrations done!', fg='green'))
+
+        if self.seed:
+            self.ctx.invoke(self.console('seed'), no_interaction=self.no_interaction)  # nopep8

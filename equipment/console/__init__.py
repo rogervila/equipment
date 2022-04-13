@@ -6,6 +6,7 @@ import sys
 from inspect import getmembers
 from os import getcwd
 import click
+from click.core import Context
 from equipment.console.Commands.DatabaseMigrateCommand import DatabaseMigrateCommand
 from equipment.console.Commands.DatabaseSeedCommand import DatabaseSeedCommand
 from equipment.console.Commands.MakeJobCommand import MakeJobCommand
@@ -42,11 +43,12 @@ def database() -> None:
 
 
 @database.command()
+@click.pass_context
 @click.option('--seed', flag_value=True, default=False)
 @click.option('--fresh', flag_value=True, default=False)
 @click.option('--no-interaction', flag_value=True, default=False)
-def migrate(seed: bool, fresh: bool, no_interaction: bool) -> None:
-    DatabaseMigrateCommand(seed, fresh, no_interaction).run()
+def migrate(ctx: Context, seed: bool, fresh: bool, no_interaction: bool) -> None:
+    DatabaseMigrateCommand(ctx, seed, fresh, no_interaction).run()
 
 
 @database.command()
