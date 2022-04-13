@@ -7,6 +7,7 @@ from inspect import getmembers
 from os import getcwd
 import click
 from equipment.console.Commands.DatabaseMigrateCommand import DatabaseMigrateCommand
+from equipment.console.Commands.DatabaseSeedCommand import DatabaseSeedCommand
 from equipment.console.Commands.MakeJobCommand import MakeJobCommand
 from equipment.console.Commands.NewCommand import NewCommand
 from equipment.framework.helpers import module
@@ -42,15 +43,16 @@ def database() -> None:
 
 @database.command()
 @click.option('--seed', flag_value=True, default=False)
+@click.option('--fresh', flag_value=True, default=False)
 @click.option('--no-interaction', flag_value=True, default=False)
-def migrate(seed: bool, no_interaction: bool) -> None:
-    DatabaseMigrateCommand(seed, no_interaction).run()
+def migrate(seed: bool, fresh: bool, no_interaction: bool) -> None:
+    DatabaseMigrateCommand(seed, fresh, no_interaction).run()
 
 
 @database.command()
 @click.option('--no-interaction', flag_value=True, default=False)
 def seed(no_interaction: bool) -> None:
-    print('seed wip')
+    DatabaseSeedCommand(no_interaction).run()
 
 
 def _load_additional_commands() -> None:

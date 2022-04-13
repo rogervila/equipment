@@ -8,10 +8,12 @@ from equipment.framework.helpers import base_path
 class DatabaseMigrateCommand(AbstractCommand):
     seed: bool
     no_interaction: bool
+    fresh: bool
     confirmation: bool
 
-    def __init__(self, seed: bool = False, no_interaction: bool = False) -> None:
+    def __init__(self, seed: bool = False, fresh: bool = False, no_interaction: bool = False) -> None:
         self.seed = seed
+        self.fresh = fresh
         self.no_interaction = no_interaction
 
     def run(self, *args, **kwargs) -> None:
@@ -24,5 +26,9 @@ class DatabaseMigrateCommand(AbstractCommand):
 
         config = Config(str(base_path('database/migrations/alembic.ini')))
         config.set_main_option('script_location', str(base_path('database/migrations')))  # nopep8
+
+        if self.fresh:
+            # TODO: delete all tables instead of downgrade
+            command.downgrade(config, 'base')
 
         command.upgrade(config, 'head')
