@@ -1,11 +1,19 @@
+#!/usr/bin/env python
+
+# pylint: disable=no-member
+
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
 from parent_import import parentdir
+from equipment.framework.Exceptions.ContainerModuleNotFound import ContainerModuleNotFound
 
-Container = parentdir.app.App.Container.Container
-app = Container()
+try:
+    Container = parentdir.parentdir.app.App.Container.Container
+    app = Container()
+except Exception as e:
+    raise ContainerModuleNotFound from e
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

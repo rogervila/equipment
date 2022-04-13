@@ -1,5 +1,4 @@
 -e ../../
-alembic==1.7.7 # Remove if SQLAlchemy is not used
 boto3==1.21.29 # Remove if AWS is not used (affects "ses" email and "s3" storage drivers)
 flask==2.1.0 # Remove if web server is not used
 Flask-WTF==1.0.0 # Remove if web server is not used
@@ -13,4 +12,6 @@ pyodbc==4.0.32 # Remove if SQLServer is not used
 redis==4.2.0 # Remove if Redis is not used (affects "redis" queue driver and RedisConnection)
 rq==1.10.1 # Remove if "Redis" queue driver is not used
 sqlalchemy==1.4.32 # Remove if SQL connections are not used
+sqlalchemy2-stubs==0.0.2a21 # Remove if SQL connections are not used
+sqlalchemy_model_faker==0.0.4 # Remove if SQL connections are not used
 waitress==2.1.1 # Remove if web server is not used

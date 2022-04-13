@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 from equipment.framework.Connection.SQLAlchemyConnection import SQLAlchemyConnection
 from equipment.framework.Config.AbstractConfig import AbstractConfig
 from equipment.framework.Log.AbstractLog import AbstractLog
+from equipment.framework.helpers import base_path
 
 
 class SQLiteConnection(SQLAlchemyConnection):
@@ -15,11 +16,7 @@ class SQLiteConnection(SQLAlchemyConnection):
         try:
             schema = self.config.get(self.name, 'schema')
             path = self.config.get(self.name, 'path')
-            db = path if path == self.memory else os.path.join(
-                os.path.dirname(os.path.realpath(__file__)),
-                '../../',
-                path
-            )
+            db = path if path == self.memory else str(base_path(path))
 
             if db != self.memory and not os.path.isfile(db):
                 raise FileNotFoundError(db)

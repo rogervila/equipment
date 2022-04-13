@@ -1,10 +1,10 @@
 from app.Jobs.ExampleJob import ExampleJob
-from equipment.framework.Scheduler.Scheduler import Scheduler as BScheduler
+from equipment.framework.Scheduler.Scheduler import Scheduler as E
 
 # Schedule setup (https://schedule.readthedocs.io/en/stable/)
 
 
-class Scheduler(BScheduler):
+class Scheduler(E):
     def run(self) -> None:
         self.schedule.every(1).seconds.do(
             self.log.info, 'Logging from scheduler'
