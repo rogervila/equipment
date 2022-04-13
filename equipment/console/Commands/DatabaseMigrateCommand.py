@@ -1,7 +1,8 @@
 from click import confirm, echo, style
+from alembic import command
 from alembic.config import Config
-from alembic.script import ScriptDirectory
 from equipment.console.Commands.AbstractCommand import AbstractCommand
+from equipment.framework.helpers import base_path
 
 
 class DatabaseMigrateCommand(AbstractCommand):
@@ -20,3 +21,8 @@ class DatabaseMigrateCommand(AbstractCommand):
         if not self.confirmation:
             echo(style('Skip', fg='yellow'))
             return None
+
+        config = Config(str(base_path('database/migrations/alembic.ini')))
+        config.set_main_option('script_location', str(base_path('database/migrations')))  # nopep8
+
+        command.upgrade(config, 'head')
