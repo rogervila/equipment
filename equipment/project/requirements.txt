@@ -10,7 +10,7 @@ psycopg2-binary==2.9.3 # Remove psycopg2-binary if PostgreSQL is not used
 pygelf==0.4.2 # Remove if "gelf" log driver is not used
 pymongo==4.0.2 # Remove if MongoDB is not used
 pyodbc==4.0.32 # Remove if SQLServer is not used
-redis==4.5.3 # Remove if Redis is not used (affects "redis" queue driver and RedisConnection)
+redis==4.5.4 # Remove if Redis is not used (affects "redis" queue driver and RedisConnection)
 rq==1.10.1 # Remove if "Redis" queue driver is not used
 sqlalchemy==1.4.32 # Remove if SQL connections are not used
 waitress==2.1.2 # Remove if web server is not used
