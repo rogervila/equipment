@@ -15,9 +15,10 @@ class SQLiteConnection(SQLAlchemyConnection):
         try:
             schema = self.config.get(self.name, 'schema')
             path = self.config.get(self.name, 'path')
+            base_path = os.path.join(os.getcwd(), '../') if os.path.isfile(os.path.join(os.getcwd(), 'alembic.ini')) else os.getcwd()
+
             db = path if path == self.memory else os.path.join(
-                os.path.dirname(os.path.realpath(__file__)),
-                '../../',
+                base_path,
                 path
             )
 
