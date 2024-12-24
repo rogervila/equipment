@@ -90,7 +90,7 @@ py web.py
 
 Equipment uses popular libraries and frameworks to avoid reinventing the wheel and provide a solid foundation for building robust and maintainable applications:
 
-- [Dependency Injector](https://dependency-injector.readthedocs.io/en/latest/) as container service
+- [Dependency Injector](https://python-dependency-injector.ets-labs.org/) as container service
 - [SQLAlchemy](https://www.sqlalchemy.org/) as ORM
 - [Alembic](https://alembic.sqlalchemy.org/en/latest/) for database migrations
 - [Redis](https://redis.io/) as queue driver
