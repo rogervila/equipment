@@ -44,5 +44,5 @@ jobs:
           cat project/Pipfile
           make build
           ls -lahrt dist
-          # twine check dist/*
-          # twine upload dist/*
+          twine check dist/*
+          twine upload dist/*
