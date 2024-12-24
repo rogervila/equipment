@@ -1,0 +1,7 @@
+storage:
+  disk: ${FILESYSTEM_DISK:local}
+
+  disks:
+
+    local:
+      path: storage/app

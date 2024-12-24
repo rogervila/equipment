@@ -1,0 +1,29 @@
+database:
+
+  connection: ${DB_CONNECTION:sqlite}
+
+  connections:
+
+    sqlite:
+      schema: sqlite
+      database: "${DB_DATABASE:database/database.sqlite}"
+
+    # requires mysqlclient to be installed. Check the Pipfile requirements
+    mysql:
+      schema: "mysql+mysqlconnector"
+      host: ${DB_HOST:127.0.0.1}
+      port: ${DB_PORT:3306}
+      database: ${DB_DATABASE:database}
+      username: ${DB_USERNAME:root}
+      password: ${DB_PASSWORD:password}
+      charset: ${DB_CHARSET:utf8mb4}
+
+
+    # requires psycopg2-binary to be installed. Check the Pipfile requirements
+    postgresql:
+      schema: "postgresql+psycopg2"
+      host: ${DB_HOST:127.0.0.1}
+      port: ${DB_PORT:5432}
+      database: ${DB_DATABASE:database}
+      username: ${DB_USERNAME:root}
+      password: ${DB_PASSWORD:password}

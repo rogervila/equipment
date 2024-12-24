@@ -1,7 +1,0 @@
-*__pycache__*
-*.pyc
-*.env
-*.coverage
-*.cache
-*.log
-coverage.xml

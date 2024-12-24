@@ -1,0 +1,13 @@
+queue:
+  connection: ${QUEUE_CONNECTION:sync} # "sync" or "redis"
+
+  connections:
+
+    sync:
+
+    redis:
+        host: ${REDIS_HOST:127.0.0.1}
+        port: ${REDIS_PORT:6379}
+        db: ${REDIS_DB:0}
+        username: ${REDIS_USERNAME:null}
+        password: ${REDIS_PASSWORD:null}

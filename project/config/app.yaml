@@ -1,0 +1,3 @@
+app:
+  name: ${APP_NAME:Equipment}
+  env: ${APP_ENV:local}

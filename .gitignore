@@ -1,14 +1,28 @@
+OLD_EQUIPMENT
+
 *__pycache__*
 *.pyc
 *.env
 *.coverage
 *.cache
 *.log
+.DS_Store
 
 .tox/
 *.egg-info
 build/
 dist/
+venv/
+htmlcov/
+.idea/
+.vscode/
+*.bat
+*.zip
+*.ps1
 
 coverage.xml
-.idea/
+Pipfile.lock
+todo.txt
+equipment-*
+project/equipment
+equipment/Command/_project

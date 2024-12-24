@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=75.0", "wheel", "twine"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "equipment"
+# Version is dinamically handled by .github/workflows/publish.yml
+version = "CURRENT_VERSION"
+description = "The root of your next python project"
+readme = "README.md"
+license = {file = "LICENSE.txt"}
+authors = [{ name = "Roger Vilà", email = "rogervila@me.com" }]
+keywords = ["equipment", "application scaffolding", "framework"]
+dynamic = ["dependencies"]
+
+requires-python = ">=3.13"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/rogervila/equipment"
+Issues = "https://github.com/rogervila/equipment/issues"
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.setuptools]
+py-modules = ['equipment']
