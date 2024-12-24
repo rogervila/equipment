@@ -23,11 +23,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tests
-        run: |
-          apt-get install make -y
-          make test
-
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
@@ -37,7 +32,6 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
-          apt-get install make -y
           echo 'Current version:'
           echo ${{ steps.get_version.outputs.VERSION }}
           sed -ri -e 's!CURRENT_VERSION!${{ steps.get_version.outputs.VERSION }}!g' pyproject.toml
