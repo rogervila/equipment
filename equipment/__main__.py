@@ -1,6 +1,6 @@
 import os
 import click
-from equipment.Command.NewProjectCommand import NewProjectCommand
+from .Command.NewProjectCommand import NewProjectCommand
 
 
 @click.group()
@@ -11,12 +11,11 @@ def main() -> None:
 
 @main.command()
 @click.argument('name')
-def new(name):
+def new(name: str) -> None:
     NewProjectCommand().run(
         name=name,
         path=os.getcwd(),
     )
 
 
-if __name__ == '__main__':
-    main()
+main()
