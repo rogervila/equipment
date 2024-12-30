@@ -10,7 +10,7 @@ description = "The root of your next python project"
 readme = "README.md"
 license = {file = "LICENSE.txt"}
 authors = [{ name = "Roger Vilà", email = "rogervila@me.com" }]
-keywords = ["equipment", "application scaffolding", "framework"]
+keywords = ["equipment", "application scaffolding", "scheduler", "dependency injection", "web"]
 dynamic = ["dependencies"]
 
 requires-python = ">=3.13"
@@ -21,6 +21,9 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+
+[project.scripts]
+equipment = "equipment.__main__:main"
 
 [project.urls]
 Homepage = "https://github.com/rogervila/equipment"
