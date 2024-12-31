@@ -4,7 +4,7 @@ prepare:
 	rm -rf ./project/equipment
 	cp -r ./equipment ./project/equipment
 	rm -rf ./equipment/Command/_project
-	cp -r ./project ./equipment/Command/_project
+	cp -r ./project/* ./equipment/Command/_project
 	cp README.md ./equipment/Command/_project/README.md
 
 build:
