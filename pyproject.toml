@@ -40,4 +40,5 @@ dependencies = { file = ["requirements.txt"] }
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["equipment"]
+include = ["equipment*"]
+namespaces = true
