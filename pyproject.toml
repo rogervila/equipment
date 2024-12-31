@@ -23,7 +23,7 @@ classifiers = [
 ]
 
 [project.scripts]
-equipment = "equipment:main"
+equipment = "equipment:cli"
 
 [project.urls]
 Homepage = "https://github.com/rogervila/equipment"

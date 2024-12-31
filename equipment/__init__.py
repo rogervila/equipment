@@ -77,3 +77,8 @@ class Equipment(DeclarativeContainer):
 
 def equipment(base_path: tuple[str, None] = None) -> Equipment:
     return Equipment.make(base_path)
+
+
+def cli() -> None:
+    from equipment.Command import main as _cli
+    _cli()
