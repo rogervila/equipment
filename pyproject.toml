@@ -39,6 +39,7 @@ Issues = "https://github.com/rogervila/equipment/issues"
 dependencies = { file = ["requirements.txt"] }
 
 [tool.setuptools.package-data]
+exclude = ["__pycache__"]
 "*" = [
     "*.py",
     "*.ini",
