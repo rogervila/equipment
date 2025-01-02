@@ -7,6 +7,8 @@ prepare:
 	rm -rf ./equipment/Command/_project
 	mkdir -p ./equipment/Command/_project
 	cp -r ./project/* ./equipment/Command/_project/
+	rm -rf ./equipment/Command/_project/equipment
+	rm -rf ./equipment/Command/_project/htmlcov
 	cp project/.gitignore ./equipment/Command/_project/.gitignore
 	cp project/.env.example ./equipment/Command/_project/.env.example
 	cp project/.editorconfig ./equipment/Command/_project/.editorconfig
