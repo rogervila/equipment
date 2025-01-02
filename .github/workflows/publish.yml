@@ -24,6 +24,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          echo 'build' >> requirements.txt
+          echo 'setuptools' >> requirements.txt
+          echo 'wheel' >> requirements.txt
+          echo 'twine' >> requirements.txt
           pip install -r requirements.txt
 
       - name: Get the version

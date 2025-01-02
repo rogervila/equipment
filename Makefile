@@ -19,7 +19,7 @@ prepare:
 build:
 	make prepare
 	python -m pip install -r requirements.txt
-	python -m pip install setuptools wheel twine
+	python -m pip install build setuptools wheel twine
 	python -m build
 
 test:
