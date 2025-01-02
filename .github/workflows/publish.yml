@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        run: |
-          shopt -s dotglob
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -36,6 +34,7 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
+          shopt -s dotglob
           echo 'Current version:'
           echo ${{ steps.get_version.outputs.VERSION }}
           sed -ri -e 's!CURRENT_VERSION!${{ steps.get_version.outputs.VERSION }}!g' pyproject.toml
