@@ -3,11 +3,10 @@ prepare:
 	rm -rf ./equipment.egg-info
 	rm -rf ./project/equipment
 	mkdir -p ./project/equipment
-	cp -r ./equipment/* ./project/equipment/
+	rsync -av --exclude '__pycache__' ./equipment/ ./project/equipment/
 	rm -rf ./equipment/Command/_project
 	mkdir -p ./equipment/Command/_project
-	cp -r ./project/* ./equipment/Command/_project/
-	cp -r ./project/.* ./equipment/Command/_project/
+	rsync -av --exclude '__pycache__' ./project/* ./equipment/Command/_project/
 	cp README.md ./equipment/Command/_project/README.md
 
 build:
