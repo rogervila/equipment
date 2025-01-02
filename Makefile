@@ -11,6 +11,9 @@ prepare:
 	cp project/.env.example ./equipment/Command/_project/.env.example
 	cp project/.editorconfig ./equipment/Command/_project/.editorconfig
 	cp project/.coveragerc ./equipment/Command/_project/.coveragerc
+	cp project/database/.gitignore ./equipment/Command/_project/database/.gitignore
+	cp project/storage/app/.gitignore ./equipment/Command/_project/storage/app/.gitignore
+	cp project/storage/logs/.gitignore ./equipment/Command/_project/storage/logs/.gitignore
 	cp README.md ./equipment/Command/_project/README.md
 
 build:

@@ -25,11 +25,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install build setuptools wheel twine
 
       - name: Get the version
         id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        # run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        run: echo '1.0.0'
 
       - name: Publish release
         env:
@@ -46,10 +46,9 @@ jobs:
           cat pyproject.toml
           echo 'Pipfile:'
           cat project/Pipfile
-          echo 'project:'
-          ls -lahrt project
           make prepare
           echo '_project:'
           ls -lahrt equipment/Command/_project
+          python -m build
           # twine check dist/*
           # twine upload dist/*
