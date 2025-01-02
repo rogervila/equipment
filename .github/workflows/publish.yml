@@ -15,8 +15,8 @@ jobs:
 
       - name: Set up Python
         uses: actions/setup-python@v5
-        cache: pip
         with:
+          cache: pip
           python-version: 3.13
 
       - name: Install dependencies
