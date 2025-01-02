@@ -2,14 +2,13 @@ prepare:
 	rm -rf ./dist
 	rm -rf ./equipment.egg-info
 	rm -rf ./project/equipment
-	cp -r ./equipment ./project/equipment
-	rm -rf ./equipment/Command/_project
-	cp -r ./project/* ./equipment/Command/_project
-	cp README.md ./equipment/Command/_project/README.md
+	mkdir -p ./project/equipment
+	cp -r ./equipment/* ./project/equipment/
 
 build:
 	make prepare
 	python -m pip install -r requirements.txt
+	python -m pip install build setuptools wheel twine
 	python -m build
 
 test:

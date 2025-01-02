@@ -38,6 +38,23 @@ Issues = "https://github.com/rogervila/equipment/issues"
 [tool.setuptools.dynamic]
 dependencies = { file = ["requirements.txt"] }
 
+[tool.setuptools.package-data]
+exclude = ["__pycache__"]
+"*" = [
+    "*.py",
+    "*.ini",
+    "*.yaml",
+    "*.yml",
+    "*.json",
+    "*.md",
+    "*.gitignore",
+    "*.gitattributes",
+    "*.coveragerc",
+    "*.editorconfig",
+    "*.example",
+    "*.toml",
+]
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["equipment*"]
