@@ -1,5 +1,4 @@
 prepare:
-	shopt -s dotglob
 	rm -rf ./dist
 	rm -rf ./equipment.egg-info
 	rm -rf ./project/equipment
