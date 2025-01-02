@@ -28,12 +28,14 @@ jobs:
           echo 'setuptools' >> requirements.txt
           echo 'wheel' >> requirements.txt
           echo 'twine' >> requirements.txt
+          echo 'requirements.txt:'
+          cat requirements.txt
           pip install -r requirements.txt
 
       - name: Get the version
         id: get_version
         # run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-        run: echo '1.0.0'
+        run: echo ::set-output name=VERSION::1.0.0
 
       - name: Publish release
         env:
@@ -50,6 +52,7 @@ jobs:
           cat pyproject.toml
           echo 'Pipfile:'
           cat project/Pipfile
-          make build
+          make prepare
+          python -m build
           # twine check dist/*
           # twine upload dist/*
