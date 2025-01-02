@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -44,6 +46,8 @@ jobs:
           cat pyproject.toml
           echo 'Pipfile:'
           cat project/Pipfile
+          echo 'project:'
+          ls -lahrt project
           make prepare
           echo '_project:'
           ls -lahrt equipment/Command/_project

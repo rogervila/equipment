@@ -7,6 +7,7 @@ prepare:
 	rm -rf ./equipment/Command/_project
 	mkdir -p ./equipment/Command/_project
 	cp -r ./project/* ./equipment/Command/_project/
+	cp -r ./project/.* ./equipment/Command/_project/
 	cp README.md ./equipment/Command/_project/README.md
 
 build:
