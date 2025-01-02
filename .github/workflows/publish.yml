@@ -46,9 +46,6 @@ jobs:
           cat pyproject.toml
           echo 'Pipfile:'
           cat project/Pipfile
-          make prepare
-          echo '_project:'
-          ls -lahrt equipment/Command/_project
-          python -m build
+          make build
           # twine check dist/*
           # twine upload dist/*
