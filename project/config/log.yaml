@@ -1,7 +1,6 @@
 log:
   level: ${LOG_LEVEL:debug}
   channel: ${LOG_CHANNEL:stack}
-  formatter: json # "null" or "json"
 
   channels:
 
@@ -11,18 +10,22 @@ log:
         - console
 
     single:
+      formatter: json # "null" or "json"
       filename: 'storage/logs/app.log'
 
     daily:
+      formatter: json # "null" or "json"
       filename: 'storage/logs/app.log'
       when: 'midnight'
       interval: 1
       backupCount: 7
 
     console:
+      formatter: null # "null" or "json"
       stream: null
 
   formatters:
     json:
       # @see https://docs.python.org/3/library/logging.html#logrecord-attributes
       format: '%(message)s %(asctime)s %(levelname)s %(levelno)d %(pathname)s %(lineno)d'
+      indent: null
