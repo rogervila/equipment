@@ -40,6 +40,7 @@ const config = {
   ],
 
   // Waiting for this fix: https://github.com/cmfcmf/docusaurus-search-local/issues/234
+  // "@cmfcmf/docusaurus-search-local": "^1.2.0",
   // plugins: [require.resolve("@cmfcmf/docusaurus-search-local")],
 
   themeConfig:
