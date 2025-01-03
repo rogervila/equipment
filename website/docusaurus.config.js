@@ -39,14 +39,8 @@ const config = {
     ],
   ],
 
-  plugins: [
-    [
-      require.resolve("@cmfcmf/docusaurus-search-local"),
-      {
-        // Options here
-      },
-    ],
-  ],
+  // Waiting for this fix: https://github.com/cmfcmf/docusaurus-search-local/issues/234
+  // plugins: [require.resolve("@cmfcmf/docusaurus-search-local")],
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
