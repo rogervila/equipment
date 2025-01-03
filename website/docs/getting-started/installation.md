@@ -4,20 +4,13 @@ sidebar_position: 1
 
 # Installation
 
-```sh
-# Install equipment globally
-pip install equipment
+```bash
+# Install Equipment
+pip install equipment pipenv
 
-# Create a new project
-
+# Generate a new project
 equipment new my-app
 
-# Install your project dependencies
-cd my app
-pip install -r requirements.txt
-
-# Run you application
-py main.py
+# Install dependencies
+cd my-app && pipenv install
 ```
-
-> WIP

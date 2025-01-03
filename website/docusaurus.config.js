@@ -65,12 +65,8 @@ const config = {
             label: 'Tutorial',
           },
           { to: '/blog', label: 'Blog', position: 'left' },
-          { to: 'https://equipment-python.vercel.app/api/index.html', label: 'API', position: 'right' },
-          {
-            href: 'https://github.com/rogervila/equipment',
-            label: 'GitHub',
-            position: 'right',
-          },
+          { href: 'https://pypi.org/project/equipment', label: 'PyPI', position: 'right' },
+          { href: 'https://github.com/rogervila/equipment', label: 'GitHub', position: 'right' },
         ],
       },
       footer: {
@@ -97,8 +93,8 @@ const config = {
               //   href: 'https://discordapp.com/invite/docusaurus',
               // },
               {
-                label: 'Twitter',
-                href: 'https://twitter.com/_rogervila',
+                label: 'X',
+                href: 'https://x.com/_rogervila',
               },
             ],
           },

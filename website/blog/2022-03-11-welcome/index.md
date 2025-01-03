@@ -5,7 +5,7 @@ authors: [rogervila]
 tags: []
 ---
 
-Equipment is a Python framework focused on the developer experience. Its goal is to avoid repeating basic application setups like handling configuration files or configuring database connections.
+Equipment is a ~~Python framework~~ scaffold project focused on the developer experience. Its goal is to avoid repeating basic application setups like handling configuration files or configuring database connections.
 
 Equipment scales with your project. It does not force you to follow any specific development strategy, so it can be used with simple scripts and big applications.
 

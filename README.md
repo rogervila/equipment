@@ -1,4 +1,4 @@
-<p align="center"><img src="https://rogervila.es/static/img/equipment-logo.png" alt="Equipment python framework" height="200" /></p>
+<p align="center"><img src="https://rogervila.es/static/img/equipment-logo.png" alt="Equipment python scaffold project" height="200" /></p>
 
 [![PyPI version](https://badge.fury.io/py/equipment.svg)](https://badge.fury.io/py/equipment)
 
@@ -8,9 +8,13 @@ The root of your next Python project
 
 ## Overview
 
-Equipment is a scaffold project for building Python applications with a focus on simplicity, extensibility, and maintainability.
+Equipment is a scaffold project focused on the developer experience. Its goal is to avoid repeating basic application setups like handling configuration files or configuring database connections.
 
-It provides a set of tools and libraries that can be used to build robust and maintainable applications.
+Equipment scales with your project. It does not force you to follow any specific development strategy, so it can be used with simple scripts and big applications.
+
+Equipment is simple to extend and modify, which makes it very flexible to fit any project requirement. It can be easily integrated with other Python frameworks and tools.
+
+Developers with any Python skills can work with Equipment. Do not hesitate to [reach us](https://github.com/rogervila/equipment/discussions) to provide feedback, raise issues, and collaborate with the project.
 
 ### Dependency Injection
 - Easy dependency injection for building robust and maintainable applications
