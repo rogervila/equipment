@@ -1,12 +1,8 @@
-<p align="center"><img src="https://rogervila.es/static/img/equipment-logo.png" alt="Equipment python scaffold project" height="200" /></p>
+---
+sidebar_position: 1
+---
 
-[![PyPI version](https://badge.fury.io/py/equipment.svg)](https://badge.fury.io/py/equipment)
-
-# Equipment
-
-The root of your next Python project
-
-## Overview
+# Intro
 
 Equipment is a scaffold project focused on the developer experience. Its goal is to avoid repeating basic application setups like handling configuration files or configuring database connections.
 
