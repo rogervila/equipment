@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=75.0", "wheel>=0.45", "twine>=6.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "app"
+version = "1.0.0"
+description = "Application scaffolded with Equipment"
+authors = []
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "alembic>=1.13.0,<2",  # Remove if alembic migrations will not be used.
+    "equipment>=1.0.0a1,<2",
+    "fastapi[standard]>=0.100.0,<1", # Remove if web.py will not be used.
+    "uvicorn[standard]>=0.30,<1", # Remove if web.py will not be used.
+    # "psycopg2-binary>=2.9,<3",
+    # "mysqlclient>=2.2,<3",
+    # "mysql-connector-python>=9.1,<10",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pylint>=3,<4",
+    "autopep8>=2,<3",
+    "flake8>=7.0.0,<8",
+    "coverage>=7,<8",
+    "runtype>=0.5,<1",
+    "faker>=33",
+]
+
+
+[tool.setuptools.package-data]
+exclude = ["__pycache__", "tests"]
+"*" = [
+    "*.py",
+    "*.ini",
+    "*.yaml",
+    "*.yml",
+    "*.json",
+    "*.md",
+    "*.gitignore",
+    "*.gitattributes",
+    "*.coveragerc",
+    "*.editorconfig",
+    "*.example",
+    "*.toml",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["*"]
+exclude = ["__pycache__", "tests"]
+namespaces = true
