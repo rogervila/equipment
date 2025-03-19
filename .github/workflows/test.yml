@@ -32,9 +32,8 @@ jobs:
 
       # TODO: build equipment locally instead of using the PyPI package
       - name: Run project tests
-        if: ${{ matrix.os }} == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest'
         run: |
           cd project
-          python -m pip install build
-          python -m build
+          pip install .
           python -m coverage run -m unittest
