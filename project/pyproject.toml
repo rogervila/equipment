@@ -3,7 +3,7 @@ requires = ["setuptools>=75.0", "wheel>=0.45", "twine>=6.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "app"
+name = "inspire"
 version = "1.0.0"
 description = "Application scaffolded with Equipment"
 authors = []
@@ -29,6 +29,8 @@ dev = [
     "faker>=33",
 ]
 
+[project.scripts]
+inspire = "inspire:cli"
 
 [tool.setuptools.package-data]
 exclude = ["__pycache__", "tests"]
