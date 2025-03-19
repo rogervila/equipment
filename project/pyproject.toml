@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "Application scaffolded with Equipment"
 authors = []
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.13.0,<2",  # Remove if alembic migrations will not be used.
     "equipment>=1.0.0a1,<2",
