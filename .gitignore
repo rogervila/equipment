@@ -16,6 +16,7 @@ venv/
 htmlcov/
 .idea/
 .vscode/
+.vs/
 *.bat
 *.zip
 *.ps1
