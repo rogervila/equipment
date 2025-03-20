@@ -33,15 +33,13 @@ jobs:
       - name: Run project tests
         if: matrix.os == 'ubuntu-latest'
         run: |
-          cd project
-          rm -rf dist
-          rm -rf equipment
-          python -m pip install .
-          cd ..
           sed -ri -e 's!CURRENT_VERSION!9.9.9!g' pyproject.toml
           python -m build
           python -m pip install ./dist/equipment-9.9.9.tar.gz
           cd project
+          rm -rf dist
+          rm -rf equipment
+          python -m pip install .
           python -m coverage run -m unittest
           cp .env.example .env
           python -m equipment compile dist
