@@ -33,6 +33,7 @@ jobs:
       - name: Run project tests
         if: matrix.os == 'ubuntu-latest'
         run: |
+          python -m pip install build
           sed -ri -e 's!CURRENT_VERSION!9.9.9!g' pyproject.toml
           python -m build
           python -m pip install ./dist/equipment-9.9.9.tar.gz
