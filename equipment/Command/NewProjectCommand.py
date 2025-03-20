@@ -1,11 +1,12 @@
 from os import sep
 from os.path import abspath, dirname, isdir, join
+from codecs import open  # pylint: disable=W0622
 from shutil import copyfile, copytree, ignore_patterns, rmtree
-from click import confirm, echo, style
-from equipment.Command.AbstractCommand import AbstractCommand
-from requests import get
 from zipfile import ZipFile
 from io import BytesIO
+from click import confirm, echo, style
+from requests import get
+from equipment.Command.AbstractCommand import AbstractCommand
 
 class NewProjectCommand(AbstractCommand):
     def run(self, name: str, path: str) -> None:
@@ -15,7 +16,7 @@ class NewProjectCommand(AbstractCommand):
             rmtree(project_template_path)
 
         try:
-            response = get('https://github.com/rogervila/equipment/archive/refs/heads/main.zip')
+            response = get('https://github.com/rogervila/equipment/archive/refs/heads/main.zip', timeout=60)
             with ZipFile(BytesIO(response.content)) as zip_file:
                 zip_file.extractall(project_template_path)
         except Exception as e:
@@ -67,7 +68,17 @@ class NewProjectCommand(AbstractCommand):
                 join(project_path, '.env')
             )
 
-            echo(style(f'Project successfully created on {project_path}!', fg='green'))
+            pyproject_path = join(project_path, 'pyproject.toml')
+
+            with open(pyproject_path, 'r') as file:
+                pyproject_content = file.read()
+
+            pyproject_content = pyproject_content.replace('PROJECT_NAME', name)
+
+            with open(pyproject_path, 'w') as file:
+                file.write(pyproject_content)
+
+            echo(style(f'Project "{name}" successfully created on {project_path}!', fg='green'))
         except Exception as e:
             echo(style(f'Fatal error: {e}', fg='red'))
             return
