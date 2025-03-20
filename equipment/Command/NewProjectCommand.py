@@ -1,11 +1,11 @@
 from os import sep
 from os.path import abspath, dirname, isdir, join
 from shutil import copyfile, copytree, ignore_patterns, rmtree
-from click import confirm, echo, style
-from equipment.Command.AbstractCommand import AbstractCommand
-from requests import get
 from zipfile import ZipFile
 from io import BytesIO
+from click import confirm, echo, style
+from requests import get
+from equipment.Command.AbstractCommand import AbstractCommand
 
 class NewProjectCommand(AbstractCommand):
     def run(self, name: str, path: str) -> None:
