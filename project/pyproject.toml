@@ -3,7 +3,7 @@ requires = ["setuptools>=75.0", "wheel>=0.45", "twine>=6.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "inspire"
+name = "PROJECT_NAME"
 version = "1.0.0"
 description = "Application scaffolded with Equipment"
 authors = []
