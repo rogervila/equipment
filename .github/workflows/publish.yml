@@ -46,11 +46,9 @@ jobs:
           echo ${{ steps.get_version.outputs.VERSION }}
           sed -ri -e 's!CURRENT_VERSION!${{ steps.get_version.outputs.VERSION }}!g' pyproject.toml
           sed -ri -e 's!#equipment!equipment!g' project/Pipfile
-          sed -ri -e 's!CURRENT_VERSION!${{ steps.get_version.outputs.VERSION }}!g' project/Pipfile
+          sed -ri -e 's!CURRENT_VERSION!${{ steps.get_version.outputs.VERSION }}!g' project/pyproject.toml
           echo 'pyproject.toml:'
           cat pyproject.toml
-          echo 'Pipfile:'
-          cat project/Pipfile
           make prepare
           python -m build
           twine check dist/*
