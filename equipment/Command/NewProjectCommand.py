@@ -15,7 +15,7 @@ class NewProjectCommand(AbstractCommand):
             rmtree(project_template_path)
 
         try:
-            response = get('https://github.com/rogervila/equipment/archive/refs/heads/main.zip')
+            response = get('https://github.com/rogervila/equipment/archive/refs/heads/main.zip', timeout=60)
             with ZipFile(BytesIO(response.content)) as zip_file:
                 zip_file.extractall(project_template_path)
         except Exception as e:
