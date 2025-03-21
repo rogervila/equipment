@@ -2,7 +2,7 @@ import os
 from glob import glob
 
 from dependency_injector.containers import DeclarativeContainer
-from dependency_injector.providers import Singleton, Configuration
+from dependency_injector.providers import ThreadSafeSingleton as Singleton, Configuration
 from dotenv import load_dotenv
 from cachetools import cached
 
