@@ -1,4 +1,4 @@
-from dependency_injector.providers import Singleton
+from dependency_injector.providers import ThreadSafeSingleton as Singleton
 from equipment import Equipment
 from app.Scheduler import Scheduler
 from app.Inspire import Inspire
