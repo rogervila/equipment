@@ -2,107 +2,78 @@
 sidebar_position: 1
 ---
 
-# Intro
+# 🚀 Equipment: Python Project Scaffolding Framework
 
-Equipment is a scaffold project focused on the developer experience. Its goal is to avoid repeating basic application setups like handling configuration files or configuring database connections.
+## What is Equipment?
 
-Equipment scales with your project. It does not force you to follow any specific development strategy, so it can be used with simple scripts and big applications.
+Equipment is a comprehensive scaffolding framework designed to simplify and streamline Python project development. It provides a robust, flexible foundation that adapts to projects of any scale - from simple scripts to complex enterprise applications.
 
-Equipment is simple to extend and modify, which makes it very flexible to fit any project requirement. It can be easily integrated with other Python frameworks and tools.
+## Key Design Principles
 
-Developers with any Python skills can work with Equipment. Do not hesitate to [reach us](https://github.com/rogervila/equipment/discussions) to provide feedback, raise issues, and collaborate with the project.
+1. **Developer Experience**: Minimize boilerplate code and configuration overhead
+2. **Flexibility**: Support various project types and development strategies
+3. **Scalability**: Grow from small scripts to large applications seamlessly
+4. **Modularity**: Easy integration with other Python tools and frameworks
 
-### Dependency Injection
-- Easy dependency injection for building robust and maintainable applications
-- Supports both class-based and function-based dependencies
+## Core Features
 
-### Project Initialization
-- Easy project creation with a standardized template
-- Quick setup for new Python projects by running a single command: `equipment new my-app`
+### 🔧 Dependency Injection
+- Intuitive dependency management
+- Support for class-based and function-based dependencies
+- Reduces complexity in managing object lifecycles
 
-### Logging Management
-- Flexible logging configuration
+### 🏗️ Project Initialization
+- One-command project creation
+- Standardized project structure
+- Consistent setup across different project types
+
+### 📝 Advanced Logging
+- Configurable logging system
 - Multiple log channels and formatters
-- Simple logging API for easy implementation
+- Simple, powerful logging API
 
-### Scheduling
+### ⏰ Task Scheduling
 - Built-in task scheduler
 - Support for periodic and recurring tasks
-- Seamless integration with queue systems
+- Seamless queue system integration
 
-### Queue Management
-- Supports both synchronous and Redis-based queues
+### 📦 Queue Management
+- Synchronous and Redis-based queues
 - Asynchronous task processing
 - Easy task enqueuing and scheduling
 
-### Database migrations and ORM
-- SQLAlchemy integration
-- Multiple database driver support
-- Built-in migration support via Alembic
+### 💾 Database Integration
+- SQLAlchemy ORM integration
+- Multi-database driver support
+- Automatic migration handling
 
-### Storage Management, either Local or Cloud
+### 💽 Storage Management
 - Filesystem abstraction layer
-- Local storage driver
-- Extensible storage configuration
+- Local and cloud storage support
+- Easily extensible configuration
 
-## Quick Start
+## Getting Started
 
-Equipment project includes a class that generates inspiring quotes as an example.
-It uses the Singleton pattern to ensure that only one instance of the class exists, and a configuration file managed by Equipment.
-
-### Installation
 ```bash
 # Install Equipment
-pip install equipment pipenv
+pip install equipment
 
 # Generate a new project
 equipment new my-app
 
 # Install dependencies
-cd my-app && pipenv install
+cd my-app && pip install .
 ```
 
-### Usage
+## 🤝 Community and Support
 
-By default, equipment generates various entrypoints for the project.
-- **main.py**: The main entrypoint for the application. It includes examples of how to use Equipment.
-- **scheduler.py**: The entrypoint for the task scheduler.
-- **queues.py**: The entrypoint for the queue system, using either Redis or synchronous queues.
-- **web.py**: The entrypoint for the web server, based on FastAPI.
+We're passionate about making Python development easier and more enjoyable. Join our community:
+- [GitHub Discussions](https://github.com/rogervila/equipment/discussions)
+- [Issue Tracker](https://github.com/rogervila/equipment/issues)
+- [Contributing Guidelines](https://github.com/rogervila/equipment/blob/main/CONTRIBUTING.md)
 
-```bash
-cd my-app
-
-# Run the main script
-py main.py
-
-# Run the scheduler
-py scheduler.py
-
-# Enqueue tasks
-py queues.py
-
-# Run the web server
-py web.py
-```
-
-## Under the hood
-
-Equipment uses popular libraries and frameworks to avoid reinventing the wheel and provide a solid foundation for building robust and maintainable applications:
-
-- [Dependency Injector](https://python-dependency-injector.ets-labs.org/) as container service
-- [SQLAlchemy](https://www.sqlalchemy.org/) as ORM
-- [Alembic](https://alembic.sqlalchemy.org/en/latest/) for database migrations
-- [Redis](https://redis.io/) as queue driver
-- [FastAPI](https://fastapi.tiangolo.com/) as web framework
-- [Schedule](https://schedule.readthedocs.io/en/stable/) as task scheduler
-
-## License
+## 📄 License
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 Equipment icons created by <a href="https://www.flaticon.com/free-icons/toolbox">Freepik - Flaticon</a>
-
-## Author
-
-[Roger Vilà](https://github.com/rogervila)
