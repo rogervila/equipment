@@ -1,8 +1,9 @@
 from logging import Handler, LogRecord
-from sqlite3 import connect, Cursor
+from sqlite3 import connect, Cursor, Connection
 from datetime import datetime
 from json import dumps
 from typing import Optional
+from threading import RLock
 
 
 class SQLiteLogHandler(Handler):
@@ -11,6 +12,7 @@ class SQLiteLogHandler(Handler):
     pragmas: Optional[list[str]] = None
     default_pragmas: list[str] = [
         "PRAGMA journal_mode = WAL",
+        "PRAGMA wal_autocheckpoint = 10000",
         "PRAGMA max_page_count = 26214400",
         "PRAGMA page_size = 4096",
         "PRAGMA cache_size = -1000000",
@@ -31,6 +33,8 @@ class SQLiteLogHandler(Handler):
         "PRAGMA foreign_keys = ON",
         "PRAGMA defer_foreign_keys = ON"
     ]
+    _connection: Optional[Connection]
+    _connection_lock: RLock
 
     def __init__(self, filename: str, table: str = 'logs', pragmas: Optional[list[str]] = None) -> None:
         super().__init__()
@@ -38,11 +42,23 @@ class SQLiteLogHandler(Handler):
         self.baseFilename = filename
         self.table = table
         self.pragmas = pragmas
+        self._connection = None
+        self._connection_lock = RLock()
 
         self._create_table()
 
+    def _get_connection(self) -> Connection:
+        """Get or create a database connection."""
+        with self._connection_lock:
+            if self._connection is None:
+                conn = connect(self.baseFilename)
+                cursor = conn.cursor()
+                self._apply_configurations(cursor)
+                self._connection = conn
+            return self._connection
+
     def emit(self, record: LogRecord) -> None:
-        conn = connect(self.baseFilename)
+        conn = self._get_connection()
         cursor = conn.cursor()
 
         self._apply_configurations(cursor)
@@ -51,8 +67,12 @@ class SQLiteLogHandler(Handler):
         current_time = datetime.now().isoformat()
 
         # Convert args to string if they exist
-        args_str = dumps(record.args) if hasattr(
-            record, 'args') and record.args else None
+        args_str = None
+        if hasattr(record, 'args') and record.args:
+            if isinstance(record.args, (dict, list, tuple, set)):
+                args_str = dumps(record.args)
+            else:
+                args_str = str(record.args)
 
         # Handle exception text if present
         exc_info = str(record.exc_info).replace(
@@ -108,12 +128,20 @@ class SQLiteLogHandler(Handler):
             '''
         )
 
+        cursor.execute(
+            f"CREATE INDEX IF NOT EXISTS idx_{self.table}_timestamp ON {self.table}(timestamp)")
+        cursor.execute(
+            f"CREATE INDEX IF NOT EXISTS idx_{self.table}_levelno ON {self.table}(levelno)")
+
         conn.commit()
         conn.close()
 
     def close(self) -> None:
         # Clean up resources and ensure connections are closed
         try:
+            if self._connection is not None:
+                self._connection.close()
+
             conn = connect(self.baseFilename)
             conn.execute("PRAGMA optimize")
             conn.close()
