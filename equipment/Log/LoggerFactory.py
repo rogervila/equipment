@@ -85,6 +85,15 @@ class LoggerFactory(AbstractLogger):
             )
         elif channel == 'console':
             handler = StreamHandler(channel_config['stream'])
+        elif channel == 'sqlite':
+            from .Handler.SQLiteLogHandler import SQLiteLogHandler
+            handler = SQLiteLogHandler(
+                filename=os.path.join(
+                    self.base_path,
+                    str(channel_config['filename'])
+                ),
+                table=channel_config['table_name'] if 'table_name' in channel_config else 'logs'
+            )
         else:
             raise ValueError(f'Invalid channel name: {channel}')
 

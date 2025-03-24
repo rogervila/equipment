@@ -1,11 +1,13 @@
 from tempfile import gettempdir
+from os import sep
 import unittest
-from random import randint
+from sqlite3 import connect
 from logging import StreamHandler, FileHandler, NullHandler, DEBUG
 from logging.handlers import TimedRotatingFileHandler
-from equipment.Log.LoggerFactory import LoggerFactory
+from random import randint
 from pythonjsonlogger.jsonlogger import JsonFormatter
-from os import sep
+from equipment.Log.LoggerFactory import LoggerFactory
+from equipment.Log.Handler.SQLiteLogHandler import SQLiteLogHandler
 
 
 class LoggerFactoryTest(unittest.TestCase):
@@ -17,7 +19,7 @@ class LoggerFactoryTest(unittest.TestCase):
     def test_get_handlers_list_null(self):
         config = {'channel': None, 'level': 'debug'}
         factory = LoggerFactory('', gettempdir(), config)
-        handlers = factory._get_handlers_list()
+        handlers = factory._get_handlers_list() # pylint: disable=W0212
         self.assertEqual(1, len(handlers))
         self.assertIsInstance(handlers[0], NullHandler)
         self.assertIsNone(handlers[0].formatter)
@@ -33,7 +35,7 @@ class LoggerFactoryTest(unittest.TestCase):
             }
         }
         factory = LoggerFactory(gettempdir(), gettempdir(), config)
-        handlers = factory._get_handlers_list()
+        handlers = factory._get_handlers_list() # pylint: disable=W0212
         self.assertEqual(1, len(handlers))
         self.assertIsInstance(handlers[0], FileHandler)
         self.assertEqual(
@@ -53,7 +55,7 @@ class LoggerFactoryTest(unittest.TestCase):
             }
         }
         factory = LoggerFactory(gettempdir(), gettempdir(), config)
-        handlers = factory._get_handlers_list()
+        handlers = factory._get_handlers_list() # pylint: disable=W0212
         self.assertEqual(1, len(handlers))
         self.assertIsInstance(handlers[0], TimedRotatingFileHandler)
         self.assertEqual(
@@ -75,7 +77,7 @@ class LoggerFactoryTest(unittest.TestCase):
             }
         }
         factory = LoggerFactory('', gettempdir(), config)
-        handlers = factory._get_handlers_list()
+        handlers = factory._get_handlers_list() # pylint: disable=W0212
         self.assertEqual(1, len(handlers))
         self.assertIsInstance(handlers[0], StreamHandler)
         self.assertIsNone(handlers[0].formatter)
@@ -94,7 +96,7 @@ class LoggerFactoryTest(unittest.TestCase):
             }
         }
         factory = LoggerFactory(gettempdir(), gettempdir(), config)
-        handlers = factory._get_handlers_list()
+        handlers = factory._get_handlers_list() # pylint: disable=W0212
         self.assertEqual(2, len(handlers))
         self.assertIsInstance(handlers[0], FileHandler)
         self.assertIsNone(handlers[0].formatter)
@@ -119,8 +121,43 @@ class LoggerFactoryTest(unittest.TestCase):
             }
         }
         factory = LoggerFactory(gettempdir(), gettempdir(), config)
-        handlers = factory._get_handlers_list()
+        handlers = factory._get_handlers_list() # pylint: disable=W0212
         self.assertEqual(1, len(handlers))
         self.assertIsInstance(handlers[0].formatter, JsonFormatter)
         self.assertEqual(indent, handlers[0].formatter.json_indent)
+        handlers[0].close()
+
+    def test_sqlite_channel(self):
+        filename = f'{str(randint(9, 99999))}.sqlite'
+        config = {
+            'level': 'debug',
+            'channel': 'sqlite',
+            'channels': {
+                'sqlite': {'filename': filename}
+            }
+        }
+        factory = LoggerFactory(gettempdir(), gettempdir(), config)
+        handlers = factory._get_handlers_list() # pylint: disable=W0212
+        self.assertEqual(1, len(handlers))
+        self.assertIsInstance(handlers[0], SQLiteLogHandler)
+
+
+        self.assertEqual(
+            f'{gettempdir()}{sep}{filename}',
+            handlers[0].baseFilename
+        )
+        self.assertIsNone(handlers[0].formatter)
+
+
+        msg = f'test msg {str(randint(9, 99999))}'
+        factory.debug(msg)
+
+        conn = connect(handlers[0].baseFilename)
+        cursor = conn.cursor()
+        cursor.execute(f'SELECT COUNT(*) FROM logs WHERE msg = "{msg}"')
+        count = cursor.fetchone()[0]
+        self.assertEqual(1, count)
+        cursor.close()
+        conn.close()
+
         handlers[0].close()
