@@ -10,3 +10,4 @@ requests>=2.32,<3
 rq>=1.16,<2
 schedule>=1.2,<2
 sqlalchemy>=2.0,<3
+python_sqlite_log_handler>=1.0,<2
