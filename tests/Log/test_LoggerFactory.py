@@ -157,7 +157,15 @@ class LoggerFactoryTest(unittest.TestCase):
         cursor.execute(f'SELECT COUNT(*) FROM logs WHERE msg = "{msg}"')
         count = cursor.fetchone()[0]
         self.assertEqual(1, count)
+
+        cursor.execute("PRAGMA journal_mode")
+        self.assertEqual("wal", cursor.fetchone()[0].lower())
+
+        cursor.execute("PRAGMA synchronous")
+        self.assertEqual(2, int(cursor.fetchone()[0]))
+
         cursor.close()
+
         conn.close()
 
         handlers[0].close()
