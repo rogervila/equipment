@@ -24,6 +24,10 @@ log:
       formatter: null # "null" or "json"
       stream: null
 
+    sqlite:
+      filename: 'storage/logs/app.sqlite'
+      table_name: logs
+
   formatters:
     json:
       # @see https://docs.python.org/3/library/logging.html#logrecord-attributes
