@@ -1,8 +1,9 @@
 import os
 from logging import Handler, FileHandler, Logger, NullHandler, StreamHandler, getLogger, getLevelNamesMapping
 from logging.handlers import TimedRotatingFileHandler
-from equipment.Log.AbstractLogger import AbstractLogger
 from pythonjsonlogger.jsonlogger import JsonFormatter
+from python_sqlite_log_handler import SQLiteLogHandler
+from equipment.Log.AbstractLogger import AbstractLogger
 
 
 class LoggerFactory(AbstractLogger):
@@ -86,13 +87,12 @@ class LoggerFactory(AbstractLogger):
         elif channel == 'console':
             handler = StreamHandler(channel_config['stream'])
         elif channel == 'sqlite':
-            from .Handler.SQLiteLogHandler import SQLiteLogHandler
             handler = SQLiteLogHandler(
-                filename=os.path.join(
+                db_path=os.path.join(
                     self.base_path,
                     str(channel_config['filename'])
                 ),
-                table=channel_config['table_name'] if 'table_name' in channel_config else 'logs'
+                table_name=channel_config['table_name'] if 'table_name' in channel_config else 'logs'
             )
         else:
             raise ValueError(f'Invalid channel name: {channel}')

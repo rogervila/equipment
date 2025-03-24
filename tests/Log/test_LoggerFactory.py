@@ -6,8 +6,8 @@ from logging import StreamHandler, FileHandler, NullHandler, DEBUG
 from logging.handlers import TimedRotatingFileHandler
 from random import randint
 from pythonjsonlogger.jsonlogger import JsonFormatter
+from python_sqlite_log_handler import SQLiteLogHandler
 from equipment.Log.LoggerFactory import LoggerFactory
-from equipment.Log.Handler.SQLiteLogHandler import SQLiteLogHandler
 
 
 class LoggerFactoryTest(unittest.TestCase):
@@ -144,7 +144,7 @@ class LoggerFactoryTest(unittest.TestCase):
 
         self.assertEqual(
             f'{gettempdir()}{sep}{filename}',
-            handlers[0].baseFilename
+            handlers[0].db_path
         )
         self.assertIsNone(handlers[0].formatter)
 
@@ -152,9 +152,9 @@ class LoggerFactoryTest(unittest.TestCase):
         msg = f'test msg {str(randint(9, 99999))}'
         factory.debug(msg)
 
-        conn = connect(handlers[0].baseFilename)
+        conn = connect(handlers[0].db_path)
         cursor = conn.cursor()
-        cursor.execute(f'SELECT COUNT(*) FROM logs WHERE msg = "{msg}"')
+        cursor.execute(f'SELECT COUNT(*) FROM logs WHERE message = "{msg}"')
         count = cursor.fetchone()[0]
         self.assertEqual(1, count)
 
