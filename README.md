@@ -1,7 +1,8 @@
-<p align="center"><img src="https://rogervila.es/static/img/equipment-logo.png" alt="Equipment python scaffold project" height="200" /></p>
+<p align="center"><img src="https://rogervila.es/static/img/equipment-logo.png" alt="Equipment: Python Project Scaffolding Framework" height="200" /></p>
 
 [![PyPI version](https://badge.fury.io/py/equipment.svg)](https://badge.fury.io/py/equipment)
-[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://equipment.rogervila.es)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/equipment)
+[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://equipment-python.vercel.app)
 
 # Equipment: Python Project Scaffolding Framework
 
