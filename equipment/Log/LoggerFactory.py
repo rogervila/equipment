@@ -33,18 +33,23 @@ class LoggerFactory(AbstractLogger):
             self.logger = logger
 
     def debug(self, *args, **kwargs) -> None:
+        kwargs.setdefault('stacklevel', 2)
         self.logger.debug(*args, **kwargs)
 
     def info(self, *args, **kwargs) -> None:
+        kwargs.setdefault('stacklevel', 2)
         self.logger.info(*args, **kwargs)
 
     def warning(self, *args, **kwargs) -> None:
+        kwargs.setdefault('stacklevel', 2)
         self.logger.warning(*args, **kwargs)
 
     def error(self, *args, **kwargs) -> None:
+        kwargs.setdefault('stacklevel', 2)
         self.logger.error(*args, **kwargs)
 
     def critical(self, *args, **kwargs) -> None:
+        kwargs.setdefault('stacklevel', 2)
         self.logger.critical(*args, **kwargs)
 
     def _get_handlers_list(self) -> list[Handler]:
