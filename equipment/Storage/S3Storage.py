@@ -130,8 +130,7 @@ class S3Storage(AbstractStorage):
 
             response = self.client().list_objects_v2(
                 Bucket=self.config['bucket'],
-                Prefix=s3_path,
-                Delimiter='/'
+                Prefix='' if s3_path == '/' else s3_path,
             )
 
             # Extract just filenames from the full paths
