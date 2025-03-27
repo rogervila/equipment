@@ -1,5 +1,6 @@
 from tempfile import gettempdir
 from os import sep
+from codecs import open  # pylint: disable=W0622
 import unittest
 from sqlite3 import connect
 from logging import StreamHandler, FileHandler, NullHandler, DEBUG
@@ -172,3 +173,29 @@ class LoggerFactoryTest(unittest.TestCase):
         cursor.close()
 
         conn.close()
+
+    def test_keeps_module(self):
+        filename = f'{str(randint(9, 99999))}.log'
+        config = {
+            'level': 'debug',
+            'channel': 'single',
+            'channels': {
+                'single': {'filename': filename, 'formatter': 'json'}
+            },
+            'formatters': {
+                'json': {
+                    'format': '%(pathname)s %(lineno)s %(message)s',
+                    'indent': None
+                }
+            }
+        }
+        factory = LoggerFactory(gettempdir(), gettempdir(), config)
+
+        message = f'test message {str(randint(9, 99999))}'
+        factory.debug(message)
+
+        with open(f'{gettempdir()}{sep}{filename}', 'r') as file:
+            lines = file.readlines()
+            self.assertEqual(1, len(lines))
+            self.assertTrue(message in lines[0])
+            self.assertTrue('test_LoggerFactory.py' in lines[0])

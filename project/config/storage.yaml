@@ -1,7 +1,15 @@
 storage:
-  disk: ${FILESYSTEM_DISK:local}
+  disk: ${FILESYSTEM_DISK:local} # "local" or "s3"
 
   disks:
 
     local:
       path: storage/app
+
+    s3:
+      endpoint: ${S3_ENDPOINT}
+      bucket: ${S3_BUCKET}
+      access_key: ${S3_ACCESS_KEY}
+      secret_key: ${S3_SECRET_KEY}
+      region: ${S3_REGION:auto}
+      prefix: ${S3_PREFIX:null}
