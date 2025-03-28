@@ -16,10 +16,42 @@ The Storage API provides a robust and intuitive interface for filesystem operati
 | `move(source, destination)` | Move a file | `app.storage().move('reports/daily.txt', 'archives/daily.txt')` |
 | `remove(path)` | Delete a file | `app.storage().remove('archives/old_report.txt')` |
 
-## Best Practices
-- Always handle potential exceptions when performing file operations
-- Use relative paths to maintain portability
-- Implement proper error handling for file not found scenarios
+## Disk Configurations
+
+The Storage API supports multiple disk types for flexible file storage:
+
+### Local Disk
+The local disk stores files on the server's filesystem. It's ideal for development and small-scale applications.
+
+- **Path**: Configurable local directory (default: `storage/app`)
+- **Use Case**: Local development, testing, and small file storage needs
+
+### S3 Disk
+The S3 disk provides cloud-based storage using Amazon S3 or compatible object storage services.
+
+- **Configuration**:
+  - `endpoint`: S3-compatible storage service URL
+  - `bucket`: S3 bucket name
+  - `access_key`: Authentication credentials
+  - `secret_key`: Authentication credentials
+  - `region`: Optional AWS region (defaults to 'auto')
+  - `prefix`: Optional path prefix within the bucket
+
+- **Note**: S3 works with any S3 compatible provider, like Cloudflare R2, MinIO, etc.
+
+### Switching Disk Configuration
+
+You can easily switch between disk types using environment variables or configuration files:
+
+```yaml
+storage:
+  disk: ${FILESYSTEM_DISK:local}  # Defaults to 'local', can be set to 's3'
+```
+
+This flexibility allows you to:
+- Use local storage during development
+- Seamlessly migrate to cloud storage in production
+- Support multiple storage backends without code changes
 
 ## Advanced Usage Example
 ```python
@@ -44,3 +76,8 @@ if app.storage().exists('report.json'):
     # Let's assume we have a Reports service with a validate method
     app.reports().validate(loaded_report)
 ```
+
+## Best Practices
+- Always handle potential exceptions when performing file operations
+- Use relative paths to maintain portability
+- Implement proper error handling for file not found scenarios
