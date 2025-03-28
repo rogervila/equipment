@@ -6,15 +6,14 @@ if TYPE_CHECKING:
     from equipment.Queue.AbstractQueue import AbstractQueue
     from app.Inspire import Inspire
 
-
-# Schedule setup (https://schedule.readthedocs.io/en/stable/)
-
-
 def _inspire(log: 'AbstractLogger', inspiring: 'Inspire'):
     log.info(inspiring.quote())
 
-
 class Scheduler(Equipment):
+    """
+    Schedule docs available in https://schedule.readthedocs.io/en/stable/
+    """
+
     def __init__(self, log: 'AbstractLogger', queue: 'AbstractQueue', inspiring: 'Inspire'):
         super().__init__(log)
         self.queue = queue
@@ -22,8 +21,8 @@ class Scheduler(Equipment):
 
     def run(self) -> None:
         # Example without queues
-        self.schedule.every(5).seconds.do(
-            _inspire, self.log, self.inspiring
+        self.schedule.every(1).seconds.do(
+            lambda: self.log.debug(self.inspiring.quote())
         )
 
         # Example with queues

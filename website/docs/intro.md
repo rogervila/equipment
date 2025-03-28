@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# 🚀 Equipment: Python Project Scaffolding Framework
+# Prologue
 
 ## What is Equipment?
 

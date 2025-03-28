@@ -58,6 +58,7 @@ def queue_example():
     Check the config/queue.yml file for more details
     """
 
+    # Results in `app.log().debug(app.inspiring().quote())`
     app.queue().push(
         app.log().debug,
         app.inspiring().quote()
