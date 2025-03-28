@@ -60,8 +60,8 @@ const config = {
 					},
 					{ to: "/blog", label: "Blog", position: "left" },
 					{
-						href: "https://equipment-python.vercel.app/llms-full.txt",
-						label: "LLM",
+						href: "https://equipment-python.vercel.app/llms.txt",
+						label: "LLMS.txt",
 						position: "left",
 					},
 					{
