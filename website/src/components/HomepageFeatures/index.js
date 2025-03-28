@@ -28,7 +28,7 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Equipment can be easily integrated with other python tools like Flask (for website applications), SQLAlchemy (for Databse management), among others.
+        Equipment can be easily integrated with other python tools like FastAPI (for website applications), SQLAlchemy (for Databse management), among others.
       </>
     ),
   },
