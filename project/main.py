@@ -9,7 +9,7 @@ app.log().info(
     Welcome to {app.config.app.name()}
 
     First, install the project dependencies
-    $ pipenv install
+    $ pip install .
 
     Do you need to run scheduled tasks?
     $ py scheduler.py
