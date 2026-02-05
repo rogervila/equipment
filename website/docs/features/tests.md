@@ -1,51 +1,76 @@
 ---
-sidebar_position: 1
+sidebar_position: 7
 ---
 
-# Testing
+# Testing Framework
 
-## Base TestCase Class
+Equipment provides a robust and developer-friendly testing framework designed to simplify and enhance the testing experience. It uses `pytest` under the hood and provides a specialized `TestCase` base class that handles boilerplate setup.
 
-Equipment provides a custom base `TestCase` class that enhances the standard `unittest.TestCase` with several convenient features:
+## The `TestCase` Base Class
 
-### Key Features
+Every project generated with Equipment includes a `tests/__init__.py` file defining a `TestCase` class. By inheriting from this class, you get several features out of the box:
 
-1. **Application Instance**:
-   - Each test automatically receives an initialized application instance via `self.app`
-   - Ensures a fresh application context for every test
+1. **Automatic Application Context**: A fresh `App` instance is created for every test method, ensuring isolation.
+2. **Faker Integration**: A pre-configured `Faker` instance is available as `self.fake` for easy test data generation.
+3. **Environment Management**: The application is automatically switched to the `testing` environment, preventing accidental changes to production data.
 
-2. **Faker Integration**:
-   - Includes a pre-configured [Faker](https://faker.readthedocs.io) instance as `self.fake`
-   - Simplifies generation of fake data for testing
+## Writing Tests
 
-3. **Environment Override**:
-   - Automatically sets the application environment to `"testing"`
-   - Ensures tests run in an isolated test environment
-   - Prevents accidental interactions with production or development configurations
+### Unit Tests
 
-4. **Optional Logging Control**:
-   - Provides the ability to disable logging during tests
-   - Can be activated by uncommenting the `NullLogger()` override
-   - Helps keep test output clean and focused
-
-### Example Usage
+Unit tests focus on individual components or functions in isolation.
 
 ```python
 from tests import TestCase
 
-class MyTest(TestCase):
-    def test_something(self):
-        # Access application instance
+class MyServiceTest(TestCase):
+    def test_logic(self):
+        # Access the app instance
         app = self.app
 
-        # Use Faker for test data
-        username = self.fake.user_name()
+        # Use Faker for random data
+        name = self.fake.name()
 
-        # Test your code...
+        # Assertions
+        self.assertEqual(app.config.app.name(), "Equipment")
+        self.assertTrue(app.storage().exists(".gitignore"))
 ```
 
-### Best Practices
+### Integration Tests
 
-- Always inherit from `TestCase` for consistent test setup
-- Utilize the `self.fake` instance for generating test data
-- Leverage the automatic testing environment configuration
+Integration tests verify that different parts of the system work together correctly (e.g., Database + Storage).
+
+```python
+from tests import TestCase
+
+class DatabaseStorageTest(TestCase):
+    def test_save_to_db_and_file(self):
+        # Perform operations using library services
+        self.app.database().execute("INSERT INTO logs (msg) VALUES ('test')")
+        self.app.storage().write("log.txt", "test")
+
+        # Verify
+        self.assertTrue(self.app.storage().exists("log.txt"))
+```
+
+## Running Tests
+
+You can run your tests using the standard `pytest` command.
+
+```bash
+# Run all tests
+pytest
+
+# Run tests in a specific file
+pytest tests/test_example.py
+
+# Run a specific test class
+pytest tests/test_example.py::TestExample
+```
+
+## Best Practices
+
+1. **Inherit from `TestCase`**: Always use the provided base class to ensure a clean testing environment.
+2. **Use `self.fake`**: Avoid hardcoding test data. Use Faker to generate diverse and realistic data.
+3. **Mock External APIs**: For services that call external APIs, use libraries like `unittest.mock` or `responses` to avoid making real network requests.
+4. **Keep Tests Independent**: Ensure that tests do not depend on the order in which they are run.

@@ -6,64 +6,85 @@ sidebar_position: 3
 
 ## Overview
 
-The project follows a modular and organized directory structure designed to promote clean code organization, separation of concerns, and maintainability. Each directory serves a specific purpose in the application architecture.
+Equipment provides a meticulously designed, modular project structure that promotes clean code organization, maintainability, and scalability. Each directory and file has a specific responsibility within the application architecture.
 
-## Key Directories
+## Visual Directory Tree
+
+```text
+my-app/
+├── app/                  # Application-specific logic
+│   ├── __init__.py       # Service definitions and App class
+│   ├── Inspire.py        # Example service
+│   └── Scheduler.py      # Custom task scheduling
+├── config/               # Configuration files (YAML, JSON, INI)
+│   ├── app.yaml          # Core application settings
+│   ├── database.yaml     # Database connections
+│   ├── log.yaml          # Logging configuration
+│   ├── queue.yaml        # Queue settings
+│   └── storage.yaml      # Storage configuration
+├── database/             # Database persistence
+│   ├── migrations/       # Alembic migration scripts
+│   └── database.sqlite   # Default SQLite database (if used)
+├── storage/              # Filesystem API storage
+│   ├── app/              # Default local storage directory
+│   ├── logs/             # Application log files
+│   └── .gitignore        # Keep directory structure
+├── tests/                # Test suite
+│   ├── __init__.py       # Test configuration and base class
+│   └── test_example.py   # Example test cases
+├── .env.example          # Template for environment variables
+├── .env                  # Local environment variables (git-ignored)
+├── main.py               # Main application entry point
+├── queues.py             # Queue worker entry point
+├── scheduler.py          # Scheduler entry point
+├── web.py                # Web server entry point
+└── pyproject.toml        # Project metadata and dependencies
+```
+
+## Detailed Directory breakdown
 
 ### `app/`
-**Purpose**: Core Application Logic
-- Contains the primary business logic and application components
-- Project services are defined in `app/__init__.py`
-- Responsible for implementing the primary features of the project
+**Purpose**: Core Application Logic.
+- **`__init__.py`**: Defines the `App` class which inherits from `Equipment`. This is where you register your custom services as singletons.
+- **`Inspire.py`**: A sample service demonstrating how to implement business logic.
+- **`Scheduler.py`**: Customizes the scheduling logic for your application.
 
 ### `config/`
-**Purpose**: Configuration Management
-- Stores configuration files in yaml, json, and ini formats
-- Manages application settings, environment variables, and global configurations
-- Supports flexible configuration across different deployment scenarios
+**Purpose**: Configuration Management.
+- Supports YAML, JSON, and INI formats.
+- Manages settings for all core components (Database, Log, Queue, Storage).
+- Supports environment variable interpolation (e.g., `${DB_PASSWORD}`).
 
 ### `database/`
-**Purpose**: Database Migrations
-- Contains database migrations powered by alembic
+**Purpose**: Database Persistence and Migrations.
+- **`migrations/`**: Contains Alembic versions and configuration for database schema evolution.
 
 ### `storage/`
-**Purpose**: Flexible Filesystem API
-- Implements a robust and flexible file storage interface
-- Supports operations like:
-  - File writing
-  - File reading
-  - File moving
-  - File removal
-- Provides a consistent API for file system interactions across different storage backends
+**Purpose**: Flexible Filesystem API.
+- **`app/`**: The base directory for the `Local` storage driver.
+- **`logs/`**: Where log files are stored when using the `single` or `daily` log channels.
 
 ### `tests/`
-**Purpose**: Quality Assurance
-- Contains comprehensive test suite
-- Includes:
-  - Unit tests for individual components
-  - Integration tests for system-wide functionality
-- Ensures code reliability and catches potential issues early in the development process
+**Purpose**: Quality Assurance.
+- Uses `pytest` by default.
+- Provides a `TestCase` base class that initializes a fresh application context for every test.
 
-## Additional Entry Points
+## Key Entry Points
 
 ### `main.py`
-- Primary application entry point
-- Initializes and starts the application
+The primary entry point for your application logic. Use this for one-off scripts, batch processing, or demonstrating functionality.
 
 ### `scheduler.py`
-- Manages scheduled tasks and background jobs
-- Implements task scheduling and execution logic
+Starts the background task scheduler. It runs indefinitely, executing tasks defined in `app/Scheduler.py`.
 
 ### `queues.py`
-- Handles background task processing
-- Manages task queues and asynchronous job execution
+Starts a Redis queue worker (using `rq`). Required only if you are using the `redis` queue driver.
 
 ### `web.py`
-- Implements web server configuration
-- Defines routes and web application endpoints
+The entry point for a FastAPI web server. Defines your routes and handles HTTP requests.
 
 ## Best Practices
 
-- Each directory has a specific, well-defined responsibility
-- Modular design allows for easy extension and maintenance
-- Separation of concerns improves code readability and testability
+- **Keep `app/` clean**: Organize complex logic into subdirectories within `app/`.
+- **Use `.env`**: Always use environment variables for sensitive or environment-specific configuration.
+- **Test everything**: Place your tests in the `tests/` directory and inherit from the provided `TestCase`.

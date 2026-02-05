@@ -1,129 +1,105 @@
 ---
-sidebar_position: 1
+sidebar_position: 3
 ---
 
 # Logging System
 
-## Overview
-
-Equipment logging system provides a robust and flexible way to track and record events, errors, and important information throughout the application lifecycle.
+Equipment provides a robust and flexible logging system built on top of the standard Python `logging` module. It features multiple channels, custom formatters (including JSON), and environment-aware configuration.
 
 ## Configuration
 
-Logging is configured through the `log.yaml` configuration file, which offers extensive customization options.
-
-### Global Configuration
+Logging is configured in `config/log.yaml`.
 
 ```yaml
 log:
-  level: ${LOG_LEVEL:debug}  # Default log level, can be overridden by environment variable
-  channel: ${LOG_CHANNEL:stack}  # Default logging channel
+  level: ${LOG_LEVEL:debug}
+  channel: ${LOG_CHANNEL:stack}
+
+  channels:
+    stack:
+      channels: [single, console]
+    single:
+      filename: storage/logs/app.log
+      formatter: json
+    daily:
+      filename: storage/logs/daily.log
+      formatter: json
+      when: midnight
+      interval: 1
+      backupCount: 7
+    console:
+      stream: ext://sys.stdout
+    sqlite:
+      filename: database/logs.sqlite
+      table_name: app_logs
+
+  formatters:
+    json:
+      format: "%(asctime)s %(levelname)s %(name)s %(message)s"
+      indent: null
 ```
 
-### Log Levels
+## Logging Channels
 
-Supported log levels:
-- `debug`: Most verbose, detailed diagnostic information
-- `info`: General application events
-- `warning`: Potential issues
-- `error`: Serious problems
-- `critical`: Highest severity failures
+### `stack`
+Allows you to log to multiple channels simultaneously. Useful for logging to a file and the console at the same time.
 
-### Log Channels
+### `single`
+Logs all messages to a single file.
 
-Channels define how and where logs are output. Multiple channels can be combined.
+### `daily`
+Automatically rotates the log file every day (or other configured interval), keeping a specified number of backups.
 
-#### Available Channels
+### `console`
+Logs messages directly to the standard output (STDOUT).
 
-1. **stack**: Combines multiple channels
-   ```yaml
-   stack:
-     channels:
-       - single  # Log to a single file
-       - console  # Log to console
-       # - etc
-   ```
+### `sqlite`
+Logs messages into a SQLite database table. This is very useful for building custom log viewers or searching logs with SQL.
 
-2. **single**: Single file logging
-   ```yaml
-   single:
-     formatter: json  # "null" or "json"
-     filename: 'storage/logs/app.log'  # Log file path
-   ```
+## Log Levels
 
-3. **daily**: Rotating daily log files
-   ```yaml
-   daily:
-     formatter: json # "null" or "json"
-     filename: 'storage/logs/app.log'
-     when: 'midnight'  # Rotate at midnight
-     interval: 1       # Rotate daily
-     backupCount: 7    # Keep 7 days of logs
-   ```
+Standard Python log levels are supported:
+- `app.log().debug()`
+- `app.log().info()`
+- `app.log().warning()`
+- `app.log().error()`
+- `app.log().critical()`
 
-4. **console**: Console logging
-   ```yaml
-   console:
-     formatter: null  # "null" or "json"
-     stream: null     # Standard output
-   ```
+## JSON Formatters
 
-5. **sqlite**: Database logging
-   ```yaml
-   sqlite:
-     filename: 'storage/logs/app.sqlite'  # SQLite database for logs
-     table_name: logs  # Table to store logs
-   ```
-
-### Formatters
-
-Customize log message formatting:
+Equipment makes it easy to output logs in JSON format, which is essential for modern log management systems like ELK or Datadog.
 
 ```yaml
+# config/log.yaml
 formatters:
   json:
-    format: '%(message)s %(asctime)s %(levelname)s %(levelno)d %(pathname)s %(lineno)d'
-    indent: null  # JSON indentation
+    format: "%(asctime)s %(levelname)s %(name)s %(message)s"
+    indent: null # Set to an integer for pretty-printing
 ```
 
-## Basic Usage
+## Usage Example
 
-```py
-# Initialize the application
+```python
 from app import app
 
 app = app()
 
-# Log messages at different levels
-app.log().debug('Detailed diagnostic information')
-app.log().info('Application started successfully')
-app.log().warning('Potential configuration issue detected')
-app.log().error('Failed to connect to database')
-app.log().critical('Critical system failure')
+# Simple logging
+app.log().info("Application started")
+
+# Logging with context (if using JSON formatter, these will be root fields)
+app.log().error("Failed to connect to API", extra={"api_url": "https://api.example.com"})
+
+# Logging exceptions
+try:
+    1 / 0
+except Exception as e:
+    app.log().error("Calculation error", exc_info=True)
 ```
-
-## Environment Configuration
-
-Log configuration can be dynamically set using environment variables:
-- `LOG_LEVEL`: Set the default log level
-- `LOG_CHANNEL`: Specify the default logging channel
 
 ## Best Practices
 
-- Use appropriate log levels
-- Avoid logging sensitive information
-- Configure log rotation to manage disk space
-- Use environment-specific logging configurations
-
-## Troubleshooting
-
-1. Verify log file permissions
-2. Check disk space for log files
-3. Validate YAML configuration syntax
-4. Use console logging for immediate debugging
-
-## Performance Considerations
-
-- Minimize debug logs in production
-- Use asynchronous logging for high-performance applications
-- Monitor log file sizes and rotation
+1. **Use appropriate levels**: Don't use `info` for debugging messages. Use `debug` instead.
+2. **Don't log secrets**: Never log passwords, API keys, or personally identifiable information (PII).
+3. **Use JSON for production**: Standardize your production logs with JSON for easier parsing and searching.
+4. **Log Context**: Use the `extra` parameter to provide additional structured data with your logs.

@@ -4,29 +4,32 @@ sidebar_position: 1
 
 # Configuration Management
 
-The project uses a modular configuration system which supports YAML, JSON and INI files to manage different aspects of the application. Each configuration file is designed to handle a specific component or service, allowing for flexible and environment-aware configuration.
+Equipment features a robust and modular configuration system that supports **YAML**, **JSON**, and **INI** files. Each component has its own configuration file, promoting a clean separation of concerns and making it easy to manage complex application settings.
 
-## Configuration Files
+## Environment Variable Interpolation
+
+One of the most powerful features of Equipment's configuration is automatic environment variable interpolation. This allows you to keep your configuration files generic while providing environment-specific values via `.env` files or system environment variables.
+
+**Syntax**: `${VAR_NAME:default_value}`
+
+```yaml
+app:
+  name: ${APP_NAME:My Application}
+  debug: ${APP_DEBUG:true}
+```
+
+## Core Configuration Files
+
+All configuration files are located in the `config/` directory.
 
 ### `app.yaml`
 Manages core application settings:
-- `name`: Application name (defaults to "Equipment")
-- `env`: Environment mode (defaults to "local"). This value may be used to determine the application mode (development, production, etc.)
-
-Example:
-```yaml
-app:
-  name: ${APP_NAME:Equipment}
-  env: ${APP_ENV:local}
-```
+- `name`: The name of your application.
+- `env`: The current environment (e.g., `local`, `production`, `testing`).
 
 ### `database.yaml`
-Handles database connection configurations:
-- Supports multiple database connection types
-- Default connection is SQLite
-- Configurable database path and connection parameters
+Handles database connection settings for various providers:
 
-Example:
 ```yaml
 database:
   connection: ${DB_CONNECTION:sqlite}
@@ -35,33 +38,67 @@ database:
     sqlite:
       schema: sqlite
       database: "${DB_DATABASE:database/database.sqlite}"
+    mysql:
+      schema: mysql+pymysql
+      host: ${DB_HOST:localhost}
+      port: ${DB_PORT:3306}
+      database: ${DB_DATABASE:equipment}
+      username: ${DB_USERNAME:root}
+      password: ${DB_PASSWORD:root}
+      charset: ${DB_CHARSET:utf8mb4}
 ```
 
 ### `log.yaml`
-Configures logging settings for the application.
+Configures the logging system, including channels and levels.
+
+```yaml
+log:
+  level: ${LOG_LEVEL:debug}
+  channel: ${LOG_CHANNEL:stack}
+
+  channels:
+    stack:
+      channels: [single, console]
+    single:
+      filename: storage/logs/app.log
+      formatter: json
+    console:
+      stream: ext://sys.stdout
+```
 
 ### `queue.yaml`
-Manages background task queue configurations.
+Defines settings for background task processing.
+
+```yaml
+queue:
+  connection: ${QUEUE_CONNECTION:sync} # Options: sync, redis
+  connections:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      db: ${REDIS_DB:0}
+```
 
 ### `storage.yaml`
-Defines file storage and filesystem API settings.
+Configures the filesystem abstraction layer.
 
-### `web.yaml`
-Configures web server parameters.
+```yaml
+storage:
+  disk: ${STORAGE_DISK:local} # Options: local, s3
+  disks:
+    local:
+      root: storage/app
+    s3:
+      bucket: ${S3_BUCKET}
+      # ... s3 specific config
+```
 
-### `inspiring.json`
-Used by `app.inspiring()`
+## Adding Custom Configuration
 
-## Configuration Principles
-
-1. **Environment Variables**: Configuration uses environment variable interpolation
-2. **Modular Design**: Separate configuration files for different system components
-3. **Default Values**: Sensible defaults provided for each configuration
-4. **Flexibility**: Easy to override settings for different environments
+You can easily add your own configuration files (e.g., `services.yaml`) to the `config/` directory. Equipment will automatically load them, and you can access them via `app.config.services`.
 
 ## Best Practices
 
-- Never commit sensitive information directly to configuration files
-- Use environment variables for environment-specific settings
-- Keep configuration files clean and well-documented
-- Use `.env` files for local development configurations
+1. **Use `.env` for secrets**: Never commit sensitive data (passwords, API keys) to your `config/*.yaml` files. Use environment variables instead.
+2. **Provide default values**: Always provide a sensible default in the interpolation syntax to ensure the app can start even if an environment variable is missing.
+3. **Modularize**: If your configuration grows large, consider splitting it into smaller, logically grouped files.
