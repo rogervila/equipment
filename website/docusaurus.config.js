@@ -24,173 +24,165 @@ Read this file when you need enough context to build applications using Equipmen
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-	title: "Equipment",
-	tagline: "The root of your next python project",
-	url: "https://equipment-python.vercel.app",
-	baseUrl: "/",
-	onBrokenLinks: "throw",
-	markdown: {
-		hooks: {
-			onBrokenMarkdownLinks: "warn",
-		},
-	},
-	favicon: "img/favicon.ico",
-	organizationName: "rogervila", // Usually your GitHub org/user name.
-	projectName: "equipment", // Usually your repo name.
+    title: "Equipment",
+    tagline: "The root of your next python project",
+    url: "https://equipment-python.vercel.app",
+    baseUrl: "/",
+    onBrokenLinks: "throw",
+    markdown: {
+        hooks: {
+            onBrokenMarkdownLinks: "warn",
+        },
+    },
+    favicon: "img/favicon.ico",
+    organizationName: "rogervila", // Usually your GitHub org/user name.
+    projectName: "equipment", // Usually your repo name.
 
-	presets: [
-		[
-			"classic",
-			/** @type {import('@docusaurus/preset-classic').Options} */
-			({
-				docs: {
-					sidebarPath: require.resolve("./sidebars.js"),
-					// Please change this to your repo.
-					editUrl: "https://github.com/rogervila/equipment/tree/main/website/",
-				},
-				blog: {
-					showReadingTime: true,
-					// Please change this to your repo.
-					editUrl: "https://github.com/rogervila/equipment/tree/main/website/",
-				},
-				theme: {
-					customCss: require.resolve("./src/css/custom.css"),
-				},
-			}),
-		],
-	],
+    presets: [
+        [
+            "classic",
+            /** @type {import('@docusaurus/preset-classic').Options} */
+            ({
+                docs: {
+                    sidebarPath: require.resolve("./sidebars.js"),
+                    // Please change this to your repo.
+                    editUrl: "https://github.com/rogervila/equipment/tree/main/website/",
+                },
+                blog: {
+                    showReadingTime: true,
+                    // Please change this to your repo.
+                    editUrl: "https://github.com/rogervila/equipment/tree/main/website/",
+                },
+                theme: {
+                    customCss: require.resolve("./src/css/custom.css"),
+                },
+            }),
+        ],
+    ],
 
-	plugins: [
-		[
-			"docusaurus-plugin-llms",
-			{
-				title: "Equipment Documentation",
-				description: "Documentation for building and maintaining Python applications with Equipment.",
-				docsDir: "docs",
-				generateLLMsTxt: true,
-				generateLLMsFullTxt: true,
-				generateMarkdownFiles: true,
-				preserveDirectoryStructure: true,
-				addMdExtension: true,
-				excludeImports: true,
-				removeDuplicateHeadings: true,
-				includeBlog: false,
-				includeOrder: [
-					"intro.md",
-					"getting-started/installation.md",
-					"getting-started/directory-structure.md",
-					"getting-started/common-workflows.md",
-					"features/dependency-injection.md",
-					"features/config.md",
-					"features/database.md",
-					"features/log.md",
-					"features/queue.md",
-					"features/scheduler.md",
-					"features/storage.md",
-					"features/tests.md",
-					"features/compilation.md",
-					"examples/fastapi.md",
-					"reference/cli.md",
-					"reference/environment-variables.md",
-					"reference/maintenance.md",
-				],
-				includeUnmatchedLast: true,
-				rootContent: llmsRootContent,
-				fullRootContent: llmsFullRootContent,
-				logLevel: "normal",
-			},
-		],
-	],
+    plugins: [
+        [
+            "docusaurus-plugin-llms",
+            {
+                title: "Equipment Documentation",
+                description: "Documentation for building and maintaining Python applications with Equipment.",
+                docsDir: "docs",
+                generateLLMsTxt: true,
+                generateLLMsFullTxt: true,
+                generateMarkdownFiles: true,
+                preserveDirectoryStructure: true,
+                addMdExtension: true,
+                excludeImports: true,
+                removeDuplicateHeadings: true,
+                includeBlog: false,
+                includeOrder: [
+                    "intro.md",
+                    "getting-started/installation.md",
+                    "getting-started/directory-structure.md",
+                    "getting-started/common-workflows.md",
+                    "features/dependency-injection.md",
+                    "features/config.md",
+                    "features/database.md",
+                    "features/log.md",
+                    "features/queue.md",
+                    "features/scheduler.md",
+                    "features/storage.md",
+                    "features/tests.md",
+                    "features/compilation.md",
+                    "examples/fastapi.md",
+                    "reference/cli.md",
+                    "reference/environment-variables.md",
+                    "reference/maintenance.md",
+                ],
+                includeUnmatchedLast: true,
+                rootContent: llmsRootContent,
+                fullRootContent: llmsFullRootContent,
+                logLevel: "normal",
+            },
+        ],
+    ],
 
-	themeConfig:
-		/** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-		({
-			navbar: {
-				title: "Equipment",
-				logo: {
-					alt: "Equipment Logo",
-					src: "img/logo.svg",
-				},
-				items: [
-					{
-						type: "doc",
-						docId: "intro",
-						position: "left",
-						label: "Docs",
-					},
-					{ to: "/blog", label: "Blog", position: "left" },
-					{
-						href: "https://equipment-python.vercel.app/llms.txt",
-						label: "LLMS.txt",
-						position: "left",
-					},
-					{
-						href: "https://equipment-python.vercel.app/llms-full.txt",
-						label: "LLMS Full",
-						position: "left",
-					},
-					{
-						href: "https://pypi.org/project/equipment",
-						label: "PyPI",
-						position: "right",
-					},
-					{
-						href: "https://github.com/rogervila/equipment",
-						label: "GitHub",
-						position: "right",
-					},
-				],
-			},
-			footer: {
-				style: "dark",
-				links: [
-					{
-						title: "Docs",
-						items: [
-							{
-								label: "Docs",
-								to: "/docs/intro",
-							},
-						],
-					},
-					{
-						title: "Community",
-						items: [
-							// {
-							//   label: 'Stack Overflow',
-							//   href: 'https://stackoverflow.com/questions/tagged/equipment',
-							// },
-							// {
-							//   label: 'Discord',
-							//   href: 'https://discordapp.com/invite/docusaurus',
-							// },
-							{
-								label: "X",
-								href: "https://x.com/_rogervila",
-							},
-						],
-					},
-					{
-						title: "More",
-						items: [
-							{
-								label: "Blog",
-								to: "/blog",
-							},
-							{
-								label: "GitHub",
-								href: "https://github.com/rogervila/equipment",
-							},
-						],
-					},
-				],
-				copyright: `Copyright © ${new Date().getFullYear()} Roger Vilà`,
-			},
-			prism: {
-				theme: lightCodeTheme,
-				darkTheme: darkCodeTheme,
-			},
-		}),
+    themeConfig:
+        /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
+        ({
+            navbar: {
+                title: "Equipment",
+                logo: {
+                    alt: "Equipment Logo",
+                    src: "img/logo.svg",
+                },
+                items: [
+                    {
+                        type: "doc",
+                        docId: "intro",
+                        position: "left",
+                        label: "Docs",
+                    },
+                    { to: "/blog", label: "Blog", position: "left" },
+                    { to: "/llms.txt", label: "LLMS.txt", position: "left" },
+                    { to: "/llms-full.txt", label: "LLMS Full", position: "left" },
+                    {
+                        href: "https://pypi.org/project/equipment",
+                        label: "PyPI",
+                        position: "right",
+                    },
+                    {
+                        href: "https://github.com/rogervila/equipment",
+                        label: "GitHub",
+                        position: "right",
+                    },
+                ],
+            },
+            footer: {
+                style: "dark",
+                links: [
+                    {
+                        title: "Docs",
+                        items: [
+                            {
+                                label: "Docs",
+                                to: "/docs/intro",
+                            },
+                        ],
+                    },
+                    {
+                        title: "Community",
+                        items: [
+                            // {
+                            //   label: 'Stack Overflow',
+                            //   href: 'https://stackoverflow.com/questions/tagged/equipment',
+                            // },
+                            // {
+                            //   label: 'Discord',
+                            //   href: 'https://discordapp.com/invite/docusaurus',
+                            // },
+                            {
+                                label: "X",
+                                href: "https://x.com/_rogervila",
+                            },
+                        ],
+                    },
+                    {
+                        title: "More",
+                        items: [
+                            {
+                                label: "Blog",
+                                to: "/blog",
+                            },
+                            {
+                                label: "GitHub",
+                                href: "https://github.com/rogervila/equipment",
+                            },
+                        ],
+                    },
+                ],
+                copyright: `Copyright © ${new Date().getFullYear()} Roger Vilà`,
+            },
+            prism: {
+                theme: lightCodeTheme,
+                darkTheme: darkCodeTheme,
+            },
+        }),
 };
 
 module.exports = config;
