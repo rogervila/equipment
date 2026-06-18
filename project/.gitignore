@@ -9,6 +9,7 @@
 build/
 dist/
 venv/
+.venv/
 htmlcov/
 coverage.xml
 .agents/
