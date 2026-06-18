@@ -1,83 +1,75 @@
 ---
-sidebar_position: 1
+sidebar_position: 6
 ---
 
-# Storage
-The Storage API provides a robust and intuitive interface for filesystem operations. It abstracts away complex file handling, offering simple methods for common file-related tasks.
+# Storage Management
 
-## Core Methods
+Equipment provides a clean and unified Filesystem API through its Storage component. It allows you to perform common file operations using a consistent interface, regardless of whether you are using local disk or cloud storage like Amazon S3.
 
-| Method | Description | Example |
-|--------|-------------|---------|
-| `write(path, content)` | Write content to a file | `app.storage().write('reports/daily.txt', 'Sales report data')` |
-| `read(path)` | Read file contents | `report_content = app.storage().read('reports/daily.txt')` |
-| `exists(path)` | Check file existence | `if app.storage().exists('reports/daily.txt'):` |
-| `list(directory)` | List files in a directory | `files = app.storage().list('reports/')` |
-| `move(source, destination)` | Move a file | `app.storage().move('reports/daily.txt', 'archives/daily.txt')` |
-| `remove(path)` | Delete a file | `app.storage().remove('archives/old_report.txt')` |
+## Configuration
 
-## Disk Configurations
-
-The Storage API supports multiple disk types for flexible file storage:
-
-### Local Disk
-The local disk stores files on the server's filesystem. It's ideal for development and small-scale applications.
-
-- **Path**: Configurable local directory (default: `storage/app`)
-- **Use Case**: Local development, testing, and small file storage needs
-
-### S3 Disk
-The S3 disk provides cloud-based storage using Amazon S3 or compatible object storage services.
-
-- **Configuration**:
-  - `endpoint`: S3-compatible storage service URL
-  - `bucket`: S3 bucket name
-  - `access_key`: Authentication credentials
-  - `secret_key`: Authentication credentials
-  - `region`: Optional AWS region (defaults to 'auto')
-  - `prefix`: Optional path prefix within the bucket
-
-- **Note**: S3 works with any S3 compatible provider, like Cloudflare R2, MinIO, etc.
-
-### Switching Disk Configuration
-
-You can easily switch between disk types using environment variables or configuration files:
+Configure your storage disks in `config/storage.yaml`.
 
 ```yaml
 storage:
-  disk: ${FILESYSTEM_DISK:local}  # Defaults to 'local', can be set to 's3'
+  disk: ${STORAGE_DISK:local} # Options: local, s3
+
+  disks:
+    local:
+        root: storage/app
+    s3:
+        bucket: ${S3_BUCKET}
+        region: ${S3_REGION}
+        access_key: ${S3_ACCESS_KEY}
+        secret_key: ${S3_SECRET_KEY}
 ```
 
-This flexibility allows you to:
-- Use local storage during development
-- Seamlessly migrate to cloud storage in production
-- Support multiple storage backends without code changes
+## Core API Methods
 
-## Advanced Usage Example
+All methods return a boolean indicating success, except for `read()` (returns content string), `path()` (returns absolute path), and `list()` (returns a list of files).
+
+| Method | Description | Example |
+|--------|-------------|---------|
+| `write(path, data)` | Write data to a file | `app.storage().write('report.txt', '...')` |
+| `read(path)` | Read the content of a file | `content = app.storage().read('report.txt')` |
+| `exists(path)` | Check if a file exists | `if app.storage().exists('report.txt'):` |
+| `remove(path)` | Delete a file | `app.storage().remove('temp.txt')` |
+| `move(src, dest)` | Move/Rename a file | `app.storage().move('old.txt', 'new.txt')` |
+| `list(directory)` | List files in a directory | `files = app.storage().list('images/')` |
+| `path(file)` | Get the absolute path | `abs_path = app.storage().path('data.csv')` |
+
+## Usage Examples
+
 ```python
-report = {
-    'title': 'Daily Sales Report',
-    'data': {
-        'total_sales': 123456,
-        'total_profit': 123456
-    }
-}
+from app import app
 
-# Write report
-if not app.storage().write('report.json', json.dumps(report)):
-    raise Exception('Failed to write report')
+app = app()
+storage = app.storage()
 
-# ...
+# Writing a JSON file
+import json
+data = {"status": "ok", "version": "1.0"}
+storage.write("config.json", json.dumps(data))
 
-# Read report
-if app.storage().exists('report.json'):
-    loaded_report = json.loads(app.storage().read('report.json'))
+# Checking existence and reading
+if storage.exists("config.json"):
+    config_data = json.loads(storage.read("config.json"))
+    print(config_data["version"])
 
-    # Let's assume we have a Reports service with a validate method
-    app.reports().validate(loaded_report)
+# Listing all files in the root of the disk
+for file in storage.list(""):
+    print(f"Found file: {file}")
 ```
+
+## S3 Implementation
+
+When using the `s3` driver, Equipment uses `boto3` under the hood. The API remains identical to the local driver, making it easy to migrate your application to the cloud.
+
+> [!NOTE]
+> Make sure to install the `boto3` package if you plan to use the S3 driver.
 
 ## Best Practices
-- Always handle potential exceptions when performing file operations
-- Use relative paths to maintain portability
-- Implement proper error handling for file not found scenarios
+
+1. **Use Relative Paths**: Always use relative paths from the root of your disk. Equipment handles the prefixing for you.
+2. **Abstract Your Storage**: Don't use `os.path` or `open()` directly for application files. Use `app.storage()` to ensure your code is portable across different environments.
+3. **Handle Errors**: While the methods return `False` on failure, they might also raise exceptions for critical errors (like permissions). Use `try...except` when necessary.

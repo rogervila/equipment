@@ -1,71 +1,68 @@
 ---
-sidebar_position: 1
+sidebar_position: 5
 ---
 
-# Scheduler
+# Task Scheduling
 
-## Overview
+Equipment provides a powerful task scheduler build on top of the popular [`schedule`](https://schedule.readthedocs.io) library. It allows you to define recurring tasks at specific intervals or times using a human-readable syntax.
 
-Equipment uses the [schedule](https://schedule.readthedocs.io) library to manage and execute scheduled tasks. The scheduler provides a flexible and powerful way to run periodic tasks within the application.
+## Scheduling Tasks
 
-## Key Components
+All your scheduled tasks should be defined in the `run()` method of your `app/Scheduler.py` class.
 
-### `app/Scheduler.py`
-This file defines the core scheduling logic for the application. It extends the base `Equipment.Scheduler` class and provides:
-- Integration with the application's logging system
-- Support for background task queuing
-- Ability to schedule and run periodic tasks
+### Common Scheduling Patterns
 
-### `scheduler.py`
-The main entry point for running scheduled tasks. It:
-- Initializes the application context
-- Starts the scheduler to run defined tasks
-
-## Dependencies and Initialization
-
-The scheduler is initialized in `app/__init__.py` using dependency injection:
-- Integrated with the application's logging system
-- Connected to the task queue
-- Optionally linked with additional services (e.g., `Inspire` for generating quotes)
-
-## Task Scheduling
-
-Tasks are defined directly in `app/Scheduler.py`. The implementation leverages the `schedule` library, allowing for:
-- Interval-based scheduling (every X minutes/hours/days)
-- Specific time-based scheduling
-- Recurring tasks
-- One-time tasks
-
-### Example Task
 ```python
 class Scheduler(Equipment):
-    # ...
-
     def run(self) -> None:
-        self.schedule.every(5).seconds.do(
-            lambda: self.log.debug('Scheduled message')
-        )
+        # Run every minute
+        self.schedule.every(1).minutes.do(self.my_task)
+
+        # Run every hour at 30 minutes past the hour
+        self.schedule.every().hour.at(":30").do(self.my_task)
+
+        # Run daily at a specific time
+        self.schedule.every().day.at("10:30").do(self.my_task)
+
+        # Run every Monday
+        self.schedule.every().monday.do(self.my_task)
+
+        # Run every 5 to 10 minutes (random range)
+        self.schedule.every(5).to(10).minutes.do(self.my_task)
+
+        # Important: call super().run() to start the execution loop
+        super().run()
+```
+
+## Scheduler & Queue Integration
+
+A powerful pattern in Equipment is using the scheduler to push tasks into a background queue. This prevents the scheduler from blocking on long-running tasks.
+
+```python
+def process_data():
+    # Long-running task
+    pass
+
+class Scheduler(Equipment):
+    def run(self) -> None:
+        # Instead of calling process_data directly, we push it to the queue
+        self.schedule.every().hour.do(self.queue.push, process_data)
+
+        super().run()
 ```
 
 ## Running the Scheduler
 
-To start the scheduler, simply run:
+The scheduler runs in a separate process that stays alive indefinitely.
+
 ```bash
+# Start the scheduler
 python scheduler.py
 ```
 
-This will:
-1. Initialize the application
-2. Set up all scheduled tasks
-3. Begin executing tasks according to their defined schedules
-
-## Features
-- Thread-safe task scheduling
-- Integrated logging
-- Background task processing
-- Flexible task definition
-
 ## Best Practices
-- Keep scheduled tasks lightweight
-- Use logging to track task execution
-- Handle potential exceptions within scheduled tasks
+
+1. **Keep tasks lightweight**: If a task takes more than a few seconds, push it to a queue instead of running it directly in the scheduler.
+2. **Use Centralized Logging**: Always use `self.log` within your scheduler tasks to track execution and errors.
+3. **Handle Exceptions**: The scheduler loop can stop if a task raises an unhandled exception. Wrap your task logic in `try...except` blocks.
+4. **Timezones**: Be aware that the `schedule` library uses the system's local time by default.

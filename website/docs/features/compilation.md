@@ -1,31 +1,49 @@
 ---
-sidebar_position: 99
+sidebar_position: 9
 ---
 
 # Project Compilation
 
-## Compile Command
+Equipment provides a built-in `compile` command that prepares your project for distribution by converting Python files into bytecode (`.pyc`) and packaging all necessary assets into a single directory.
 
-The `equipment compile <path>` command is used to compile the entire project into a `<path>` directory. This process involves:
+## Why Compile?
 
-- Converting all Python (`.py`) files to compiled Python (`.pyc`) files
-- Preserving all non-Python files in their original structure
-- Creating a complete, ready-to-distribute version of the project
+1. **Performance**: Bytecode files skip the compilation step when executed, leading to faster startup times.
+2. **Obfuscation**: While not a security measure, bytecode is harder to read than source code, providing a basic level of protection for your logic.
+3. **Clean Distribution**: Compiling creates a dedicated `dist` folder containing only what's needed to run the application, making deployment simpler.
 
-### Usage
+## Usage
+
+Run the `compile` command followed by the target directory name.
 
 ```bash
-# compile into the ./dist directory
+# Compile the project into the 'dist' folder
 equipment compile dist
 ```
 
-### Compilation Details
+## How it Works
 
-- **Python Files**: Converted to bytecode (`.pyc`) for faster execution
-- **Non-Python Files**: Copied as-is to maintain project structure
-- **Output Directory**: All compiled files are placed in the `<path>` folder
+When you run the `compile` command, Equipment performs the following steps:
 
-This command is useful for:
-- Creating a distributable version of your project
-- Improving initial load times by pre-compiling Python files
-- Preparing the project for deployment or sharing
+1. **Scans the Project**: It identifies all files in your current directory while respecting a set of default ignore patterns (like `.git`, `venv`, `__pycache__`, etc.).
+2. **Converts Python Files**: Every `.py` file is compiled into a `.pyc` file using the `py_compile` module. The original `.py` files are **not** included in the output.
+3. **Preserves Assets**: All non-Python files (YAML, JSON, INI, SQL, TXT, etc.) are copied exactly as they are to the target directory.
+4. **Maintains Structure**: The directory hierarchy is perfectly preserved in the output directory.
+
+## Deployment
+
+After compilation, the `dist` folder is ready to be deployed.
+
+```bash
+# Navigate to the compiled project
+cd dist
+
+# Run the application (no .py files needed!)
+python main.pyc
+```
+
+## Best Practices
+
+1. **Compile before Release**: Always use the `compile` command before packaging your application for production.
+2. **Verify the Output**: After compiling, run your tests or the main entry point within the `dist` folder to ensure everything was copied correctly.
+3. **Keep it Clean**: Avoid compiling directly into your main project directory. Always use a dedicated output folder like `dist` or `build`.

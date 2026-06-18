@@ -1,65 +1,83 @@
 ---
-sidebar_position: 1
+sidebar_position: 4
 ---
 
 # Queue Management
 
-## Overview
-Equipment provides a flexible queue management system with two primary queue drivers: local (sync) and Redis. This allows for seamless handling of asynchronous tasks with different backend configurations.
+Equipment provides a robust and flexible queue management system for handling asynchronous tasks efficiently. It supports multiple drivers, allowing you to switch between synchronous processing for development and distributed queuing for production.
+
+## Configuration
+
+Queues are configured in `config/queue.yaml`.
+
+```yaml
+queue:
+  connection: ${QUEUE_CONNECTION:sync} # Options: sync, redis
+  connections:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      db: ${REDIS_DB:0}
+```
 
 ## Queue Drivers
-The queue driver is configured in `config/queue.yml` and can be set using the `QUEUE_CONNECTION` environment variable.
 
-### 1. Sync Driver
-- **Name**: `sync`
-- **Behavior**: Tasks are processed immediately in the current process
-- **Use Case**: Ideal for local development or simple task processing
+### `sync` (Default)
+- **Behavior**: Tasks are executed immediately in the current process.
+- **Use Case**: Local development, debugging, or simple scripts where background processing is not required.
+- **Note**: This driver does not require any additional services like Redis.
 
-### 2. Redis Driver
-- **Name**: `redis`
-- **Behavior**: Tasks are queued and processed by a separate worker
-- **Configuration**:
-  - `host`: Redis server host (default: 127.0.0.1)
-  - `port`: Redis server port (default: 6379)
-  - `db`: Redis database number (default: 0)
-  - `username`: Optional Redis username
-  - `password`: Optional Redis password
+### `redis`
+- **Behavior**: Tasks are pushed to a Redis instance and executed by background workers.
+- **Use Case**: Production environments, long-running tasks, or when you need to offload work from a web request.
+- **Requirement**: Requires a running Redis server and a worker process.
 
-## Queue Methods
+## Usage
 
-### `push(task)`
-- Adds a task to the queue for immediate or deferred processing
-- Works with both sync and Redis drivers
+### Enqueuing a Task
 
-### `push_at(task, timestamp)`
-- Schedules a task to be executed at a specific time
-- Supports both sync and Redis drivers
-
-## Usage Example
+You can enqueue any Python callable (function or method).
 
 ```python
-# Initialize the application
 from app import app
 
 app = app()
 
-# When using Sync driver, task is processed immediately
+def send_email(to, subject, body):
+    # Logic to send email
+    print(f"Sending email to {to}")
 
-# When using Redis driver, task is queued for worker processing
-# Start worker with: $ py queues.py
-
-# Results in `app.log().debug(app.inspiring().quote())`
-app.queue().push(
-    app.log().debug,
-    app.inspiring().quote()
-)
+# Push task to the queue
+app.queue().push(send_email, "user@example.com", "Hello", "Welcome to Equipment!")
 ```
 
-## Running Queue Worker
-For Redis driver, start the queue worker using:
+### Scheduling a Future Task
+
+The `push_at` method allows you to schedule a task to be executed at a specific time.
+
+```python
+from datetime import datetime, timedelta
+
+# Schedule a task to run 1 hour from now
+run_at = datetime.now() + timedelta(hours=1)
+
+app.queue().push_at(run_at, send_email, "user@example.com", "Reminder", "Don't forget!")
+```
+
+## Running the Worker
+
+When using the `redis` driver, you must start a worker process to consume and execute the tasks.
+
 ```bash
-$ py queues.py
+# Start the queue worker
+python queues.py
 ```
 
-## Configuration
-Modify `config/queue.yml` to configure queue connection and Redis settings.
+`queues.py` is a pre-configured entry point that initializes the application context and starts the `rq` worker.
+
+## Best Practices
+
+1. **Use async for long tasks**: Always offload tasks like email sending, image processing, or external API calls to a queue.
+2. **Handle failures**: Ensure your queued functions are idempotent (safe to retry) and include proper error handling.
+3. **Monitor your queues**: Use tools like `rq-dashboard` to monitor the status and performance of your Redis queues.
+4. **Keep task arguments simple**: Prefer passing record IDs instead of full objects to avoid serialization issues and ensure data freshness.
