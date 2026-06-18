@@ -73,8 +73,8 @@ Website docs workflow:
 
 ```bash
 cd website
-pnpm install
-pnpm build
+npm ci
+npm run build
 ```
 
 ## Generated Project Structure

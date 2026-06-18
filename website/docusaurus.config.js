@@ -12,7 +12,11 @@ const config = {
 	url: "https://equipment-python.vercel.app",
 	baseUrl: "/",
 	onBrokenLinks: "throw",
-	onBrokenMarkdownLinks: "warn",
+	markdown: {
+		hooks: {
+			onBrokenMarkdownLinks: "warn",
+		},
+	},
 	favicon: "img/favicon.ico",
 	organizationName: "rogervila", // Usually your GitHub org/user name.
 	projectName: "equipment", // Usually your repo name.

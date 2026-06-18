@@ -143,8 +143,8 @@ Build the documentation site:
 
 ```bash
 cd website
-pnpm install
-pnpm build
+npm ci
+npm run build
 ```
 
 Windows helper scripts use the `PYTHON` environment variable when set, otherwise `python`:
