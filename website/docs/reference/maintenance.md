@@ -78,6 +78,13 @@ npm run build
 
 Keep `website/package-lock.json` committed when website dependencies change. Vercel uses the lockfile for deterministic installs.
 
+The hosted LLM files are generated during the Docusaurus build by `docusaurus-plugin-llms`:
+
+- `https://equipment-python.vercel.app/llms.txt`
+- `https://equipment-python.vercel.app/llms-full.txt`
+
+Do not hand-edit generated files in `website/build/`. Update `website/docs/` content and the plugin root content in `website/docusaurus.config.js` instead.
+
 ## Dependency Upgrade Policy
 
 Do not mix dependency upgrades with unrelated compatibility, docs, or test changes. Upgrade dependencies in a dedicated change so failures are easy to diagnose.
@@ -109,7 +116,7 @@ When editing `project/`:
 
 - Update generated tests if behavior changes.
 - Update website docs if commands, files, or config change.
-- Update `website/static/llms.txt` (served at `https://equipment-python.vercel.app/llms.txt`) and `website/static/llms-full.txt` (served at `https://equipment-python.vercel.app/llms-full.txt`) if architecture or constraints change.
+- Update website docs and the `docusaurus-plugin-llms` root content in `website/docusaurus.config.js` if architecture or constraints change.
 - Validate generated project install and tests.
 - Validate compile output if entry points or runtime assets change.
 - Keep Unix and Windows behavior in mind.
@@ -122,7 +129,7 @@ When adding or removing Python support:
 - Update generated `project/pyproject.toml` classifiers and `requires-python` if needed.
 - Update GitHub Actions matrix.
 - Run tests on each supported interpreter available locally.
-- Update README, website docs, `website/static/llms.txt`, and `website/static/llms-full.txt`.
+- Update README, website docs, and the `docusaurus-plugin-llms` root content in `website/docusaurus.config.js`.
 - Document any dependency blocker instead of silently upgrading requirements.
 
 ## Cross-platform Checklist
@@ -139,7 +146,7 @@ When adding or removing Python support:
 
 When docs change:
 
-- Keep README, website docs, [llms.txt](https://equipment-python.vercel.app/llms.txt), and [llms-full.txt](https://equipment-python.vercel.app/llms-full.txt) consistent.
+- Keep README, website docs, [llms.txt](https://equipment-python.vercel.app/llms.txt), and [llms-full.txt](https://equipment-python.vercel.app/llms-full.txt) consistent. The LLM files are generated from docs during `npm run build`.
 - Prefer copyable commands.
 - Include Windows notes when commands differ.
 - Mention required external services such as Redis, S3, MySQL, or PostgreSQL.
