@@ -11,9 +11,9 @@ class CompileCommandTest(unittest.TestCase):
     def setUp(self):
         self.workspace = Path(tempfile.mkdtemp())
         self.previous_cwd = Path.cwd()
-        os.chdir(self.workspace)
-        self.addCleanup(os.chdir, self.previous_cwd)
         self.addCleanup(shutil.rmtree, self.workspace)
+        self.addCleanup(os.chdir, self.previous_cwd)
+        os.chdir(self.workspace)
 
     def write_file(self, path: str, content: str = '') -> Path:
         file_path = self.workspace / path
