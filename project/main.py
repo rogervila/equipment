@@ -12,13 +12,13 @@ app.log().info(
     $ pip install .
 
     Do you need to run scheduled tasks?
-    $ py scheduler.py
+    $ python scheduler.py
 
     Do you need to enqueue tasks?
-    $ py queues.py
+    $ python queues.py
 
     Do you need to run a web server?
-    $ py web.py
+    $ python web.py
 
     Check main.py for more examples
     '''
@@ -53,7 +53,7 @@ def queue_example():
 
     When using the Sync driver, an inspiring quote will be logged in the current process.
     When using Redis, the quote will be logged in a queue worker. To start the worker, run the following command:
-    $ py queues.py
+    $ python queues.py
 
     Check the config/queue.yml file for more details
     """

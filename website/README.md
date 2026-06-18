@@ -1,41 +1,23 @@
-# Website
+# Equipment Website
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+This website is built with Docusaurus and deployed on Vercel.
 
-### Installation
+## Install
 
-```
-$ yarn
-```
-
-### Local Development
-
-```
-$ yarn start
+```bash
+npm ci
 ```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+## Develop
 
-### Build
-
-```
-$ yarn build
+```bash
+npm run start
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+## Build
 
-### Deployment
-
-Using SSH:
-
-```
-$ USE_SSH=true yarn deploy
+```bash
+npm run build
 ```
 
-Not using SSH:
-
-```
-$ GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+The build writes generated files to `build/`. Vercel runs the same npm-based build path.

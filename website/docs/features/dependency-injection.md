@@ -4,89 +4,227 @@ sidebar_position: 0
 
 # Dependency Injection
 
-## Overview
+Equipment uses `dependency-injector` to keep service creation explicit and reusable. The framework container provides shared services, and the generated project adds application-specific services on top.
 
-Dependency Injection (DI) is a core design pattern in Equipment used to manage object creation and lifecycle. It promotes loose coupling, improved modularity, and makes your application significantly easier to test.
+## Runtime Container
 
-Equipment uses the [`python-dependency-injector`](https://github.com/ets-labs/python-dependency-injector) library under the hood, specifically utilizing `ThreadSafeSingleton` for creating thread-safe, single-instance objects.
+The base `Equipment` container loads configuration and exposes these singleton providers:
 
-## The Equipment Architecture
+- `log`: configured logger factory;
+- `queue`: sync or Redis queue factory;
+- `storage`: local or S3 storage factory;
+- `database`: SQLAlchemy factory.
 
-Equipment separates dependencies into two layers:
-1. **Library-level Singletons**: Core services provided by the Equipment framework (Log, Queue, Database, Storage).
-2. **Application-level Singletons**: Custom services defined in your project's `App` class.
+The generated `App` class is the application composition root. A composition root is the place where concrete services are assembled. Keeping service registration in one file makes the dependency graph easy to inspect and easy for LLMs to reason about.
 
-### Library-level Singletons
-
-These are always available in any Equipment project. They are configured automatically based on your `config/` files.
-
-- **Log**: `app.log()` - Centralized logging system.
-- **Queue**: `app.queue()` - Background task management.
-- **Database**: `app.database()` - SQLAlchemy engine and session management.
-- **Storage**: `app.storage()` - Abstract filesystem interface.
-
-### Application-level Singletons
-
-You define your own services in the `App` class located in `app/__init__.py`.
+Generated projects subclass the base container in `app/__init__.py`:
 
 ```python
-# app/__init__.py
 from dependency_injector.providers import ThreadSafeSingleton as Singleton
 from equipment import Equipment
-from app.MyService import MyService
+from app.Inspire import Inspire
+from app.Scheduler import Scheduler
+
 
 class App(Equipment):
-    # Registering a custom service as a singleton
-    myservice = Singleton(
-        MyService,
-        Equipment.log,  # Injecting a library-level singleton
-        Equipment.config.app.my_setting # Injecting a configuration value
+    inspiring = Singleton(Inspire, Equipment.config.inspiring.quotes)
+
+    scheduler = Singleton(
+        Scheduler,
+        Equipment.log,
+        Equipment.queue,
+        inspiring,
     )
+
+
+def app(base_path: str | None = None) -> App:
+    return App.make(base_path)
 ```
 
-## Usage Example
-
-The `app()` function serves as a factory method to create and configure the main `App` instance.
+## Access Services
 
 ```python
-#!/usr/bin/env python
 from app import app
 
-# Create the application instance
-app = app()
+application = app()
 
-# Accessing library singletons
-app.log().info("Hello World")
-app.storage().write("test.txt", "data")
-
-# Accessing your custom singletons
-result = app.myservice().do_something()
+application.log().info("Application started")
+quote = application.inspiring().quote()
+application.storage().write("quote.txt", quote)
 ```
 
-## Advanced Injection
+## Add Your Own Service
 
-You can inject services into other services by passing them to the `Singleton` provider in your `App` class.
+Define a class in `app/` and register it in `App`:
 
 ```python
-class App(Equipment):
-    repository = Singleton(UserRepository, Equipment.database)
+from dependency_injector.providers import ThreadSafeSingleton as Singleton
+from equipment import Equipment
+from app.Reports import Reports
 
-    service = Singleton(
-        UserService,
-        repository,    # Injecting another singleton
-        Equipment.log  # Injecting library singleton
+
+class App(Equipment):
+    reports = Singleton(
+        Reports,
+        Equipment.database,
+        Equipment.storage,
+        Equipment.log,
     )
 ```
 
-## Benefits
+Prefer constructor injection. It keeps dependencies visible, easier to test, and easier for LLMs to follow.
 
-- **Modularity**: Dependencies are explicit and easy to swap.
-- **Thread Safety**: `ThreadSafeSingleton` ensures a single instance even in multi-threaded environments (like web servers).
-- **Testability**: You can easily override providers with mocks or stubs during testing.
-- **Clean Code**: Reduces the need for global variables or complex factory functions.
+## Constructor Injection Pattern
 
-## Best Practices
+Prefer this pattern:
 
-1. **Inject, Don't Fetch**: Pass dependencies to your service constructors instead of using the `app` instance inside the service.
-2. **Keep services focused**: Each singleton should have a single, well-defined responsibility.
-3. **Use the `App` class**: Always register your main business logic services in the `App` class for consistent lifecycle management.
+```python
+class InvoiceService:
+    def __init__(self, database, log):
+        self.database = database
+        self.log = log
+
+    def create_invoice(self, customer_id: int) -> int:
+        self.log.info("Creating invoice", extra={"customer_id": customer_id})
+        # Use self.database here.
+        return 1
+```
+
+Register it once:
+
+```python
+class App(Equipment):
+    invoices = Singleton(InvoiceService, Equipment.database, Equipment.log)
+```
+
+Then use it from entry points:
+
+```python
+from app import app
+
+application = app()
+invoice_id = application.invoices().create_invoice(customer_id=42)
+```
+
+Avoid this pattern inside business services:
+
+```python
+class InvoiceService:
+    def create_invoice(self, customer_id: int) -> int:
+        from app import app
+        application = app()
+        application.log().info("Creating invoice")
+        return 1
+```
+
+The second version hides dependencies, makes tests more difficult, and can create surprising container instances when called from workers or scripts.
+
+## Provider Lifecycle
+
+Generated services use `ThreadSafeSingleton`. The first call creates the service, and later calls reuse it. This is useful for services that hold references to framework factories such as logging, database, storage, or queue providers.
+
+Use singleton services for:
+
+- stateless business services;
+- repositories that use shared framework factories;
+- adapters around external systems;
+- scheduler classes;
+- services that are safe to reuse between calls.
+
+Avoid storing request-specific mutable state on singleton services. In web apps, request data should live in function parameters, local variables, database rows, or dedicated request-scoped objects that you create manually.
+
+## Passing Configuration Into Services
+
+You can inject config values directly:
+
+```python
+class Reports:
+    def __init__(self, storage, output_path: str):
+        self.storage = storage
+        self.output_path = output_path
+
+
+class App(Equipment):
+    reports = Singleton(
+        Reports,
+        Equipment.storage,
+        Equipment.config.reports.output_path,
+    )
+```
+
+The injected config provider is evaluated when the service is created. If tests need a different value, override the config before calling the service for the first time:
+
+```python
+self.app.config.reports.output_path.from_value("test-report.txt")
+report = self.app.reports()
+```
+
+## Testing Overrides
+
+Tests can override providers when a service should be replaced with a fake or mock:
+
+```python
+from unittest.mock import Mock
+
+from tests.TestCase import TestCase
+
+
+class ReportsTest(TestCase):
+    def test_report_uses_storage(self):
+        fake_storage = Mock()
+        self.app.storage.override(fake_storage)
+
+        self.app.reports().run()
+
+        fake_storage.write.assert_called()
+```
+
+When overriding providers, keep the override local to the test. `unittest` creates a new `TestCase` instance for each method, but singleton providers can still hold created objects. For tests that override core providers, reset the provider or create a fresh app base path if the test needs strict isolation.
+
+## Designing Services For Workers And Schedulers
+
+Queue workers and schedulers run in separate processes. Services should therefore be importable from module scope and should not depend on local state created only in `main.py`.
+
+Good worker-friendly pattern:
+
+```python
+# app/jobs.py
+from app import app
+
+
+def send_invoice(invoice_id: int) -> None:
+    application = app()
+    application.invoices().send(invoice_id)
+```
+
+The queued function creates its own application container in the worker process and delegates to a service. That keeps the queued function small and lets tests target `InvoiceService` directly.
+
+## Naming Conventions
+
+- Use lowercase provider names such as `reports`, `invoices`, or `mailer`.
+- Use class names for service classes such as `Reports`, `InvoiceService`, or `Mailer`.
+- Keep provider names stable because entry points and tests may call them directly.
+- Group related providers together in `app/__init__.py` when the application grows.
+
+## Troubleshooting
+
+`AttributeError` when accessing a service:
+
+The service is not registered on the generated `App` class, or the entry point imported the wrong `app` object.
+
+Configuration value is missing:
+
+Confirm the config file exists under `config/`, the top-level key matches the filename, and the application is running from the project root or an explicit base path.
+
+Service uses stale config in a test:
+
+The singleton may have already been created. Override config before first access, or reset the provider before creating the service again.
+
+## Guidance
+
+- Register long-lived services as `ThreadSafeSingleton` providers.
+- Keep application registrations in `app/__init__.py` so the container stays discoverable.
+- Pass framework services into constructors instead of importing a global app object inside business logic.
+- Reset or override providers in tests when a dependency touches the filesystem, network, database, or queue.
+- Keep singleton services stateless with respect to per-request data.
+- Put process entry-point logic in `main.py`, `web.py`, `queues.py`, or `scheduler.py`, and reusable behavior in registered services.

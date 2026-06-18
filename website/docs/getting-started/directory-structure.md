@@ -2,89 +2,165 @@
 sidebar_position: 3
 ---
 
-# Project Directory Structure
+# Generated Directory Structure
 
-## Overview
-
-Equipment provides a meticulously designed, modular project structure that promotes clean code organization, maintainability, and scalability. Each directory and file has a specific responsibility within the application architecture.
-
-## Visual Directory Tree
+`equipment new my-app` creates an application scaffold with runtime code, configuration, tests, and project metadata. The structure is intentionally small so it can be understood before it is customized.
 
 ```text
 my-app/
-├── app/                  # Application-specific logic
-│   ├── __init__.py       # Service definitions and App class
-│   ├── Inspire.py        # Example service
-│   └── Scheduler.py      # Custom task scheduling
-├── config/               # Configuration files (YAML, JSON, INI)
-│   ├── app.yaml          # Core application settings
-│   ├── database.yaml     # Database connections
-│   ├── log.yaml          # Logging configuration
-│   ├── queue.yaml        # Queue settings
-│   └── storage.yaml      # Storage configuration
-├── database/             # Database persistence
-│   ├── migrations/       # Alembic migration scripts
-│   └── database.sqlite   # Default SQLite database (if used)
-├── storage/              # Filesystem API storage
-│   ├── app/              # Default local storage directory
-│   ├── logs/             # Application log files
-│   └── .gitignore        # Keep directory structure
-├── tests/                # Test suite
-│   ├── __init__.py       # Test configuration and base class
-│   └── test_example.py   # Example test cases
-├── .env.example          # Template for environment variables
-├── .env                  # Local environment variables (git-ignored)
-├── main.py               # Main application entry point
-├── queues.py             # Queue worker entry point
-├── scheduler.py          # Scheduler entry point
-├── web.py                # Web server entry point
-└── pyproject.toml        # Project metadata and dependencies
+├── app/
+│   ├── __init__.py
+│   ├── Inspire.py
+│   └── Scheduler.py
+├── config/
+│   ├── app.yaml
+│   ├── database.yaml
+│   ├── inspiring.json
+│   ├── log.yaml
+│   ├── queue.yaml
+│   ├── storage.yaml
+│   └── web.yaml
+├── database/
+│   ├── .gitignore
+│   └── migrations/
+├── storage/
+│   ├── app/
+│   └── logs/
+├── tests/
+│   ├── TestCase.py
+│   └── app/test_Inspire.py
+├── .coveragerc
+├── .editorconfig
+├── .env.example
+├── .gitignore
+├── README.md
+├── main.py
+├── pyproject.toml
+├── queues.py
+├── scheduler.py
+└── web.py
 ```
 
-## Detailed Directory breakdown
+## Application Code
 
-### `app/`
-**Purpose**: Core Application Logic.
-- **`__init__.py`**: Defines the `App` class which inherits from `Equipment`. This is where you register your custom services as singletons.
-- **`Inspire.py`**: A sample service demonstrating how to implement business logic.
-- **`Scheduler.py`**: Customizes the scheduling logic for your application.
+`app/__init__.py` defines the generated `App` container. It inherits from `equipment.Equipment` and registers application services with `dependency-injector` singletons.
 
-### `config/`
-**Purpose**: Configuration Management.
-- Supports YAML, JSON, and INI formats.
-- Manages settings for all core components (Database, Log, Queue, Storage).
-- Supports environment variable interpolation (e.g., `${DB_PASSWORD}`).
+`app/Inspire.py` is a small example service that reads quote data from `config/inspiring.json`.
 
-### `database/`
-**Purpose**: Database Persistence and Migrations.
-- **`migrations/`**: Contains Alembic versions and configuration for database schema evolution.
+`app/Scheduler.py` defines scheduled tasks for `scheduler.py`.
 
-### `storage/`
-**Purpose**: Flexible Filesystem API.
-- **`app/`**: The base directory for the `Local` storage driver.
-- **`logs/`**: Where log files are stored when using the `single` or `daily` log channels.
+## File-by-file Reference
 
-### `tests/`
-**Purpose**: Quality Assurance.
-- Uses `pytest` by default.
-- Provides a `TestCase` base class that initializes a fresh application context for every test.
+| Path | Owned By | Purpose |
+| --- | --- | --- |
+| `app/__init__.py` | You | Defines the application container and service registrations. |
+| `app/Inspire.py` | You | Example service; replace or remove when your own services exist. |
+| `app/Scheduler.py` | You | Defines recurring jobs for the scheduler process. |
+| `config/app.yaml` | You | App name and environment defaults. |
+| `config/database.yaml` | You | SQLAlchemy connection configuration. |
+| `config/inspiring.json` | You | Example data for `Inspire`; safe to remove with the example service. |
+| `config/log.yaml` | You | Log channels, handlers, levels, and formatters. |
+| `config/queue.yaml` | You | Queue driver selection and Redis connection values. |
+| `config/storage.yaml` | You | Local/S3 storage driver settings. |
+| `config/web.yaml` | You | Host and port used by `web.py`. |
+| `database/migrations/` | You | Alembic migration environment and migration versions. |
+| `storage/app/` | Runtime | Local storage root for application-managed files. |
+| `storage/logs/` | Runtime | Log output directory for file-based handlers. |
+| `tests/TestCase.py` | You | Shared test setup with Faker and an application container. |
+| `main.py` | You | Script entry point and examples. |
+| `queues.py` | You | Redis worker entry point. |
+| `scheduler.py` | You | Scheduler process entry point. |
+| `web.py` | You | FastAPI entry point. |
+| `.env.example` | You | Documented environment variable template. |
+| `.env` | Local runtime | Local overrides copied from `.env.example`; keep secrets out of Git. |
+| `pyproject.toml` | You | Generated project metadata and dependencies. |
+| `README.md` | You | Project-specific instructions for maintainers and users. |
 
-## Key Entry Points
+## Configuration
 
-### `main.py`
-The primary entry point for your application logic. Use this for one-off scripts, batch processing, or demonstrating functionality.
+The `config/` directory is loaded by filename and extension. Equipment supports `.ini`, `.yaml`, and `.json` files. The generated project uses YAML for application services and JSON for the example quote list.
 
-### `scheduler.py`
-Starts the background task scheduler. It runs indefinitely, executing tasks defined in `app/Scheduler.py`.
+Use `${ENV_NAME:default}` syntax to let `.env` or system environment variables override defaults.
 
-### `queues.py`
-Starts a Redis queue worker (using `rq`). Required only if you are using the `redis` queue driver.
+## Entry Points
 
-### `web.py`
-The entry point for a FastAPI web server. Defines your routes and handles HTTP requests.
+- `main.py`: script entry point and examples for storage, queue, database, and logging.
+- `scheduler.py`: starts the schedule loop defined in `app/Scheduler.py`.
+- `queues.py`: starts an RQ worker for Redis-backed queues.
+- `web.py`: starts the FastAPI example using `config/web.yaml`.
 
-## Best Practices
+## When To Remove Generated Files
 
-- **Keep `app/` clean**: Organize complex logic into subdirectories within `app/`.
-- **Use `.env`**: Always use environment variables for sensitive or environment-specific configuration.
-- **Test everything**: Place your tests in the `tests/` directory and inherit from the provided `TestCase`.
+The scaffold includes several optional capabilities. You can remove them when a project does not use them:
+
+- Remove `web.py` and FastAPI/Uvicorn dependencies if the project is not a web app.
+- Remove `queues.py` and Redis configuration if the project never uses async workers.
+- Remove `scheduler.py` and `app/Scheduler.py` if there are no recurring jobs.
+- Remove Alembic dependencies and `database/migrations/` if the project does not own a relational schema.
+- Remove `app/Inspire.py` and `config/inspiring.json` after replacing the example service.
+
+When removing a feature, remove its tests, config references, and documentation together. That keeps the project understandable for future humans and LLMs.
+
+## Where To Put New Code
+
+Use `app/` for application code. For a small project, flat files are fine:
+
+```text
+app/
+├── __init__.py
+├── Billing.py
+├── Reports.py
+└── Scheduler.py
+```
+
+For a larger project, organize by domain or responsibility:
+
+```text
+app/
+├── billing/
+│   ├── __init__.py
+│   ├── models.py
+│   ├── repository.py
+│   └── service.py
+├── notifications/
+│   ├── __init__.py
+│   └── service.py
+└── Scheduler.py
+```
+
+Register only the services that need container-managed dependencies in `app/__init__.py`. Plain helper functions and data models do not need DI registrations.
+
+## Tests
+
+The generated `tests/TestCase.py` is based on `unittest.TestCase`. It creates an app instance, sets `APP_ENV` to `testing`, and exposes `self.fake` from Faker.
+
+Run generated tests with:
+
+```bash
+python -m unittest discover -s tests
+```
+
+## Files Created During Development
+
+The scaffold intentionally ignores local runtime files such as `.env`, compiled Python files, coverage output, SQLite files, logs, and virtual environments. This keeps generated projects portable across Unix and Windows.
+
+Common generated or local-only files include:
+
+- `.env`: local secrets and environment overrides;
+- `.coverage`: coverage data;
+- `htmlcov/`: HTML coverage reports;
+- `*.pyc` and `__pycache__/`: Python bytecode cache;
+- `database/*.sqlite*`: local SQLite database files;
+- `storage/logs/*.log`: file log output;
+- `dist/` and `build/`: compile or packaging outputs;
+- `.venv/` or `venv/`: virtual environments.
+
+Do not rely on these files being present in production. They should be recreated by deployment or runtime setup.
+
+## Safe Customization
+
+- Add business logic under `app/`.
+- Add configuration files under `config/`.
+- Keep secrets in `.env` or real environment variables.
+- Keep tests under `tests/` and prefer workflow tests around public entry points.
+- Use `pathlib` for custom file handling so code works on Windows and Unix.

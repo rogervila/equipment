@@ -2,13 +2,15 @@
 sidebar_position: 2
 ---
 
-# Database Management
+# Database
 
-Equipment leverages [SQLAlchemy](https://www.sqlalchemy.org) to provide a powerful and flexible database management system. It supports multiple database engines and provides both low-level raw SQL execution and high-level ORM capabilities.
+Equipment wraps SQLAlchemy setup in `SQLAlchemyFactory`. The generated project defaults to SQLite so the scaffold can run locally without an external database.
+
+The database component exposes a SQLAlchemy `engine`, a `session()` factory, and a `text()` helper. Equipment does not define your ORM models. Your application owns table definitions, migrations, repositories, and transaction boundaries.
 
 ## Configuration
 
-Configure your database connections in `config/database.yaml`.
+`config/database.yaml` selects the active connection:
 
 ```yaml
 database:
@@ -18,94 +20,244 @@ database:
     sqlite:
       schema: sqlite
       database: "${DB_DATABASE:database/database.sqlite}"
-    mysql:
-      schema: mysql+pymysql
-      host: ${DB_HOST:localhost}
-      port: ${DB_PORT:3306}
-      database: ${DB_DATABASE:my_app}
-      username: ${DB_USERNAME:root}
-      password: ${DB_PASSWORD:secret}
-      charset: ${DB_CHARSET:utf8mb4}
 ```
 
-## Usage
+The generated file also includes MySQL and PostgreSQL examples. Those require optional drivers in the generated `pyproject.toml`, such as `mysql-connector-python` or `psycopg2-binary`.
 
-### Raw SQL Execution
+## Connection URLs
 
-For simple queries or when you need maximum performance, you can use raw SQL.
+Equipment builds SQLAlchemy URLs from config values:
+
+- SQLite file: `sqlite:///BASE_PATH/database/database.sqlite`
+- SQLite memory: `sqlite://`
+- MySQL: `mysql+mysqlconnector://user:pass@host:port/database?charset=utf8mb4`
+- PostgreSQL: `postgresql+psycopg2://user:pass@host:port/database`
+
+The generated SQLite database path is relative to the project base path. This keeps local development portable across Unix and Windows.
+
+## SQLite Local Development
+
+For the fastest local setup, use:
+
+```env
+DB_CONNECTION=sqlite
+DB_DATABASE=database/database.sqlite
+```
+
+SQLite files are local runtime artifacts and should not be committed. Use migrations to recreate schema.
+
+## MySQL Configuration
+
+Install or uncomment the matching generated dependency before using MySQL. The generated config uses the `mysql+mysqlconnector` SQLAlchemy dialect:
+
+```toml
+dependencies = [
+    "mysql-connector-python>=9.1,<10",
+]
+```
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=equipment
+DB_USERNAME=equipment
+DB_PASSWORD=equipment
+DB_CHARSET=utf8mb4
+```
+
+## PostgreSQL Configuration
+
+Install or uncomment a PostgreSQL driver before using PostgreSQL:
+
+```toml
+dependencies = [
+    "psycopg2-binary>=2.9,<3",
+]
+```
+
+```env
+DB_CONNECTION=postgresql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=equipment
+DB_USERNAME=equipment
+DB_PASSWORD=equipment
+```
+
+## Raw SQL
+
+Use `app.database().text()` for SQLAlchemy text queries:
 
 ```python
 from app import app
 
-app = app()
+application = app()
 
-with app.database().engine.connect() as connection:
-    # Use app.database().text() for safe query building
+with application.database().engine.connect() as connection:
     result = connection.execute(
-        app.database().text("SELECT * FROM users WHERE active = :active"),
-        {"active": True}
+        application.database().text("SELECT * FROM todos ORDER BY id DESC LIMIT 1")
     )
-
-    for row in result:
-        print(row.name)
+    latest = result.mappings().first()
 ```
 
-### SQLAlchemy ORM
-
-For complex business logic, the ORM approach is recommended.
+Use bind parameters for user-provided values:
 
 ```python
-from sqlalchemy import Column, Integer, String
+result = connection.execute(
+    application.database().text("SELECT * FROM todos WHERE id = :todo_id"),
+    {"todo_id": todo_id},
+)
+```
+
+Avoid formatting user values directly into SQL strings.
+
+## ORM Sessions
+
+```python
+from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.orm import declarative_base
+
 from app import app
+
 
 Base = declarative_base()
 
-class User(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50))
 
-app = app()
-session = app.database().session()
+class Todo(Base):
+    __tablename__ = "todos"
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String(255), nullable=False)
+    completed = Column(Boolean, nullable=False)
+
+
+application = app()
+session = application.database().session()
 
 try:
-    # Querying
-    users = session.query(User).filter(User.name == "John").all()
-
-    # Inserting
-    new_user = User(name="Jane")
-    session.add(new_user)
+    session.add(Todo(title="Learn Equipment", completed=False))
     session.commit()
-except Exception as e:
+except Exception:
     session.rollback()
-    raise e
+    raise
 finally:
     session.close()
 ```
 
-## Database Migrations
+## Repository Pattern
 
-Equipment uses [Alembic](https://alembic.sqlalchemy.org/) for managing database schema changes.
+For larger apps, keep SQLAlchemy calls in repository classes and call repositories from services:
 
-1.  **Initialize Migrations** (already done in the scaffold):
-    The `database/migrations` directory contains the Alembic environment.
+```python
+class TodoRepository:
+    def __init__(self, database):
+        self.database = database
 
-2.  **Create a new migration**:
-    ```bash
-    cd database/migrations
-    alembic revision --autogenerate -m "create users table"
-    ```
+    def latest(self):
+        with self.database.engine.connect() as connection:
+            result = connection.execute(
+                self.database.text("SELECT * FROM todos ORDER BY id DESC LIMIT 1")
+            )
+            return result.mappings().first()
+```
 
-3.  **Apply migrations**:
-    ```bash
-    cd database/migrations
-    alembic upgrade head
-    ```
+Register the repository in `app/__init__.py`:
 
-## Best Practices
+```python
+todos = Singleton(TodoRepository, Equipment.database)
+```
 
-1.  **Use Migrations**: Never manually change your database schema. Always use Alembic.
-2.  **Session Context**: Always ensure your sessions are properly closed using a `try...finally` block or a context manager.
-3.  **Environment Variables**: Use `${DB_...}` interpolation in `database.yaml` to manage connection strings for different environments.
-4.  **Validation**: Validate your model data before attempting to commit to the database.
+This keeps database details out of routes, queue jobs, and scheduler definitions.
+
+## Migrations
+
+The generated project includes an Alembic environment under `database/migrations`.
+
+Create a migration:
+
+```bash
+cd database/migrations
+alembic revision --autogenerate -m "create todos table"
+```
+
+Apply migrations:
+
+```bash
+cd database/migrations
+alembic upgrade head
+```
+
+## Migration Workflow
+
+Use this loop for schema changes:
+
+1. Change or add ORM model metadata.
+2. Generate an Alembic revision.
+3. Inspect the generated migration file before running it.
+4. Apply it locally.
+5. Run tests.
+6. Apply it in staging/production with deployment controls.
+
+Do not rely blindly on autogenerated migrations. Always read the migration to confirm indexes, constraints, nullable changes, defaults, and destructive operations.
+
+## Transactions
+
+Keep transaction boundaries explicit. A good service method either completes fully or rolls back:
+
+```python
+def create_todo(application, title: str):
+    session = application.database().session()
+    try:
+        todo = Todo(title=title, completed=False)
+        session.add(todo)
+        session.commit()
+        return todo.id
+    except Exception:
+        session.rollback()
+        raise
+    finally:
+        session.close()
+```
+
+For request-heavy web applications, consider using FastAPI dependencies or context managers around session lifecycle so every request closes its session.
+
+## Testing Database Code
+
+Prefer fast tests with SQLite when logic is database-agnostic. Use separate integration tests for MySQL or PostgreSQL-specific SQL, constraints, and driver behavior.
+
+Common test patterns:
+
+- use SQLite `:memory:` for unit-level repository tests;
+- use a temporary SQLite file when migrations or file paths matter;
+- skip MySQL/PostgreSQL tests unless required drivers and services are available;
+- seed only the rows needed for the behavior under test;
+- close sessions in `finally` blocks.
+
+## Troubleshooting
+
+Unknown connection type:
+
+`DB_CONNECTION` must match a key under `database.connections`.
+
+SQLite file is created in an unexpected place:
+
+Check the application base path. Relative SQLite paths are resolved from the base path.
+
+Driver import error:
+
+Install the optional driver dependency for the selected database. The generated `pyproject.toml` includes commented examples.
+
+Locked SQLite database:
+
+Close sessions and connections promptly. SQLite is convenient for local development but has different concurrency behavior from server databases.
+
+## Testing And Maintenance
+
+- Use SQLite `:memory:` for fast unit tests when possible.
+- Keep MySQL and PostgreSQL tests optional unless CI provides those services.
+- Run database URL and session tests before upgrading SQLAlchemy.
+- Do not commit local SQLite database files.
+- Keep business logic outside migration files.
+- Review autogenerated Alembic migrations before applying them.
+- Prefer bind parameters for user input in raw SQL.

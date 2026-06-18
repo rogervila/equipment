@@ -27,3 +27,10 @@ todo.txt
 equipment-*
 project/equipment
 equipment/Command/_project
+
+# Agents
+.agents/
+.github/agents/
+.claude/
+.windsurf/
+skills-lock.json

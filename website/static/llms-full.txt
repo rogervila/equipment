@@ -1,285 +1,391 @@
-# Equipment: The Complete Developer's Manual
+# Equipment Full LLM Manual
 
-> Equipment is a comprehensive scaffolding framework designed to simplify and streamline Python project development. It provides a robust, flexible foundation for projects of any scale, from simple scripts to complex enterprise applications.
+Equipment is a Python project scaffolding framework. It provides a generated project template plus a small runtime toolkit for configuration, dependency injection, logging, database access, queues, scheduling, storage, testing, optional FastAPI serving, and bytecode compilation.
 
----
+This file is optimized for LLM coding agents and human maintainers who need a compact but complete map of the project. Treat it as a high-signal orientation document, not a replacement for reading the source when making code changes.
 
-## 1. Prologue & Design Philosophy
+## Support Matrix
 
-Equipment is built to eliminate the "blank page" problem in Python development. By providing a pre-configured architecture and a set of core services, it allows developers to focus on business logic from minute one.
+- Python: 3.12, 3.13, 3.14.
+- Operating systems: Linux, macOS, Windows.
+- Test runner: `unittest` with `coverage`.
+- Website: Docusaurus deployed on Vercel with npm.
+- Root package metadata: `pyproject.toml`.
+- Runtime dependency list: `requirements.txt`.
+- Generated project template: `project/`.
 
-### Core Design Principles
-1. **Developer Experience (DX)**: Minimize boilerplate code and configuration overhead.
-2. **Flexibility**: Support various project types (CLI, Web, Background Workers) without being overly opinionated.
-3. **Scalability**: Seamlessly transition from a 10-line script to a distributed enterprise system.
-4. **Modularity**: Every component (Log, DB, Queue, Storage) is an interchangeable service managed by Dependency Injection.
+CI should validate the Python test suite on Ubuntu, Windows, and macOS for supported Python versions. Native Windows validation is important for path handling, temporary directory cleanup, batch scripts, and bytecode compilation behavior.
 
----
+## What Equipment Solves
 
-## 2. Installation & Quick Start
+Equipment removes repetitive project setup for Python applications. A generated project already includes:
 
-### System Requirements
-- **Python**: 3.12+ (uses modern type hinting)
-- **OS**: Windows, macOS, Linux
-- **Package Manager**: pip, pipenv, or poetry
+- an application package under `app/`;
+- environment-aware configuration under `config/`;
+- a dependency-injector container;
+- logging configuration and handlers;
+- SQLAlchemy database factory and Alembic migration scaffold;
+- sync and Redis-backed queue drivers;
+- schedule-based recurring task runner;
+- local and S3 storage drivers;
+- unittest/Faker test scaffold;
+- script, web, worker, and scheduler entry points;
+- optional FastAPI/Uvicorn dependencies;
+- bytecode compilation command.
 
-### standard Installation
+Equipment is best for scripts, workers, scheduled jobs, APIs, internal tools, and services that may grow over time. It is not a full web framework, hosted platform, secret manager, ORM model framework, or task orchestration system.
+
+## Canonical Commands
+
+Install and create a project:
+
 ```bash
-pip install equipment
-```
-
-### Creating a Project
-```bash
+python -m pip install equipment
 equipment new my-app
 cd my-app
-pip install .
-```
-
-### Verifying the Setup
-```bash
-equipment --version
+python -m pip install .
 python main.py
 ```
 
----
+Windows:
 
-## 3. Project Directory Structure
+```powershell
+py -3.14 -m pip install equipment
+equipment new my-app
+cd my-app
+py -3.14 -m pip install .
+py -3.14 main.py
+```
 
-Equipment uses a modular directory structure designed for clean separation of concerns.
+Run generated project tests:
+
+```bash
+python -m pip install .[dev]
+python -m coverage run -m unittest discover -s tests
+python -m coverage report
+```
+
+Run repository tests:
+
+```bash
+python -m pip install -r requirements.txt
+python -m pip install coverage runtype faker
+python -m coverage run -m unittest discover -s tests
+```
+
+Validate Python 3.14:
+
+```bash
+python3.14 -m coverage run -m unittest discover -s tests
+```
+
+Build website docs:
+
+```bash
+cd website
+npm ci
+npm run build
+```
+
+Compile a generated project:
+
+```bash
+python -m equipment compile dist
+cd dist
+python main.pyc
+```
+
+## Generated Project Structure
 
 ```text
 my-app/
-├── app/                  # Application-specific logic
-│   ├── __init__.py       # Service registrations (App class)
-│   ├── Inspire.py        # Business logic example
-│   └── Scheduler.py      # Custom task scheduling definitions
-├── config/               # Component-specific configurations
-│   ├── app.yaml          # Metadata and environment settings
-│   ├── database.yaml     # Connection strings (supports SQLA)
-│   ├── log.yaml          # Multi-channel log drivers
-│   ├── queue.yaml        # Sync/Redis queue settings
-│   └── storage.yaml      # Local/S3 filesystem drivers
-├── database/             # persistence layer
-│   ├── migrations/       # Alembic version control
-│   └── database.sqlite   # Default development database
-├── storage/              # Abstract filesystem storage
-│   ├── app/              # Local disk root
-│   └── logs/             # File-based logs
-├── tests/                # Integrated testing framework
-│   ├── __init__.py       # TestCase base class with DI support
-│   └── test_example.py   # Pytest examples
-├── main.py               # Main CLI/Script entry point
-├── queues.py             # redis-rq Worker entry point
-├── scheduler.py          # Background scheduler entry point
-├── web.py                # FastAPI server entry point
-└── pyproject.toml        # Dependency and metadata management
+├── app/
+│   ├── __init__.py       # App container and service registration
+│   ├── Inspire.py        # Example service; safe to replace
+│   └── Scheduler.py      # Scheduled task definitions
+├── config/
+│   ├── app.yaml          # app.name, app.env
+│   ├── database.yaml     # SQLAlchemy connection settings
+│   ├── inspiring.json    # example quote data
+│   ├── log.yaml          # log level, channels, formatters
+│   ├── queue.yaml        # sync/redis queue settings
+│   ├── storage.yaml      # local/S3 storage settings
+│   └── web.yaml          # FastAPI/Uvicorn host and port
+├── database/
+│   ├── .gitignore
+│   └── migrations/       # Alembic env and versions
+├── storage/
+│   ├── app/              # local storage root
+│   └── logs/             # file log output
+├── tests/
+│   ├── TestCase.py       # unittest base with Faker and app container
+│   └── app/test_Inspire.py
+├── .coveragerc
+├── .editorconfig
+├── .env.example
+├── .gitignore
+├── README.md
+├── main.py
+├── pyproject.toml
+├── queues.py
+├── scheduler.py
+└── web.py
 ```
 
----
+## File Ownership
 
-## 4. Dependency Injection (DI)
+The generated project belongs to the user after creation. Equipment does not own it forever. Users should edit `app/`, `config/`, `tests/`, entry points, and `pyproject.toml` as their app evolves.
 
-Equipment implements DI using the `python-dependency-injector` library, specifically the `ThreadSafeSingleton` provider.
+Safe removals when unused:
 
-### The Architecture
-Dependencies are split into two layers:
-1. **Library Services**: Core logic provided by the framework (Log, Queue, Database, Storage).
-2. **Application Services**: Custom logic defined by the developer in `app/__init__.py`.
+- remove `web.py`, FastAPI, and Uvicorn if no web API is needed;
+- remove `queues.py` and Redis config if no background worker is needed;
+- remove `scheduler.py` and `app/Scheduler.py` if no scheduled jobs are needed;
+- remove Alembic dependencies and migrations if no relational database is owned;
+- remove `app/Inspire.py` and `config/inspiring.json` after replacing examples.
 
-### Registering Services
+When removing a feature, update tests, docs, config, and dependencies together.
+
+## Runtime Model
+
+`equipment.Equipment` is a `dependency_injector.containers.DeclarativeContainer`.
+
+`Equipment.make(base_path)`:
+
+1. uses the passed base path or `os.getcwd()`;
+2. loads `.env` from the base path;
+3. loads `config/*.ini`;
+4. loads `config/*.yaml`;
+5. loads `config/*.json`;
+6. sets `config.base_path`.
+
+Core providers:
+
+- `Equipment.log`: `LoggerFactory(config.app.name, config.base_path, config.log)`
+- `Equipment.queue`: `QueueFactory(config.queue, log)`
+- `Equipment.storage`: `StorageFactory(config.storage, config.base_path, log)`
+- `Equipment.database`: `SQLAlchemyFactory(config.database, config.base_path, log)`
+
+Generated apps subclass `Equipment` in `app/__init__.py` and register app services with `ThreadSafeSingleton`.
+
+## Dependency Injection Guidance
+
+Register services in `app/__init__.py`:
+
 ```python
-# app/__init__.py
 from dependency_injector.providers import ThreadSafeSingleton as Singleton
 from equipment import Equipment
+from app.Reports import Reports
+
 
 class App(Equipment):
-    # Registering a custom service
-    myservice = Singleton(
-        MyService,
-        Equipment.log,                  # Injecting library service
-        Equipment.config.app.setting    # Injecting config value
-    )
+    reports = Singleton(Reports, Equipment.storage, Equipment.log)
 ```
 
-### Accessing services
+Prefer constructor injection:
+
 ```python
-from app import app
-instance = app()
-
-instance.log().info("Hello")
-instance.myservice().do_work()
+class Reports:
+    def __init__(self, storage, log):
+        self.storage = storage
+        self.log = log
 ```
 
----
+Avoid importing `app()` inside service methods unless writing a process boundary function such as a queue job.
 
-## 5. Configuration Management
+Do not store request-specific mutable state on singleton services.
 
-Equipment supports YAML, JSON, and INI files. Configurations are automatically loaded based on their filenames in the `config/` directory.
+## Configuration Contract
 
-### Environment Variable Interpolation
-Generic configs can be specialized using the `${VAR:default}` syntax.
-```yaml
-app:
-  name: ${APP_NAME:Equipment}
-  env: ${APP_ENV:local}
-```
+Generated config uses `${VAR:default}` interpolation.
 
-### Core Configuration Files
-- `app.yaml`: Global application state.
-- `database.yaml`: SQL connection drivers.
-- `log.yaml`: Logging channels and formatters (supports JSON).
-- `queue.yaml`: Driver selection (`sync` vs `redis`).
-- `storage.yaml`: Filesystem driver selection (`local` vs `s3`).
+Important environment variables:
 
----
+- `APP_NAME`, `APP_ENV`
+- `LOG_CHANNEL`, `LOG_LEVEL`
+- `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`, `DB_CHARSET`
+- `QUEUE_CONNECTION`, `REDIS_HOST`, `REDIS_PORT`, `REDIS_DB`, `REDIS_USERNAME`, `REDIS_PASSWORD`
+- `FILESYSTEM_DISK`, `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `S3_REGION`, `S3_PREFIX`
+- `WEB_HOST`, `PORT`
 
-## 6. Database Management
+Environment values are strings. Cast them before passing them to libraries:
 
-Powered by **SQLAlchemy** (ORM) and **Alembic** (Migrations).
-
-### RAW SQL Example
 ```python
-with app.database().engine.connect() as conn:
-    conn.execute(app.database().text("UPDATE users SET active=1"))
+port = int(application.config.web.port())
+enabled = str(application.config.feature.enabled()).lower() == "true"
 ```
 
-### ORM Example
-```python
-session = app.database().session()
-new_user = User(name="Alice")
-session.add(new_user)
-session.commit()
-```
+Keep secrets out of Git, docs, tests, and logs. `.env.example` should contain fake values only.
 
-### Migrations
+## Logging Contract
+
+Logging is configured in `config/log.yaml` and accessed through `application.log()`.
+
+Channels:
+
+- `stack`: logs to multiple channels;
+- `single`: one file;
+- `daily`: timed rotating file;
+- `console`: stdout or configured stream;
+- `sqlite`: SQLite log table;
+- `null`: no visible output.
+
+Use `extra` for stable structured context. Do not log secrets.
+
+Testing may override logs with `NullLogger`.
+
+## Database Contract
+
+Equipment creates SQLAlchemy engine/session helpers but does not own ORM models.
+
+Supported generated connection examples:
+
+- SQLite: default local development path.
+- MySQL: requires optional driver dependency.
+- PostgreSQL: requires optional driver dependency.
+
+Use bind parameters for raw SQL. Close sessions in `finally` blocks. Review Alembic autogenerated migrations before applying them.
+
+## Queue Contract
+
+Drivers:
+
+- `sync`: executes immediately in-process; best for tests/local scripts.
+- `redis`: enqueues into Redis/RQ; requires `python queues.py` worker.
+
+Queue job functions should be module-level importable callables. Pass IDs and primitive values, not database sessions, request objects, lambdas, open files, or container instances.
+
+Design queued jobs to be idempotent.
+
+## Scheduler Contract
+
+Scheduled jobs live in `app/Scheduler.py`; `scheduler.py` starts the process.
+
+Always call `super().run()` after registering jobs. Keep scheduled jobs short. Push slow work into the queue. Run one scheduler process unless duplicate jobs are safe or externally locked.
+
+`schedule` uses local machine time. Deployment docs should state timezone assumptions.
+
+## Storage Contract
+
+Drivers:
+
+- `local`: stores under `base_path / config.storage.disks.local.path`.
+- `s3`: stores in an S3-compatible bucket with optional prefix.
+
+Storage methods handle strings. Serialize JSON manually. Use relative safe paths. Do not pass untrusted raw filenames directly.
+
+The abstraction does not guarantee atomic writes, locking, or compare-and-swap behavior. Add app-level coordination if concurrent writes matter.
+
+## FastAPI Contract
+
+Generated `web.py` creates the Equipment app container and a FastAPI app. Config comes from `config/web.yaml`.
+
+For larger apps, move routes into router modules and keep route handlers thin. Put business logic in services registered in `app/__init__.py`.
+
+Use queues for slow work triggered by HTTP requests.
+
+## Testing Contract
+
+Use `unittest`, not pytest.
+
+Generated `tests/TestCase.py` provides:
+
+- `self.fake`: Faker instance;
+- `self.app`: application container;
+- `APP_ENV` set to `testing`.
+
+Important coverage areas:
+
+- CLI command behavior;
+- project scaffolding with mocked GitHub downloads;
+- template rendering and generated metadata;
+- compile output and ignored directories;
+- config loading;
+- storage local/S3 behavior;
+- database URL/session behavior;
+- logging handlers;
+- queue sync behavior;
+- scheduler loop behavior.
+
+Windows note: tests cannot delete the current working directory. If a test changes into a temp directory, change back before deleting it. `unittest.addCleanup` callbacks run LIFO.
+
+## CLI Contract
+
+`equipment new NAME`:
+
+- downloads the GitHub archive;
+- extracts/copies `project/`;
+- creates `.env` from `.env.example`;
+- replaces `PROJECT_NAME` in generated `pyproject.toml`;
+- prompts before overwriting.
+
+`equipment compile DIST`:
+
+- walks the current directory;
+- ignores `__pycache__`, `dist`, `tests`, `equipment`, and selected output directory;
+- compiles `.py` to `.pyc`;
+- copies runtime assets: `config`, `database`, `storage`, `.coveragerc`, `.editorconfig`, `.env`, `.env.example`, `.gitignore`, `pyproject.toml`, `README.md`.
+
+## Website Contract
+
+Website source lives in `website/`.
+
+Important files:
+
+- `website/package.json`
+- `website/package-lock.json`
+- `website/docusaurus.config.js`
+- `website/docs/`
+- `website/static/llms.txt` served at https://equipment-python.vercel.app/llms.txt
+- `website/static/llms-full.txt` served at https://equipment-python.vercel.app/llms-full.txt
+
+Vercel uses npm. Validate with:
+
 ```bash
-cd database/migrations
-alembic revision --autogenerate -m "description"
-alembic upgrade head
+cd website
+npm ci
+npm run build
 ```
 
----
+Keep `package-lock.json` committed when website dependencies change.
 
-## 7. Logging System
+## Maintenance Rules
 
-Supports multiple channels and JSON formatting for production observability.
+- Do not update `requirements.txt` unless dependency upgrades are explicitly requested.
+- Do not mix dependency upgrades with docs-only or compatibility-only changes.
+- Keep README, website docs, https://equipment-python.vercel.app/llms.txt, and https://equipment-python.vercel.app/llms-full.txt consistent.
+- Preserve Python 3.12/3.13/3.14 support unless explicitly dropping support.
+- Prefer `pathlib` or platform-safe path APIs.
+- Mock network access in unit tests.
+- Validate generated project workflows after changing `project/`.
+- Validate website build after changing website docs or Docusaurus config.
 
-### Channels
-- `stack`: Log to multiple destinations at once.
-- `single`: One log file.
-- `daily`: Automated rotation.
-- `console`: Standard output.
-- `sqlite`: Log to a database table.
+## Common LLM Mistakes To Avoid
 
-### Usage
-```python
-app.log().error("API Failure", extra={"url": "...", "status": 500})
-```
+- Claiming pytest is the default runner.
+- Editing `requirements.txt` during docs or compatibility work.
+- Forgetting to update the generated `project/` template when root metadata changes.
+- Testing `equipment new` against live GitHub instead of mocking the zip.
+- Passing non-importable callables to Redis queue examples.
+- Hardcoding Unix paths or shell commands without Windows alternatives.
+- Deleting temp directories while the process is still inside them on Windows.
+- Treating `.pyc` compilation as source protection or dependency bundling.
+- Updating Docusaurus dependencies without validating `npm ci && npm run build`.
 
----
+## Best Starting Points For Tasks
 
-## 8. Queue & Background Tasks
+Create a service: read Dependency Injection and Common Workflows.
 
-Equipment abstracts background processing using the `rq` library for Redis and a `sync` driver for development.
+Add config: read Configuration and Environment Variables.
 
-### Drivers
-- `sync`: Tasks execute immediately (useful for debugging).
-- `redis`: Tasks are pushed to Redis and consumed by `queues.py`.
+Add database behavior: read Database and Maintenance.
 
-### Enqueuing
-```python
-app.queue().push(my_function, arg1, arg2)
+Add background work: read Queue and Scheduler.
 
-# Delayed execution
-app.queue().push_at(datetime.now() + timedelta(hours=1), my_function)
-```
+Add file handling: read Storage.
 
-### Starting the Worker
-```bash
-python queues.py
-```
+Add HTTP routes: read FastAPI Example.
 
----
+Upgrade dependencies: read Maintenance and run full validation first.
 
-## 9. Task Scheduling
-
-Built on the `schedule` library. Definitions live in `app/Scheduler.py`.
-
-### Common Patterns
-```python
-class Scheduler(Equipment):
-    def run(self) -> None:
-        self.schedule.every(10).minutes.do(self.my_task)
-        self.schedule.every().day.at("00:00").do(self.cleanup)
-        super().run()
-```
-
----
-
-## 10. Storage Management
-
-A unified Filesystem API that allows switching between Local disk and Amazon S3 without changing code.
-
-### Supported Methods
-- `write(path, data)`
-- `read(path)`
-- `exists(path)`
-- `remove(path)`
-- `move(src, dest)`
-- `list(directory)`
-
----
-
-## 11. Testing Framework
-
-Pre-configured `pytest` environment with a `TestCase` base class.
-
-### TestCase Features
-- **Auto-context**: Fresh `App` instance for every test.
-- **Faker**: Pre-configured data generator (`self.fake`).
-- **Isolation**: Automatically sets environment to `testing`.
-
-### Example
-```python
-from tests import TestCase
-
-class MyTest(TestCase):
-    def test_foo(self):
-        name = self.fake.name()
-        self.app.storage().write("test.txt", name)
-        self.assertTrue(self.app.storage().exists("test.txt"))
-```
-
----
-
-## 12. Project Compilation
-
-Utilities for preparing bytecode distributions.
-
-### Bytecode Compilation
-```bash
-equipment compile dist
-```
-This converts `.py` to `.pyc`, removes source files, and copies all non-Python assets to the `dist` folder, creating a deployment-ready package.
-
----
-
-## 13. Web Development (FastAPI)
-
-Integrates seamlessly with FastAPI.
-
-```python
-from app import app
-from fastapi import FastAPI
-from uvicorn import Server, Config
-
-app = app()
-web = FastAPI(title=app.config.app.name())
-
-@web.get("/")
-async def index():
-    return {"quote": app.inspiring().quote()}
-
-if __name__ == "__main__":
-    Server(Config(app="web:web", host="0.0.0.0", port=8000)).run()
-```
+Debug CI: inspect logs, reproduce the exact command, and prefer platform-specific fixes over broad rewrites.

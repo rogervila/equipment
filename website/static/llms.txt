@@ -1,33 +1,138 @@
-# Equipment: Python Project Scaffolding Framework
+# Equipment LLM Summary
 
-> Equipment is a comprehensive scaffolding framework designed to simplify and streamline Python project development. It provides a robust, flexible foundation for projects of any scale, from simple scripts to enterprise applications. Key features include built-in Dependency Injection, modular configuration, SQLAlchemy ORM, background queues, task scheduling, and an abstract storage API.
+Equipment is a Python project scaffolding framework. It generates a ready-to-run application project with configuration loading, dependency injection, logging, SQLAlchemy database access, queues, scheduling, local/S3 storage, unittest-based tests, bytecode compilation support, and an optional FastAPI entry point.
 
-## Core Documentation
+Supported Python versions: 3.12, 3.13, and 3.14. Supported operating systems: Linux, macOS, and Windows.
 
-- [Full Docs (Text)](https://equipment-python.vercel.app/llms-full.txt): Comprehensive technical documentation optimized for LLMs.
-- [Official Website](https://equipment-python.vercel.app): Interactive documentation and guides.
+## Primary Use Case
 
-## Quick Start
+Use Equipment when a Python project needs a practical application skeleton instead of a blank directory. It is suitable for scripts, internal tools, queue workers, scheduled jobs, APIs, and services that may grow over time.
+
+Equipment is not a full web framework, ORM framework, deployment platform, secret manager, or task orchestration system. It provides structure and integration points around standard Python libraries.
+
+## Canonical User Commands
 
 ```bash
-pip install equipment
+python -m pip install equipment
 equipment new my-app
-cd my-app && pip install .
+cd my-app
+python -m pip install .
 python main.py
 ```
 
-## Features & Guides
+Windows equivalent:
 
-- [Dependency Injection](https://equipment-python.vercel.app/docs/features/dependency-injection): Manage object lifecycles with singletons.
-- [Configuration](https://equipment-python.vercel.app/docs/features/config): YAML/JSON/INI support with env var interpolation.
-- [Database](https://equipment-python.vercel.app/docs/features/database): SQLAlchemy and Alembic integration.
-- [Logging](https://equipment-python.vercel.app/docs/features/log): Multi-channel logging with JSON support.
-- [Queue & Worker](https://equipment-python.vercel.app/docs/features/queue): Async task processing with Redis.
-- [Task Scheduler](https://equipment-python.vercel.app/docs/features/scheduler): Recurring task scheduling.
-- [Storage API](https://equipment-python.vercel.app/docs/features/storage): Unified Local/S3 filesystem interface.
-- [Testing](https://equipment-python.vercel.app/docs/features/tests): Pre-configured pytest environment with Faker.
-- [Compilation](https://equipment-python.vercel.app/docs/features/compilation): Bytecode distribution tool.
+```powershell
+py -3.14 -m pip install equipment
+equipment new my-app
+cd my-app
+py -3.14 -m pip install .
+py -3.14 main.py
+```
 
-## Examples
+Generated project tests:
 
-- [FastAPI Integration](https://equipment-python.vercel.app/docs/examples/fastapi): Building a modern web API with Equipment.
+```bash
+python -m pip install .[dev]
+python -m coverage run -m unittest discover -s tests
+python -m coverage report
+```
+
+Repository validation:
+
+```bash
+python -m pip install -r requirements.txt
+python -m pip install coverage runtype faker
+python -m coverage run -m unittest discover -s tests
+```
+
+Website validation:
+
+```bash
+cd website
+npm ci
+npm run build
+```
+
+Compile a generated project:
+
+```bash
+python -m equipment compile dist
+cd dist
+python main.pyc
+```
+
+## Generated Project Layout
+
+```text
+app/                 application services and scheduler definitions
+config/              YAML/JSON config loaded by Equipment
+database/migrations/ Alembic environment and migration files
+storage/app/         local storage root
+storage/logs/        file log output
+tests/               unittest test suite
+main.py              script/demo entry point
+web.py               FastAPI entry point
+queues.py            Redis RQ worker entry point
+scheduler.py         schedule loop entry point
+pyproject.toml       generated project metadata and dependencies
+.env.example         environment variable template
+README.md            generated project guide
+```
+
+## Core Runtime Model
+
+`equipment.Equipment` is a `dependency_injector` container. `Equipment.make(base_path)` loads `.env`, then `config/*.ini`, `config/*.yaml`, and `config/*.json`, then sets `config.base_path`.
+
+Core providers:
+
+- `log`: `LoggerFactory`
+- `queue`: `QueueFactory`
+- `storage`: `StorageFactory`
+- `database`: `SQLAlchemyFactory`
+
+Generated projects subclass `Equipment` in `app/__init__.py` and add application services with `ThreadSafeSingleton`.
+
+## Important Config Files
+
+- `config/app.yaml`: `APP_NAME`, `APP_ENV`.
+- `config/database.yaml`: `DB_CONNECTION`, SQLite/MySQL/PostgreSQL settings.
+- `config/log.yaml`: `LOG_LEVEL`, `LOG_CHANNEL`, handlers, JSON formatter.
+- `config/queue.yaml`: `QUEUE_CONNECTION`, Redis settings.
+- `config/storage.yaml`: `FILESYSTEM_DISK`, local/S3 settings.
+- `config/web.yaml`: `WEB_HOST`, `PORT`.
+- `config/inspiring.json`: example data for the generated `Inspire` service.
+
+## Feature Summary
+
+- Dependency injection: register services in `app/__init__.py`; prefer constructor injection.
+- Configuration: use `${VAR:default}` interpolation; keep secrets in `.env` or deployment env vars.
+- Logging: use `application.log()`; choose `stack`, `console`, `single`, `daily`, `sqlite`, or `null` through config.
+- Database: use SQLAlchemy engine/session factory; app owns models, repositories, and migrations.
+- Queue: use `sync` for tests/local work and `redis` plus `python queues.py` for background jobs.
+- Scheduler: define recurring jobs in `app/Scheduler.py`; delegate slow jobs to the queue.
+- Storage: use relative paths with `application.storage()`; choose `local` or `s3` through config.
+- Testing: use `unittest`, not pytest; generated `TestCase` provides `self.fake` and `self.app`.
+- Compilation: `equipment compile dist` creates `.pyc` output and copies runtime assets, but does not bundle dependencies.
+
+## Critical Constraints
+
+- Do not update `requirements.txt` unless dependency changes are explicitly requested.
+- Do not remove Python 3.12 or 3.13 support while adding Python 3.14 support.
+- Keep README, website docs, https://equipment-python.vercel.app/llms.txt, and https://equipment-python.vercel.app/llms-full.txt consistent when behavior changes.
+- `equipment new` needs GitHub network access; mock downloads in tests.
+- Redis, S3, MySQL, and PostgreSQL require external services or optional drivers.
+- Use `pathlib` or platform-safe path APIs. Windows cannot delete the current working directory.
+- Website builds on Vercel use npm, `website/package-lock.json`, `npm ci`, and `npm run build`.
+
+## Human Docs
+
+- Overview: `/docs/intro`
+- Installation: `/docs/getting-started/installation`
+- Generated structure: `/docs/getting-started/directory-structure`
+- Common workflows: `/docs/getting-started/common-workflows`
+- CLI reference: `/docs/reference/cli`
+- Environment variables: `/docs/reference/environment-variables`
+- Maintenance: `/docs/reference/maintenance`
+- LLM summary: https://equipment-python.vercel.app/llms.txt
+- Full LLM manual: https://equipment-python.vercel.app/llms-full.txt

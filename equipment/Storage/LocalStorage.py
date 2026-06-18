@@ -1,4 +1,3 @@
-import codecs
 import os
 from typing import TYPE_CHECKING
 
@@ -35,7 +34,7 @@ class LocalStorage(AbstractStorage):
                 exist_ok=True
             )
 
-            with codecs.open(file, 'w') as filepath:
+            with open(file, 'w', encoding='utf-8') as filepath:
                 filepath.write(data)
 
             return True
@@ -51,7 +50,7 @@ class LocalStorage(AbstractStorage):
 
         self.log.debug('file: ' + file)
 
-        with codecs.open(file, 'r') as filepath:
+        with open(file, 'r', encoding='utf-8') as filepath:
             return filepath.read()
 
     def exists(self, file: str) -> bool:

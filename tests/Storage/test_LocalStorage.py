@@ -2,7 +2,6 @@ import unittest
 import tempfile
 import os
 import shutil
-from codecs import open  # pylint: disable=W0622
 from unittest.mock import MagicMock
 from equipment.Log.NullLogger import NullLogger
 from equipment.Storage.LocalStorage import LocalStorage
@@ -56,7 +55,7 @@ class TestLocalStorage(unittest.TestCase):
             self.temp_dir, 'test_storage', 'test_file.txt')
         self.assertTrue(os.path.isfile(expected_path))
 
-        with open(expected_path, 'r') as f:
+        with open(expected_path, 'r', encoding='utf-8') as f:
             content = f.read()
         self.assertEqual(content, 'Hello, World!')
 
@@ -70,7 +69,7 @@ class TestLocalStorage(unittest.TestCase):
             self.temp_dir, 'test_storage', 'nested/dir/test_file.txt')
         self.assertTrue(os.path.isfile(expected_path))
 
-        with open(expected_path, 'r') as f:
+        with open(expected_path, 'r', encoding='utf-8') as f:
             content = f.read()
         self.assertEqual(content, 'Nested content')
 
@@ -88,7 +87,7 @@ class TestLocalStorage(unittest.TestCase):
             self.temp_dir, 'test_storage', 'test_file.txt')
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-        with open(file_path, 'w') as f:
+        with open(file_path, 'w', encoding='utf-8') as f:
             f.write('Test content')
 
         # Read the file
@@ -107,7 +106,7 @@ class TestLocalStorage(unittest.TestCase):
             self.temp_dir, 'test_storage', 'test_file.txt')
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-        with open(file_path, 'w') as f:
+        with open(file_path, 'w', encoding='utf-8') as f:
             f.write('Test content')
 
         # Check if file exists
@@ -123,7 +122,7 @@ class TestLocalStorage(unittest.TestCase):
             self.temp_dir, 'test_storage', 'test_file.txt')
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-        with open(file_path, 'w') as f:
+        with open(file_path, 'w', encoding='utf-8') as f:
             f.write('Test content')
 
         # Remove the file
@@ -145,7 +144,7 @@ class TestLocalStorage(unittest.TestCase):
             self.temp_dir, 'test_storage', 'destination.txt')
         os.makedirs(os.path.dirname(source_path), exist_ok=True)
 
-        with open(source_path, 'w') as f:
+        with open(source_path, 'w', encoding='utf-8') as f:
             f.write('Test content')
 
         # Move the file
@@ -166,10 +165,10 @@ class TestLocalStorage(unittest.TestCase):
         dir_path = os.path.join(self.temp_dir, 'test_storage', 'test_dir')
         os.makedirs(dir_path, exist_ok=True)
 
-        with open(os.path.join(dir_path, 'file1.txt'), 'w') as f:
+        with open(os.path.join(dir_path, 'file1.txt'), 'w', encoding='utf-8') as f:
             f.write('File 1')
 
-        with open(os.path.join(dir_path, 'file2.txt'), 'w') as f:
+        with open(os.path.join(dir_path, 'file2.txt'), 'w', encoding='utf-8') as f:
             f.write('File 2')
 
         # Create a subdirectory (should not be in results)

@@ -1,6 +1,5 @@
 from tempfile import gettempdir
 from os import sep
-from codecs import open  # pylint: disable=W0622
 import unittest
 from sqlite3 import connect
 from logging import StreamHandler, FileHandler, NullHandler, DEBUG
@@ -194,7 +193,7 @@ class LoggerFactoryTest(unittest.TestCase):
         message = f'test message {str(randint(9, 99999))}'
         factory.debug(message)
 
-        with open(f'{gettempdir()}{sep}{filename}', 'r') as file:
+        with open(f'{gettempdir()}{sep}{filename}', 'r', encoding='utf-8') as file:
             lines = file.readlines()
             self.assertEqual(1, len(lines))
             self.assertTrue(message in lines[0])

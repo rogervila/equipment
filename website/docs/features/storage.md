@@ -2,74 +2,184 @@
 sidebar_position: 6
 ---
 
-# Storage Management
+# Storage
 
-Equipment provides a clean and unified Filesystem API through its Storage component. It allows you to perform common file operations using a consistent interface, regardless of whether you are using local disk or cloud storage like Amazon S3.
+Equipment provides a storage abstraction with local filesystem and S3-compatible drivers. Application code can call the same methods regardless of the configured disk.
+
+Use storage for application-managed files: generated reports, uploads, exports, temporary artifacts, cache files, and files that may move from local disk to S3 later.
 
 ## Configuration
 
-Configure your storage disks in `config/storage.yaml`.
-
 ```yaml
 storage:
-  disk: ${STORAGE_DISK:local} # Options: local, s3
+  disk: ${FILESYSTEM_DISK:local}
 
   disks:
     local:
-        root: storage/app
+      path: storage/app
+
     s3:
-        bucket: ${S3_BUCKET}
-        region: ${S3_REGION}
-        access_key: ${S3_ACCESS_KEY}
-        secret_key: ${S3_SECRET_KEY}
+      endpoint: ${S3_ENDPOINT}
+      bucket: ${S3_BUCKET}
+      access_key: ${S3_ACCESS_KEY}
+      secret_key: ${S3_SECRET_KEY}
+      region: ${S3_REGION:auto}
+      prefix: ${S3_PREFIX:null}
 ```
 
-## Core API Methods
+The local driver uses `path`, for example `storage/app`.
 
-All methods return a boolean indicating success, except for `read()` (returns content string), `path()` (returns absolute path), and `list()` (returns a list of files).
+## API
 
-| Method | Description | Example |
-|--------|-------------|---------|
-| `write(path, data)` | Write data to a file | `app.storage().write('report.txt', '...')` |
-| `read(path)` | Read the content of a file | `content = app.storage().read('report.txt')` |
-| `exists(path)` | Check if a file exists | `if app.storage().exists('report.txt'):` |
-| `remove(path)` | Delete a file | `app.storage().remove('temp.txt')` |
-| `move(src, dest)` | Move/Rename a file | `app.storage().move('old.txt', 'new.txt')` |
-| `list(directory)` | List files in a directory | `files = app.storage().list('images/')` |
-| `path(file)` | Get the absolute path | `abs_path = app.storage().path('data.csv')` |
+| Method | Behavior |
+| --- | --- |
+| `path(file)` | Return the local absolute path or S3 key. |
+| `write(file, data)` | Write string data. Returns `True` or `False`. |
+| `read(file)` | Read string data. Raises `FileNotFoundError` when missing. |
+| `exists(file)` | Return whether the file exists. |
+| `remove(file)` | Delete a file. Returns `True` or `False`. |
+| `move(source, destination)` | Move or rename a file. Returns `True` or `False`. |
+| `list(path)` | Return files directly under a directory or prefix. |
 
-## Usage Examples
+Pass relative paths. Avoid leading slashes, drive letters, and user-controlled `..` segments.
+
+## Usage
 
 ```python
 from app import app
 
-app = app()
-storage = app.storage()
+application = app()
+storage = application.storage()
 
-# Writing a JSON file
-import json
-data = {"status": "ok", "version": "1.0"}
-storage.write("config.json", json.dumps(data))
+storage.write("reports/today.txt", "ready")
 
-# Checking existence and reading
-if storage.exists("config.json"):
-    config_data = json.loads(storage.read("config.json"))
-    print(config_data["version"])
+if storage.exists("reports/today.txt"):
+    content = storage.read("reports/today.txt")
+    application.log().info(content)
 
-# Listing all files in the root of the disk
-for file in storage.list(""):
-    print(f"Found file: {file}")
+storage.move("reports/today.txt", "reports/archive/today.txt")
+storage.remove("reports/archive/today.txt")
 ```
 
-## S3 Implementation
+## Structured Data
 
-When using the `s3` driver, Equipment uses `boto3` under the hood. The API remains identical to the local driver, making it easy to migrate your application to the cloud.
+Storage methods read and write strings. Serialize structured data explicitly:
 
-> [!NOTE]
-> Make sure to install the `boto3` package if you plan to use the S3 driver.
+```python
+import json
 
-## Best Practices
+payload = {"status": "ready", "count": 3}
+application.storage().write("reports/status.json", json.dumps(payload))
 
-1. **Use Relative Paths**: Always use relative paths from the root of your disk. Equipment handles the prefixing for you.
-2. **Abstract Your Storage**: Don't use `os.path` or `open()` directly for application files. Use `app.storage()` to ensure your code is portable across different environments.
-3. **Handle Errors**: While the methods return `False` on failure, they might also raise exceptions for critical errors (like permissions). Use `try...except` when necessary.
+loaded = json.loads(application.storage().read("reports/status.json"))
+```
+
+For binary files, encode data before writing or extend the storage abstraction in your application.
+
+## Local Driver
+
+The local driver stores files under `base_path / config.storage.disks.local.path`. In the generated project, that is `storage/app`.
+
+Local storage is a good default for:
+
+- local development;
+- tests;
+- single-machine scripts;
+- generated files that do not need to be shared across servers.
+
+Do not use local storage for horizontally scaled production apps unless every process sees the same shared filesystem.
+
+## S3 Driver
+
+The S3 driver uses `boto3`. It supports an optional `prefix` and treats `None`, `null`, and empty values as no prefix.
+
+S3 storage is useful for:
+
+- user uploads;
+- generated exports;
+- shared files across workers and web servers;
+- environments without persistent local disks.
+
+Example environment:
+
+```env
+FILESYSTEM_DISK=s3
+S3_ENDPOINT=https://s3.example.com
+S3_BUCKET=my-app-files
+S3_ACCESS_KEY=...
+S3_SECRET_KEY=...
+S3_REGION=eu-west-1
+S3_PREFIX=production
+```
+
+With `S3_PREFIX=production`, `write("reports/a.txt", "data")` writes to `production/reports/a.txt`.
+
+## Path Safety
+
+Do not pass untrusted raw user input directly as a storage path. Normalize it or generate your own filenames:
+
+```python
+safe_name = uploaded_filename.replace("/", "_").replace("\\", "_")
+path = f"uploads/{user_id}/{safe_name}"
+application.storage().write(path, content)
+```
+
+For stronger guarantees, generate filenames with UUIDs or database IDs.
+
+## Error Handling
+
+`write`, `remove`, and `move` return booleans. Check them when failure matters:
+
+```python
+if not application.storage().write(path, content):
+    application.log().error("Could not write file", extra={"path": path})
+    raise RuntimeError("Storage write failed")
+```
+
+`read` raises `FileNotFoundError` when a file is missing. Handle that separately when missing files are expected.
+
+## Atomicity And Concurrency
+
+The storage abstraction does not guarantee atomic writes, locks, version checks, or compare-and-swap behavior. If concurrent writes matter, add application-level coordination, database records, object versioning, or a queue.
+
+For local storage, `move()` uses filesystem rename semantics. For S3, `move()` is implemented as copy then delete.
+
+## Testing Storage
+
+Use the local driver and a temporary base path for most tests. Use moto for S3 unit coverage. Keep real bucket tests separate from fast unit tests and protect them with explicit environment variables.
+
+Test both success and failure paths:
+
+- write then read;
+- missing read;
+- nested directory writes;
+- move into a nested path;
+- list files without listing subdirectories;
+- S3 prefix handling.
+
+## Troubleshooting
+
+File is written to an unexpected directory:
+
+Check `FILESYSTEM_DISK`, `config/storage.yaml`, and the application base path.
+
+S3 key has an unexpected prefix:
+
+Check `S3_PREFIX`. Values `None`, `null`, and empty string mean no prefix.
+
+Local storage works but S3 does not:
+
+Check endpoint, region, bucket, credentials, and network access. Then verify credentials with a small S3 integration test.
+
+`FileNotFoundError` from `read()`:
+
+Check the active disk, base path, and relative file path.
+
+## Guidance
+
+- Prefer `app.storage()` over direct `open()` calls for application-managed files.
+- Keep user input sanitized before using it as a storage path.
+- Avoid absolute paths in storage calls.
+- Serialize non-string data explicitly.
+- Design production storage around shared persistence when running multiple processes.
+- Run both local and S3 storage tests before upgrading `boto3`, `botocore`, or `moto`.
