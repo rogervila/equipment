@@ -119,8 +119,16 @@ const config = {
                         label: "Docs",
                     },
                     { to: "/blog", label: "Blog", position: "left" },
-                    { to: "/llms.txt", label: "LLMS.txt", position: "left" },
-                    { to: "/llms-full.txt", label: "LLMS Full", position: "left" },
+                    {
+                        href: "https://equipment-python.vercel.app/llms.txt",
+                        label: "llms.txt",
+                        position: "left"
+                    },
+                    {
+                        href: "https://equipment-python.vercel.app/llms-full.txt",
+                        label: "llms-full.txt",
+                        position: "left"
+                    },
                     {
                         href: "https://pypi.org/project/equipment",
                         label: "PyPI",
