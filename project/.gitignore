@@ -4,12 +4,15 @@
 *.coverage
 *.cache
 *.log
-
 .tox/
 *.egg-info
 build/
 dist/
 venv/
 htmlcov/
-
 coverage.xml
+.agents/
+.github/agents/
+.claude/
+.windsurf/
+skills-lock.json

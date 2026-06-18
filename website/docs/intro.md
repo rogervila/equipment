@@ -66,6 +66,83 @@ An Equipment project includes:
 - Queue and storage drivers can be switched through configuration.
 - Tests use standard `unittest` discovery, so they run with the Python standard library test runner.
 
+## Mental Model
+
+An Equipment application has two layers:
+
+1. The framework layer, provided by the `equipment` package.
+2. The application layer, generated into your project and owned by you.
+
+The framework layer is intentionally small. It knows how to load configuration, create loggers, create queue drivers, create storage drivers, and create a SQLAlchemy database factory. The application layer decides what the app does with those services.
+
+The generated project is not meant to be a black box. You should edit it. Add services under `app/`, add configuration under `config/`, and add tests under `tests/`. The generated files are a starting contract, not a code generator that needs to own the project forever.
+
+## Request And Process Flow
+
+Most Equipment entry points follow the same flow:
+
+1. Import `app` from `app/__init__.py`.
+2. Call `app()` to create or retrieve an application container for the current base path.
+3. Read config values from `application.config`.
+4. Use framework services such as `application.log()`, `application.storage()`, `application.database()`, or `application.queue()`.
+5. Delegate business logic to application services registered on the generated `App` class.
+
+For example, `main.py`, `web.py`, `scheduler.py`, and `queues.py` all start by creating an application context. That keeps scripts, web routes, scheduled jobs, and workers aligned around the same configuration and dependency graph.
+
+## What Equipment Owns
+
+Equipment owns these reusable concerns:
+
+- loading `.env` and `config/` files;
+- wiring framework services into a dependency injection container;
+- creating log handlers from config;
+- selecting sync or Redis queue behavior;
+- selecting local or S3 storage behavior;
+- creating SQLAlchemy engines and sessions;
+- compiling project files for bytecode distribution;
+- scaffolding a new project from the maintained template.
+
+Your application owns these concerns:
+
+- domain models and business services;
+- database schema design and migrations;
+- HTTP routes and request validation;
+- queued task functions;
+- scheduler definitions;
+- deployment-specific environment variables;
+- tests for your own behavior.
+
+## What Equipment Does Not Do
+
+Equipment does not replace FastAPI, SQLAlchemy, Alembic, Redis, boto3, or `unittest`. It provides a structure for using those tools consistently. When you need advanced behavior, use the underlying library directly inside your own service layer.
+
+Equipment also does not provide a built-in authentication system, object-relational model base, API router generator, Docker deployment contract, secret manager, production process supervisor, or cloud deployment platform. Those choices stay with the application.
+
+## Good First Changes
+
+After generating a project, common first edits are:
+
+- rename the project in `.env` by changing `APP_NAME`;
+- set `APP_ENV=local` for local development;
+- replace `app/Inspire.py` with your first domain service;
+- register that service in `app/__init__.py`;
+- add tests under `tests/`;
+- choose whether `web.py`, `queues.py`, or `scheduler.py` are needed;
+- remove optional generated dependencies from `pyproject.toml` if a feature will not be used.
+
+## Reading Order
+
+New users should read these pages in order:
+
+1. Installation.
+2. Generated Directory Structure.
+3. Common Workflows.
+4. Configuration.
+5. Dependency Injection.
+6. The feature pages for the services they plan to use.
+
+LLM coding agents should also read [llms.txt](https://equipment-python.vercel.app/llms.txt) and [llms-full.txt](https://equipment-python.vercel.app/llms-full.txt) before making broad changes, because those hosted files summarize project constraints and common mistakes.
+
 ## Maintenance Contract
 
 The repository avoids dependency upgrades inside compatibility or documentation work. Dependency updates should be done as their own change with the full test suite and generated-project workflow validated afterwards.

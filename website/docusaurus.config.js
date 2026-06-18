@@ -70,6 +70,11 @@ const config = {
 						position: "left",
 					},
 					{
+						href: "https://equipment-python.vercel.app/llms-full.txt",
+						label: "LLMS Full",
+						position: "left",
+					},
+					{
 						href: "https://pypi.org/project/equipment",
 						label: "PyPI",
 						position: "right",
