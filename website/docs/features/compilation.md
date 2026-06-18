@@ -2,48 +2,69 @@
 sidebar_position: 9
 ---
 
-# Project Compilation
+# Compilation
 
-Equipment provides a built-in `compile` command that prepares your project for distribution by converting Python files into bytecode (`.pyc`) and packaging all necessary assets into a single directory.
+The `equipment compile` command prepares a generated project for bytecode-based distribution. It compiles Python files to `.pyc` and copies runtime assets into an output directory.
 
-## Why Compile?
-
-1. **Performance**: Bytecode files skip the compilation step when executed, leading to faster startup times.
-2. **Obfuscation**: While not a security measure, bytecode is harder to read than source code, providing a basic level of protection for your logic.
-3. **Clean Distribution**: Compiling creates a dedicated `dist` folder containing only what's needed to run the application, making deployment simpler.
-
-## Usage
-
-Run the `compile` command followed by the target directory name.
+## Command
 
 ```bash
-# Compile the project into the 'dist' folder
 equipment compile dist
 ```
 
-## How it Works
+Run it from the generated project root.
 
-When you run the `compile` command, Equipment performs the following steps:
+## What It Does
 
-1. **Scans the Project**: It identifies all files in your current directory while respecting a set of default ignore patterns (like `.git`, `venv`, `__pycache__`, etc.).
-2. **Converts Python Files**: Every `.py` file is compiled into a `.pyc` file using the `py_compile` module. The original `.py` files are **not** included in the output.
-3. **Preserves Assets**: All non-Python files (YAML, JSON, INI, SQL, TXT, etc.) are copied exactly as they are to the target directory.
-4. **Maintains Structure**: The directory hierarchy is perfectly preserved in the output directory.
+- Walks the current directory.
+- Ignores `__pycache__`, `dist`, `tests`, `equipment`, and the selected output directory.
+- Compiles `.py` files into `.pyc` files under the output directory.
+- Copies runtime assets: `config`, `database`, `storage`, `.coveragerc`, `.editorconfig`, `.env`, `.env.example`, `.gitignore`, `pyproject.toml`, and `README.md`.
 
-## Deployment
-
-After compilation, the `dist` folder is ready to be deployed.
+## Example
 
 ```bash
-# Navigate to the compiled project
+equipment compile dist
 cd dist
-
-# Run the application (no .py files needed!)
 python main.pyc
 ```
 
-## Best Practices
+On Windows:
 
-1. **Compile before Release**: Always use the `compile` command before packaging your application for production.
-2. **Verify the Output**: After compiling, run your tests or the main entry point within the `dist` folder to ensure everything was copied correctly.
-3. **Keep it Clean**: Avoid compiling directly into your main project directory. Always use a dedicated output folder like `dist` or `build`.
+```bat
+equipment compile dist
+cd dist
+py -3.14 main.pyc
+```
+
+## Output Shape
+
+```text
+dist/
+├── app/
+│   └── ... .pyc files
+├── config/
+├── database/
+├── storage/
+├── main.pyc
+├── queues.pyc
+├── scheduler.pyc
+├── web.pyc
+├── README.md
+└── pyproject.toml
+```
+
+Tests and the vendored `equipment` package directory are intentionally excluded.
+
+## Limitations
+
+- Bytecode is not a security boundary. Treat `.pyc` files as packaging convenience, not source protection.
+- Compiled output should be tested before deployment.
+- Platform-specific bytecode should be built with the Python version and operating system you plan to run.
+
+## Guidance
+
+- Compile into a clean output directory such as `dist` or `build/output`.
+- Do not compile into the source root.
+- Run `python main.pyc` from inside the output directory to verify imports and runtime assets.
+- Use `pathlib` in project code so compiled projects behave consistently on Windows and Unix.

@@ -1,33 +1,64 @@
-# Equipment: Python Project Scaffolding Framework
+# Equipment LLM Summary
 
-> Equipment is a comprehensive scaffolding framework designed to simplify and streamline Python project development. It provides a robust, flexible foundation for projects of any scale, from simple scripts to enterprise applications. Key features include built-in Dependency Injection, modular configuration, SQLAlchemy ORM, background queues, task scheduling, and an abstract storage API.
+Equipment is a Python project scaffolding framework. It generates a ready-to-run project with dependency injection, configuration files, logging, SQLAlchemy database access, queues, scheduling, local/S3 storage, unittest-based tests, and optional FastAPI entry points.
 
-## Core Documentation
+Supported Python versions: 3.12, 3.13, and 3.14. Supported operating systems: Linux, macOS, and Windows.
 
-- [Full Docs (Text)](https://equipment-python.vercel.app/llms-full.txt): Comprehensive technical documentation optimized for LLMs.
-- [Official Website](https://equipment-python.vercel.app): Interactive documentation and guides.
-
-## Quick Start
+## Canonical Commands
 
 ```bash
-pip install equipment
+python -m pip install equipment
 equipment new my-app
-cd my-app && pip install .
+cd my-app
+python -m pip install .
 python main.py
 ```
 
-## Features & Guides
+Repository validation:
 
-- [Dependency Injection](https://equipment-python.vercel.app/docs/features/dependency-injection): Manage object lifecycles with singletons.
-- [Configuration](https://equipment-python.vercel.app/docs/features/config): YAML/JSON/INI support with env var interpolation.
-- [Database](https://equipment-python.vercel.app/docs/features/database): SQLAlchemy and Alembic integration.
-- [Logging](https://equipment-python.vercel.app/docs/features/log): Multi-channel logging with JSON support.
-- [Queue & Worker](https://equipment-python.vercel.app/docs/features/queue): Async task processing with Redis.
-- [Task Scheduler](https://equipment-python.vercel.app/docs/features/scheduler): Recurring task scheduling.
-- [Storage API](https://equipment-python.vercel.app/docs/features/storage): Unified Local/S3 filesystem interface.
-- [Testing](https://equipment-python.vercel.app/docs/features/tests): Pre-configured pytest environment with Faker.
-- [Compilation](https://equipment-python.vercel.app/docs/features/compilation): Bytecode distribution tool.
+```bash
+python -m pip install -r requirements.txt
+python -m pip install coverage runtype faker
+python -m coverage run -m unittest discover -s tests
+python -m coverage report
+```
 
-## Examples
+Generated project tests:
 
-- [FastAPI Integration](https://equipment-python.vercel.app/docs/examples/fastapi): Building a modern web API with Equipment.
+```bash
+python -m pip install .[dev]
+python -m coverage run -m unittest discover -s tests
+python -m coverage report
+```
+
+Compile a generated project:
+
+```bash
+python -m equipment compile dist
+cd dist
+python main.pyc
+```
+
+## Important Files
+
+- `pyproject.toml`: package metadata and Python version classifiers.
+- `requirements.txt`: runtime and test-integration dependencies. Do not update unless dependency changes are explicitly requested.
+- `equipment/Command/NewProjectCommand.py`: downloads and copies the project scaffold.
+- `equipment/Command/CompileCommand.py`: compiles Python files to `.pyc` and copies runtime assets.
+- `project/`: generated project template.
+- `tests/`: repository unittest suite.
+- `website/docs/`: human documentation.
+- `website/static/llms.txt` and `website/static/llms-full.txt`: LLM-oriented docs.
+
+## Constraints And Warnings
+
+- `equipment new` downloads the template from GitHub `main`; mock this in tests.
+- Keep Unix and Windows behavior in mind. Prefer `pathlib` for path changes.
+- Use `unittest` commands in this repo; docs should not claim pytest is the default runner.
+- Redis, S3, MySQL, and PostgreSQL require external services or optional drivers.
+- Python 3.14 support must be reflected in metadata, CI, generated template metadata, tests, and docs.
+
+## Docs
+
+- Full LLM manual: https://equipment-python.vercel.app/llms-full.txt
+- Human docs: https://equipment-python.vercel.app/docs/intro

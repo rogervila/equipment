@@ -2,76 +2,62 @@
 sidebar_position: 1
 ---
 
-# Configuration Management
+# Configuration
 
-Equipment features a robust and modular configuration system that supports **YAML**, **JSON**, and **INI** files. Each component has its own configuration file, promoting a clean separation of concerns and making it easy to manage complex application settings.
+Equipment loads configuration from a project base path. It first loads `.env` when present, then merges files from `config/*.ini`, `config/*.yaml`, and `config/*.json`.
 
-## Environment Variable Interpolation
+Generated projects use YAML for framework settings and JSON for the example quote data.
 
-One of the most powerful features of Equipment's configuration is automatic environment variable interpolation. This allows you to keep your configuration files generic while providing environment-specific values via `.env` files or system environment variables.
+## Environment Interpolation
 
-**Syntax**: `${VAR_NAME:default_value}`
+Configuration values can use `${VARIABLE:default}` syntax:
 
 ```yaml
 app:
-  name: ${APP_NAME:My Application}
-  debug: ${APP_DEBUG:true}
+  name: ${APP_NAME:Equipment}
+  env: ${APP_ENV:local}
 ```
 
-## Core Configuration Files
+Set values in `.env` for local development or in the real process environment for production.
 
-All configuration files are located in the `config/` directory.
+## Generated Config Files
 
-### `app.yaml`
-Manages core application settings:
-- `name`: The name of your application.
-- `env`: The current environment (e.g., `local`, `production`, `testing`).
+| File | Purpose |
+| --- | --- |
+| `config/app.yaml` | Application name and environment. |
+| `config/database.yaml` | SQLAlchemy connection selection and database settings. |
+| `config/log.yaml` | Log level, channel, handlers, and JSON formatter. |
+| `config/queue.yaml` | `sync` or `redis` queue driver settings. |
+| `config/storage.yaml` | `local` or `s3` storage disk settings. |
+| `config/web.yaml` | FastAPI host and port. |
+| `config/inspiring.json` | Example quote data used by `app/Inspire.py`. |
 
-### `database.yaml`
-Handles database connection settings for various providers:
+## App Settings
+
+```yaml
+app:
+  name: ${APP_NAME:Equipment}
+  env: ${APP_ENV:local}
+```
+
+## Database Settings
 
 ```yaml
 database:
   connection: ${DB_CONNECTION:sqlite}
-
   connections:
     sqlite:
       schema: sqlite
       database: "${DB_DATABASE:database/database.sqlite}"
-    mysql:
-      schema: mysql+pymysql
-      host: ${DB_HOST:localhost}
-      port: ${DB_PORT:3306}
-      database: ${DB_DATABASE:equipment}
-      username: ${DB_USERNAME:root}
-      password: ${DB_PASSWORD:root}
-      charset: ${DB_CHARSET:utf8mb4}
 ```
 
-### `log.yaml`
-Configures the logging system, including channels and levels.
+MySQL and PostgreSQL examples are present in the generated file. Uncomment or install the matching optional driver in the generated `pyproject.toml` before using them.
 
-```yaml
-log:
-  level: ${LOG_LEVEL:debug}
-  channel: ${LOG_CHANNEL:stack}
-
-  channels:
-    stack:
-      channels: [single, console]
-    single:
-      filename: storage/logs/app.log
-      formatter: json
-    console:
-      stream: ext://sys.stdout
-```
-
-### `queue.yaml`
-Defines settings for background task processing.
+## Queue Settings
 
 ```yaml
 queue:
-  connection: ${QUEUE_CONNECTION:sync} # Options: sync, redis
+  connection: ${QUEUE_CONNECTION:sync}
   connections:
     redis:
       host: ${REDIS_HOST:127.0.0.1}
@@ -79,26 +65,46 @@ queue:
       db: ${REDIS_DB:0}
 ```
 
-### `storage.yaml`
-Configures the filesystem abstraction layer.
+Use `sync` for local development and simple scripts. Use `redis` when work should be processed by `queues.py`.
+
+## Storage Settings
 
 ```yaml
 storage:
-  disk: ${STORAGE_DISK:local} # Options: local, s3
+  disk: ${FILESYSTEM_DISK:local}
   disks:
     local:
-      root: storage/app
+      path: storage/app
     s3:
+      endpoint: ${S3_ENDPOINT}
       bucket: ${S3_BUCKET}
-      # ... s3 specific config
+      access_key: ${S3_ACCESS_KEY}
+      secret_key: ${S3_SECRET_KEY}
+      region: ${S3_REGION:auto}
+      prefix: ${S3_PREFIX:null}
 ```
 
-## Adding Custom Configuration
+The local storage key is `path`, not `root`.
 
-You can easily add your own configuration files (e.g., `services.yaml`) to the `config/` directory. Equipment will automatically load them, and you can access them via `app.config.services`.
+## Add Custom Config
 
-## Best Practices
+Add a new file under `config/`, for example `config/services.yaml`:
 
-1. **Use `.env` for secrets**: Never commit sensitive data (passwords, API keys) to your `config/*.yaml` files. Use environment variables instead.
-2. **Provide default values**: Always provide a sensible default in the interpolation syntax to ensure the app can start even if an environment variable is missing.
-3. **Modularize**: If your configuration grows large, consider splitting it into smaller, logically grouped files.
+```yaml
+services:
+  api_base_url: ${API_BASE_URL:https://example.test}
+```
+
+Then access it through the loaded config:
+
+```python
+application = app()
+base_url = application.config.services.api_base_url()
+```
+
+## Guidance
+
+- Keep secrets out of committed config files.
+- Prefer defaults that let local tests start without external services.
+- Keep config file names stable; they become attributes on `application.config`.
+- Use strings for environment-derived values and cast at the call site when a library needs `int` or `bool`.

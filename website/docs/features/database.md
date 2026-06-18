@@ -2,13 +2,13 @@
 sidebar_position: 2
 ---
 
-# Database Management
+# Database
 
-Equipment leverages [SQLAlchemy](https://www.sqlalchemy.org) to provide a powerful and flexible database management system. It supports multiple database engines and provides both low-level raw SQL execution and high-level ORM capabilities.
+Equipment wraps SQLAlchemy setup in `SQLAlchemyFactory`. The generated project defaults to SQLite so the scaffold can run locally without an external database.
 
 ## Configuration
 
-Configure your database connections in `config/database.yaml`.
+`config/database.yaml` selects the active connection:
 
 ```yaml
 database:
@@ -18,94 +18,80 @@ database:
     sqlite:
       schema: sqlite
       database: "${DB_DATABASE:database/database.sqlite}"
-    mysql:
-      schema: mysql+pymysql
-      host: ${DB_HOST:localhost}
-      port: ${DB_PORT:3306}
-      database: ${DB_DATABASE:my_app}
-      username: ${DB_USERNAME:root}
-      password: ${DB_PASSWORD:secret}
-      charset: ${DB_CHARSET:utf8mb4}
 ```
 
-## Usage
+The generated file also includes MySQL and PostgreSQL examples. Those require optional drivers in the generated `pyproject.toml`, such as `mysql-connector-python` or `psycopg2-binary`.
 
-### Raw SQL Execution
+## Raw SQL
 
-For simple queries or when you need maximum performance, you can use raw SQL.
+Use `app.database().text()` for SQLAlchemy text queries:
 
 ```python
 from app import app
 
-app = app()
+application = app()
 
-with app.database().engine.connect() as connection:
-    # Use app.database().text() for safe query building
+with application.database().engine.connect() as connection:
     result = connection.execute(
-        app.database().text("SELECT * FROM users WHERE active = :active"),
-        {"active": True}
+        application.database().text("SELECT * FROM todos ORDER BY id DESC LIMIT 1")
     )
-
-    for row in result:
-        print(row.name)
+    latest = result.mappings().first()
 ```
 
-### SQLAlchemy ORM
-
-For complex business logic, the ORM approach is recommended.
+## ORM Sessions
 
 ```python
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.orm import declarative_base
+
 from app import app
+
 
 Base = declarative_base()
 
-class User(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50))
 
-app = app()
-session = app.database().session()
+class Todo(Base):
+    __tablename__ = "todos"
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String(255), nullable=False)
+    completed = Column(Boolean, nullable=False)
+
+
+application = app()
+session = application.database().session()
 
 try:
-    # Querying
-    users = session.query(User).filter(User.name == "John").all()
-
-    # Inserting
-    new_user = User(name="Jane")
-    session.add(new_user)
+    session.add(Todo(title="Learn Equipment", completed=False))
     session.commit()
-except Exception as e:
+except Exception:
     session.rollback()
-    raise e
+    raise
 finally:
     session.close()
 ```
 
-## Database Migrations
+## Migrations
 
-Equipment uses [Alembic](https://alembic.sqlalchemy.org/) for managing database schema changes.
+The generated project includes an Alembic environment under `database/migrations`.
 
-1.  **Initialize Migrations** (already done in the scaffold):
-    The `database/migrations` directory contains the Alembic environment.
+Create a migration:
 
-2.  **Create a new migration**:
-    ```bash
-    cd database/migrations
-    alembic revision --autogenerate -m "create users table"
-    ```
+```bash
+cd database/migrations
+alembic revision --autogenerate -m "create todos table"
+```
 
-3.  **Apply migrations**:
-    ```bash
-    cd database/migrations
-    alembic upgrade head
-    ```
+Apply migrations:
 
-## Best Practices
+```bash
+cd database/migrations
+alembic upgrade head
+```
 
-1.  **Use Migrations**: Never manually change your database schema. Always use Alembic.
-2.  **Session Context**: Always ensure your sessions are properly closed using a `try...finally` block or a context manager.
-3.  **Environment Variables**: Use `${DB_...}` interpolation in `database.yaml` to manage connection strings for different environments.
-4.  **Validation**: Validate your model data before attempting to commit to the database.
+## Testing And Maintenance
+
+- Use SQLite `:memory:` for fast unit tests when possible.
+- Keep MySQL and PostgreSQL tests optional unless CI provides those services.
+- Run database URL and session tests before upgrading SQLAlchemy.
+- Do not commit local SQLite database files.

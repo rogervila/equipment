@@ -4,132 +4,83 @@ sidebar_position: 1
 
 # FastAPI Example
 
-Equipment provides a robust, modular approach to building web applications using FastAPI. This example demonstrates key features and best practices.
+Generated Equipment projects include `web.py`, a small FastAPI entry point that reads host and port from `config/web.yaml` and uses the generated application container.
 
-## Project Structure Overview
+## Dependencies
 
-Before diving into the code, let's understand the project structure:
+The generated `pyproject.toml` includes:
 
-```
-project/
-│
-├── app/                # Core application logic
-│   └── __init__.py     # Equipment initialization
-│   └── ...             # Application services
-├── config/             # Configuration management
-│   └── web.yaml        # Web server configuration
-│   └── ...             # Other configuration files
-└── web.py              # FastAPI server
+```toml
+dependencies = [
+    "equipment>=1.0.0",
+    "fastapi[standard]>=0.100.0,<1",
+    "uvicorn[standard]>=0.30,<1",
+]
 ```
 
-## Basic Setup and Configuration
+Install the generated project before running the web example:
+
+```bash
+python -m pip install .
+```
+
+## Configuration
+
+`config/web.yaml`:
+
+```yaml
+web:
+  host: ${WEB_HOST:0.0.0.0}
+  port: ${PORT:8000}
+```
+
+Set `WEB_HOST` or `PORT` in `.env` or the process environment to change runtime behavior.
+
+## Generated `web.py`
 
 ```python
-#!/usr/bin/env python
-
-# Import the core application framework
 from app import app
-
-# Import FastAPI and related dependencies
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from uvicorn import Server, Config
 
-# Initialize the Equipment application
-# This provides centralized configuration, logging, and core services
 app = app()
-
-# Logging configuration - demonstrates Equipment's integrated logging
-app.log().info(
-    f'''
-    Welcome to {app.config.app.name()}
-
-    This file runs a FastAPI server defined in ./config/web.yaml
-    host: {app.config.web.host()}
-    port: {app.config.web.port()}
-    '''
-)
-
-# Create FastAPI application with dynamic naming from configuration
 name = app.config.app.name()
 web = FastAPI(title=name)
-```
 
-### Key Concepts
-- `app()` initializes Equipment, providing:
-  - Centralized configuration management
-  - Integrated logging
-  - Access to application-wide services
-- Configuration is dynamically loaded from YAML files, placed in `config/`
-- Logging is pre-configured and easily accessible, and is configurable in `config/log.yaml`
 
-## Route Definition
-
-Equipment comes with a utility to fetch inspiring quotes, which is used in this example.
-
-```python
 @web.get("/", response_class=HTMLResponse)
 async def landing() -> str:
-    # This example uses the Inspire service for dynamic content
     return f'''
         <h1>{name}</h1>
         <hr />
         <p>{app.inspiring().quote()}</p>
     '''
-```
 
-### Route Features
-- Uses standard FastAPI route decorators
-- Demonstrates Equipment's `inspiring()` utility for dynamic content
-- Type hints and response class for improved type safety
 
-## Server Initialization
-
-```python
 if __name__ == '__main__':
-    try:
-        # Server configuration from config/web.yaml
-        server = Server(Config(
-            app='web:web',
-            host=str(app.config.web.host()),
-            port=int(app.config.web.port()),
-        ))
-        server.run()
-    except KeyboardInterrupt:
-        # Graceful shutdown with logging
-        app.log().info('Exiting webserver...')
+    server = Server(Config(
+        app='web:web',
+        host=str(app.config.web.host()),
+        port=int(app.config.web.port()),
+    ))
+    server.run()
 ```
 
-### Server Management
-- Dynamic host and port configuration
-- Graceful shutdown handling
-- Integrated logging for server events
-
-## Configuration Example
-
-```yaml
-# config/web.yaml
-web:
-  host: 0.0.0.0
-  port: 8000
-
-app:
-  name: Equipment Demo
-```
-
-### Best Practices
-1. Separate configuration from code
-2. Use environment-specific settings
-3. Centralize application parameters
-
-## Running the Application
+## Run
 
 ```bash
 python web.py
 ```
 
-## Additional Equipment Features
-- Automatic dependency injection
-- Comprehensive logging and monitoring
+Then open the configured host and port, usually `http://127.0.0.1:8000` for local development.
 
-**Pro Tip**: Leverage Equipment's modular design to easily extend and customize your web application.
+## Extend
+
+Add routers or services in `app/`, then inject framework services through the generated `App` container. Keep route functions thin and move business logic into testable services.
+
+## Guidance
+
+- Keep web configuration in `config/web.yaml` or environment variables.
+- Do not hardcode secrets or deployment hostnames in `web.py`.
+- Use FastAPI's normal testing tools for HTTP behavior and Equipment's `TestCase` for service-level behavior.

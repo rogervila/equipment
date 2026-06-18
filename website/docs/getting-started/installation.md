@@ -2,121 +2,123 @@
 sidebar_position: 1
 ---
 
-# Installation Guide
+# Installation
 
-## System Requirements
+## Requirements
 
-- **Operating System**: Windows, macOS, or Linux
-- **Python**: Version 3.12+ (latest stable recommended)
-- **Package Manager**: pip (version 21.0+)
+- Python 3.12, 3.13, or 3.14.
+- Windows, macOS, or Linux.
+- `pip` installed for the selected Python interpreter.
+- Network access when running `equipment new`, because the command downloads the current project template from GitHub.
 
-## Installation Methods
-
-### 1. Install via pip (Recommended)
-
-For most users, installing Equipment globally or in a specialized tool environment (like `pipx`) is the easiest way to access the `equipment` command.
+Check your interpreter:
 
 ```bash
-# Install Equipment globally
-pip install equipment
+python --version
 ```
 
-#### Using a Virtual Environment
+On Windows, the Python launcher can select a version explicitly:
 
-It is highly recommended to use a virtual environment for your projects to manage dependencies cleanly.
+```bat
+py -3.14 --version
+```
+
+## Install Equipment
+
+Install the CLI into your active Python environment:
 
 ```bash
-# Create a virtual environment
+python -m pip install equipment
+```
+
+If you use `pipx` for command-line tools:
+
+```bash
+pipx install equipment
+```
+
+## Create A Virtual Environment
+
+Unix shells:
+
+```bash
 python -m venv .venv
-
-# Activate the virtual environment
-# On macOS and Linux:
 source .venv/bin/activate
-# On Windows:
+python -m pip install --upgrade pip
+python -m pip install equipment
+```
+
+Windows PowerShell or Command Prompt:
+
+```bat
+py -3.14 -m venv .venv
 .venv\Scripts\activate
-
-# Install Equipment in the virtual environment
-pip install equipment
+python -m pip install --upgrade pip
+python -m pip install equipment
 ```
 
-### 2. Create a New Project
-
-Once Equipment is installed, you can use the CLI to scaffold a new project.
+## Create A Project
 
 ```bash
-# Generate a new Equipment project
 equipment new my-app
-
-# Navigate to the project directory
 cd my-app
-
-# Install project dependencies in editable mode
-# This installs the dependencies defined in pyproject.toml
-pip install .
-```
-
-### 3. Verify Installation
-
-After installation and project creation, verify that everything is working as expected.
-
-```bash
-# Check the Equipment CLI version
-equipment --version
-
-# Run the main entry point of your newly created project
+python -m pip install .
 python main.py
 ```
 
-## Advanced Dependency Management
+The generated project has its own `pyproject.toml`. Install it from inside the generated directory so imports such as `from app import app` resolve correctly.
 
-### Using `pipenv`
+## Verify The Generated Project
 
-If you prefer `pipenv` for dependency management:
+Run the generated tests:
 
 ```bash
-# Install pipenv
-pip install pipenv
-
-# Create a new project with pipenv
-pipenv --python 3.12
-pipenv install equipment
-
-# Activate the virtual environment
-pipenv shell
+python -m unittest discover -s tests
 ```
 
-### Using `poetry`
-
-Equipment is also compatible with `poetry`:
+Run optional entry points only when their dependencies are configured:
 
 ```bash
-# Initialize a poetry project
-poetry init
-poetry add equipment
+python scheduler.py
+python queues.py
+python web.py
+```
 
-# Enter the virtual environment
-poetry shell
+`queues.py` expects Redis. `web.py` expects the FastAPI and Uvicorn dependencies from the generated `pyproject.toml`.
+
+## Dependency Managers
+
+Equipment does not require a specific dependency manager. These are equivalent ways to use it:
+
+```bash
+python -m pip install equipment
+```
+
+```bash
+pipenv --python 3.14
+pipenv install equipment
+pipenv run equipment new my-app
+```
+
+```bash
+poetry add equipment
+poetry run equipment new my-app
 ```
 
 ## Troubleshooting
 
-### Common Installation Issues
+Python version error:
 
-1. **Python Version Compatibility**
-   - **Issue**: `equipment` requires Python 3.12+.
-   - **Solution**: Check your Python version: `python --version`. If it's lower than 3.12, upgrade your Python installation.
+Equipment requires Python 3.12 or newer and is tested on Python 3.12, 3.13, and 3.14. Check `python --version` or `py -0p` on Windows.
 
-2. **Command Not Found**
-   - **Issue**: After installing with `pip`, the `equipment` command is not recognized.
-   - **Solution**: Ensure that your Python scripts directory is in your system's `PATH`. This is common when installing without a virtual environment.
+`equipment` command not found:
 
-3. **pip Installation Problems**
-   - **Solution**: Upgrade pip to the latest version:
-     ```bash
-     python -m pip install --upgrade pip
-     ```
+Use `python -m pip show equipment` to confirm where it is installed. If the scripts directory is not on `PATH`, use a virtual environment or `pipx`.
 
-## Support
+Project creation fails before files are copied:
 
-- **GitHub Issues**: [Report a problem](https://github.com/rogervila/equipment/issues)
-- **Community Support**: [Discussions](https://github.com/rogervila/equipment/discussions)
+Check network access to GitHub. The `new` command downloads `https://github.com/rogervila/equipment/archive/refs/heads/main.zip`.
+
+Generated project install fails:
+
+Run `python -m pip install .` from inside the generated project directory and confirm that `README.md` and `pyproject.toml` are present.
