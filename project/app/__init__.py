@@ -15,5 +15,5 @@ class App(Equipment):
     )
 
 
-def app(base_path: tuple[str, None] = None) -> App:
+def app(base_path: str | None = None) -> App:
     return App.make(base_path)

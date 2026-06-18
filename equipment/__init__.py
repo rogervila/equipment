@@ -36,7 +36,7 @@ class Equipment(DeclarativeContainer):
 
     @classmethod
     @cached({})
-    def make(cls, base_path: tuple[str, None] = None):
+    def make(cls, base_path: str | None = None):
         base_path = base_path if base_path is not None else os.getcwd()
         _load_environment(base_path)
         instance = cls()
@@ -75,7 +75,7 @@ class Equipment(DeclarativeContainer):
     )
 
 
-def equipment(base_path: tuple[str, None] = None) -> Equipment:
+def equipment(base_path: str | None = None) -> Equipment:
     return Equipment.make(base_path)
 
 

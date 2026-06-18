@@ -9,6 +9,13 @@ description = "Application scaffolded with Equipment"
 authors = []
 readme = "README.md"
 requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: OS Independent",
+]
 dependencies = [
     "alembic>=1.13.0,<2",  # Remove if alembic migrations will not be used.
     "equipment>=1.0.0",
