@@ -1,10 +1,9 @@
 import os
 from typing import TYPE_CHECKING
-from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker
 
 if TYPE_CHECKING:
     from sqlalchemy import Engine, TextClause
+    from sqlalchemy.orm import sessionmaker
     from sqlalchemy.orm.session import Session
     from equipment.Log.AbstractLogger import AbstractLogger
 
@@ -29,11 +28,14 @@ def _create_postgresql_url(config: dict) -> str:
 
 class SQLAlchemyFactory:
     url: str
-    session_maker: sessionmaker
+    session_maker: 'sessionmaker'
     engine: 'Engine'
 
     def __init__(self, config: dict, base_path: str, log: 'AbstractLogger'):
         if not hasattr(self, 'session_maker'):
+            from sqlalchemy import create_engine
+            from sqlalchemy.orm import sessionmaker
+
             if config['connection'] == 'sqlite':
                 self.url = _create_sqlite_url(config['connections']['sqlite'], base_path)
             elif config['connection'] == 'mysql':
@@ -51,4 +53,6 @@ class SQLAlchemyFactory:
 
     @staticmethod
     def text(query: str) -> 'TextClause':
+        from sqlalchemy import text
+
         return text(query)

@@ -48,7 +48,7 @@ class NewProjectCommandTest(unittest.TestCase):
     def test_run_scaffolds_project_from_downloaded_template(self):
         response = Mock(content=self.template_zip)
 
-        with patch.object(new_project_module, 'get', return_value=response):
+        with patch.object(new_project_module, '_download_project_template', return_value=response):
             NewProjectCommand().run('demo-app', str(self.workspace))
 
         project_path = self.workspace / 'demo-app'
@@ -80,7 +80,7 @@ class NewProjectCommandTest(unittest.TestCase):
         marker_path.write_text('existing', encoding='utf-8')
         response = Mock(content=self.template_zip)
 
-        with patch.object(new_project_module, 'get', return_value=response):
+        with patch.object(new_project_module, '_download_project_template', return_value=response):
             with patch.object(new_project_module, 'confirm', return_value=False) as confirm:
                 NewProjectCommand().run('demo-app', str(self.workspace))
 
@@ -88,7 +88,7 @@ class NewProjectCommandTest(unittest.TestCase):
         self.assertEqual('existing', marker_path.read_text(encoding='utf-8'))
 
     def test_run_stops_when_template_download_fails(self):
-        with patch.object(new_project_module, 'get', side_effect=Exception('network down')):
+        with patch.object(new_project_module, '_download_project_template', side_effect=Exception('network down')):
             NewProjectCommand().run('broken-app', str(self.workspace))
 
         self.assertFalse((self.workspace / 'broken-app').exists())

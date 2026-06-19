@@ -53,9 +53,6 @@ class S3Storage(AbstractStorage):
             return False
 
     def read(self, file: str) -> str:
-        if not self.exists(file):
-            raise FileNotFoundError(file)
-
         try:
             s3_path = self._get_full_path(file)
 
@@ -64,6 +61,10 @@ class S3Storage(AbstractStorage):
                 Key=s3_path
             )
             return response['Body'].read().decode('utf-8')
+        except ClientError as e:
+            if e.response['Error']['Code'] not in ('404', 'NoSuchKey'):
+                self.log.error(e, exc_info=True)
+            raise FileNotFoundError(file) from None
         except Exception as e:
             self.log.error(e, exc_info=True)
             raise

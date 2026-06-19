@@ -104,6 +104,33 @@ class TestS3Storage(unittest.TestCase):
             self.storage.read('error.txt')
         self.mock_logger.error.assert_called()
 
+    def test_read_skips_head_object_for_existing_file(self):
+        body = MagicMock()
+        body.read.return_value = b'test content'
+        client = MagicMock()
+        client.get_object.return_value = {'Body': body}
+        self.storage.s3 = client
+
+        content = self.storage.read('test.txt')
+
+        self.assertEqual(content, 'test content')
+        client.head_object.assert_not_called()
+        client.get_object.assert_called_once_with(
+            Bucket=self.config['bucket'],
+            Key='test-prefix/test.txt'
+        )
+
+    def test_read_client_error_raises_file_not_found(self):
+        self.storage.client = MagicMock()
+        error_response = {'Error': {'Code': '403'}}
+        self.storage.client.return_value.get_object.side_effect = botocore.exceptions.ClientError(
+            error_response, 'GetObject')
+
+        with self.assertRaises(FileNotFoundError):
+            self.storage.read('error.txt')
+
+        self.mock_logger.error.assert_called()
+
     def test_exists(self):
         # Create a test file
         self.s3_client.put_object(

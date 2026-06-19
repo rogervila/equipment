@@ -3,8 +3,13 @@ from shutil import copyfile, copytree, ignore_patterns, rmtree
 from zipfile import ZipFile
 from io import BytesIO
 from click import confirm, echo, style
-from requests import get
 from equipment.Command.AbstractCommand import AbstractCommand
+
+
+def _download_project_template(url: str, timeout: int):
+    from requests import get
+
+    return get(url, timeout=timeout)
 
 
 class NewProjectCommand(AbstractCommand):
@@ -21,7 +26,7 @@ class NewProjectCommand(AbstractCommand):
             rmtree(project_template_root)
 
         try:
-            response = get('https://github.com/rogervila/equipment/archive/refs/heads/main.zip', timeout=60)
+            response = _download_project_template('https://github.com/rogervila/equipment/archive/refs/heads/main.zip', timeout=60)
             with ZipFile(BytesIO(response.content)) as zip_file:
                 zip_file.extractall(project_template_root)
         except Exception as e:
