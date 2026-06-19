@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 from equipment.Queue.AbstractQueue import AbstractQueue
 from equipment.Queue.SyncQueue import SyncQueue
-from equipment.Queue.RedisQueue import RedisQueue
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -18,6 +17,8 @@ class QueueFactory(AbstractQueue):
                 return
 
             if config['connection'] == 'redis':
+                from equipment.Queue.RedisQueue import RedisQueue
+
                 self.queue = RedisQueue(config['connections']['redis'], log)
                 return
 

@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 from equipment.Storage.AbstractStorage import AbstractStorage
 from equipment.Storage.LocalStorage import LocalStorage
-from equipment.Storage.S3Storage import S3Storage
 
 if TYPE_CHECKING:
     from equipment.Log.AbstractLogger import AbstractLogger
@@ -19,6 +18,8 @@ class StorageFactory(AbstractStorage):
                     log
                 )
             elif config['disk'] == 's3':
+                from equipment.Storage.S3Storage import S3Storage
+
                 self.storage = S3Storage(config['disks']['s3'], log)
             else:
                 raise ValueError(f'Unknown storage type: {config["disk"]}')

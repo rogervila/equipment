@@ -1,8 +1,6 @@
 import os
 from logging import Handler, FileHandler, Logger, NullHandler, StreamHandler, getLogger, getLevelNamesMapping
 from logging.handlers import TimedRotatingFileHandler
-from pythonjsonlogger.jsonlogger import JsonFormatter
-from python_sqlite_log_handler import SQLiteLogHandler
 from equipment.Log.AbstractLogger import AbstractLogger
 
 
@@ -92,6 +90,8 @@ class LoggerFactory(AbstractLogger):
         elif channel == 'console':
             handler = StreamHandler(channel_config['stream'])
         elif channel == 'sqlite':
+            from python_sqlite_log_handler import SQLiteLogHandler
+
             handler = SQLiteLogHandler(
                 db_path=os.path.join(
                     self.base_path,
@@ -103,6 +103,8 @@ class LoggerFactory(AbstractLogger):
             raise ValueError(f'Invalid channel name: {channel}')
 
         if 'formatter' in channel_config and str(channel_config['formatter']).strip().lower() == 'json':
+            from pythonjsonlogger.jsonlogger import JsonFormatter
+
             handler.setFormatter(
                 JsonFormatter(
                     self.config['formatters']['json']['format'],
