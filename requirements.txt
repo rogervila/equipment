@@ -1,5 +1,5 @@
-boto3>=1.43.37,<2
-boto3-stubs-lite[s3]>=1.43.36,<2
+boto3>=1.43.47,<2
+boto3-stubs-lite[s3]>=1.43.47,<2
 cachetools>=7.1.4,<8
 click>=8.4.2,<9
 dependency-injector>=4.49.1,<5
