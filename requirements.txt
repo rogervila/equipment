@@ -1,10 +1,10 @@
-boto3>=1.43.37,<2
-boto3-stubs-lite[s3]>=1.43.36,<2
+boto3>=1.43.52,<2
+boto3-stubs-lite[s3]>=1.43.52,<2
 cachetools>=7.1.4,<8
 click>=8.4.2,<9
 dependency-injector>=4.49.1,<5
 moto[s3]>=5.2.2,<6
-mypy-boto3-s3>=1.43.31,<2
+mypy-boto3-s3>=1.43.50,<2
 parent-import>=0.0.1
 python-dotenv>=1.2.2,<2
 python-json-logger>=4.1.0,<5
