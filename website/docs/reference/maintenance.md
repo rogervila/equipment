@@ -10,9 +10,9 @@ This page describes how to keep Equipment and generated projects healthy over ti
 
 Equipment currently supports:
 
-- Python 3.12
 - Python 3.13
 - Python 3.14
+- Python 3.15
 - Windows
 - macOS
 - Linux
@@ -27,6 +27,12 @@ From the repository root:
 python -m pip install -r requirements.txt
 python -m pip install coverage runtype faker
 python -m coverage run -m unittest discover -s tests
+```
+
+For Python 3.15 specifically:
+
+```bash
+python3.15 -m coverage run -m unittest discover -s tests
 ```
 
 For Python 3.14 specifically:
@@ -131,6 +137,12 @@ When adding or removing Python support:
 - Run tests on each supported interpreter available locally.
 - Update README, website docs, and the `docusaurus-plugin-llms` root content in `website/docusaurus.config.js`.
 - Document any dependency blocker instead of silently upgrading requirements.
+
+## Import Performance
+
+- Import heavy optional dependencies (`boto3`, `redis`, `rq`, `sqlalchemy`, `python-json-logger`, `python_sqlite_log_handler`, `requests`) inside the function or factory that needs them. `tests/test_ImportPerformance.py` enforces this.
+- Modules needed only on some code paths are also listed in a module-level `__lazy_modules__` ([PEP 810](https://peps.python.org/pep-0810/)). Python 3.15+ defers those imports until first use. Python 3.13 and 3.14 ignore the attribute and import eagerly, so behavior is unchanged there.
+- On Python 3.15+, a lazy `from module import name` binding resolves at first use, so a `mock.patch` of `module.name` active at that moment is kept permanently. Do not add a module to `__lazy_modules__` when tests patch names imported from it, or when the import must run its side effects at module load time.
 
 ## Cross-platform Checklist
 

@@ -10,7 +10,7 @@ const llmsRootContent = `Equipment is a Python project scaffolding framework for
 Use this file as an LLM-oriented index. For complete offline documentation content, use https://equipment-python.vercel.app/llms-full.txt.
 
 Important constraints:
-- Supported Python versions are 3.12, 3.13, and 3.14.
+- Supported Python versions are 3.13, 3.14, and 3.15.
 - Equipment projects use unittest, not pytest.
 - Generated projects must remain portable across Linux, macOS, and Windows.
 - Runtime dependencies are managed from requirements.txt and should not be changed unless dependency upgrades are explicitly requested.
@@ -20,7 +20,7 @@ const llmsFullRootContent = `Complete LLM-oriented documentation bundle for Equi
 
 Equipment is a Python project scaffolding framework. It generates a ready-to-run project with application structure, configuration, dependency injection, logging, SQLAlchemy database access, queues, scheduling, local/S3 storage, unittest-based tests, bytecode compilation support, and an optional FastAPI entry point.
 
-Read this file when you need enough context to build applications using Equipment or maintain the Equipment repository. Preserve Python 3.12, 3.13, and 3.14 support, keep Unix and Windows behavior in mind, and keep README, website docs, and generated LLM outputs consistent.`;
+Read this file when you need enough context to build applications using Equipment or maintain the Equipment repository. Preserve Python 3.13, 3.14, and 3.15 support, keep Unix and Windows behavior in mind, and keep README, website docs, and generated LLM outputs consistent.`;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {

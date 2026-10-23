@@ -4,7 +4,7 @@ This project was generated with Equipment. It includes configuration loading, de
 
 ## Requirements
 
-- Python 3.12, 3.13, or 3.14.
+- Python 3.13, 3.14, or 3.15.
 - Windows, macOS, or Linux.
 - Optional services depending on configuration: Redis, S3-compatible storage, MySQL, or PostgreSQL.
 

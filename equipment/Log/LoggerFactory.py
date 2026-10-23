@@ -1,3 +1,6 @@
+# Deferred until first use on Python 3.15+ (PEP 810 lazy imports); ignored by older versions.
+__lazy_modules__ = ['logging.handlers']
+
 import os
 from logging import Handler, FileHandler, Logger, NullHandler, StreamHandler, getLogger, getLevelNamesMapping
 from logging.handlers import TimedRotatingFileHandler

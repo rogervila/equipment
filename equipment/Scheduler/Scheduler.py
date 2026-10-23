@@ -1,3 +1,6 @@
+# Deferred until first use on Python 3.15+ (PEP 810 lazy imports); ignored by older versions.
+__lazy_modules__ = ['schedule']
+
 from typing import TYPE_CHECKING
 from sys import exit as _exit
 from time import sleep

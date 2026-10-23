@@ -22,7 +22,7 @@ Equipment is less useful when you only need a single-file script, when you alrea
 
 ## Supported Platforms
 
-- Python 3.12, 3.13, and 3.14.
+- Python 3.13, 3.14, and 3.15.
 - Windows, macOS, and Linux.
 - CI is configured to test all supported Python versions on all three operating systems.
 
