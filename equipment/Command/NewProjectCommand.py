@@ -1,3 +1,6 @@
+# Deferred until first use on Python 3.15+ (PEP 810 lazy imports); ignored by older versions.
+__lazy_modules__ = ['zipfile']
+
 from pathlib import Path
 from shutil import copyfile, copytree, ignore_patterns, rmtree
 from zipfile import ZipFile

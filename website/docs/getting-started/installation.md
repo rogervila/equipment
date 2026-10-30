@@ -6,7 +6,7 @@ sidebar_position: 1
 
 ## Requirements
 
-- Python 3.12, 3.13, or 3.14.
+- Python 3.13, 3.14, or 3.15.
 - Windows, macOS, or Linux.
 - `pip` installed for the selected Python interpreter.
 - Network access when running `equipment new`, because the command downloads the current project template from GitHub.
@@ -185,7 +185,7 @@ poetry run equipment new my-app
 
 Python version error:
 
-Equipment requires Python 3.12 or newer and is tested on Python 3.12, 3.13, and 3.14. Check `python --version` or `py -0p` on Windows.
+Equipment requires Python 3.13 or newer and is tested on Python 3.13, 3.14, and 3.15. Check `python --version` or `py -0p` on Windows.
 
 `equipment` command not found:
 

@@ -1,3 +1,6 @@
+import os
+import shutil
+import tempfile
 import unittest
 from dependency_injector.containers import DynamicContainer
 from equipment import Equipment, equipment
@@ -57,6 +60,20 @@ class EquipmentTest(unittest.TestCase):
         self.assertTrue(isa(instance.storage(), StorageFactory))
         self.assertTrue(isa(instance.queue(), QueueFactory))
         self.assertTrue(isa(instance.database(), SQLAlchemyFactory))
+
+    def test_make_loads_env_file(self):
+        variable = 'EQUIPMENT_TEST_DOTENV_VALUE'
+        temp_dir = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, temp_dir)
+        self.addCleanup(os.environ.pop, variable, None)
+
+        with open(os.path.join(temp_dir, '.env'), 'w', encoding='utf-8') as env_file:
+            env_file.write(f'{variable}=loaded\n')
+
+        instance = Equipment.make(temp_dir)
+
+        self.assertEqual('loaded', os.environ.get(variable))
+        self.assertEqual(temp_dir, instance.config.base_path())
 
 
 if __name__ == '__main__':

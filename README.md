@@ -12,7 +12,7 @@ Use Equipment when you want a practical application skeleton instead of a blank 
 
 ## Requirements
 
-- Python 3.12, 3.13, or 3.14.
+- Python 3.13, 3.14, or 3.15.
 - Windows, macOS, or Linux.
 - `pip` for installation.
 - Optional external services depending on features: Redis for the Redis queue driver, S3-compatible storage for the S3 driver, and database drivers for MySQL or PostgreSQL.
@@ -167,7 +167,7 @@ test.bat
 - Redis queue processing requires a running Redis service.
 - S3 storage requires compatible credentials and bucket configuration.
 - MySQL and PostgreSQL require optional database driver dependencies in the generated project.
-- Local validation in this repository depends on the Python interpreters installed on the machine; CI is configured for Python 3.12, 3.13, and 3.14 on Ubuntu, Windows, and macOS.
+- Local validation in this repository depends on the Python interpreters installed on the machine; CI is configured for Python 3.13, 3.14, and 3.15 on Ubuntu, Windows, and macOS.
 
 ## Documentation
 

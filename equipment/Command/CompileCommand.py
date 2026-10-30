@@ -1,3 +1,6 @@
+# Deferred until first use on Python 3.15+ (PEP 810 lazy imports); ignored by older versions.
+__lazy_modules__ = ['py_compile']
+
 from py_compile import compile  # pylint: disable=W0622
 from os import walk
 from pathlib import Path
