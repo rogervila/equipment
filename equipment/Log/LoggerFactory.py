@@ -53,6 +53,9 @@ class LoggerFactory(AbstractLogger):
         kwargs.setdefault('stacklevel', 2)
         self.logger.critical(*args, **kwargs)
 
+    def get_logger(self) -> Logger:
+        return self.logger
+
     def _get_handlers_list(self) -> list[Handler]:
         channel = self.config['channel']
 

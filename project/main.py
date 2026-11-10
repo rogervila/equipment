@@ -20,6 +20,9 @@ app.log().info(
     Do you need to run a web server?
     $ python web.py
 
+    Do you need to run an MCP server?
+    $ python mcpserver.py
+
     Check main.py for more examples
     '''
 )

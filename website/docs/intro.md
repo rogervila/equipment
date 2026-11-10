@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Equipment Overview
 
-Equipment is a scaffolding framework for creating Python application projects. It gives a new project a working structure for configuration, dependency injection, logging, storage, database access, queues, scheduling, tests, and optional FastAPI serving.
+Equipment is a scaffolding framework for creating Python application projects. It gives a new project a working structure for configuration, dependency injection, logging, storage, database access, queues, scheduling, tests, optional FastAPI serving, and an optional MCP server.
 
 The goal is to remove the repetitive setup that appears at the beginning of many Python applications while keeping the generated project simple enough to modify. Equipment is not a web framework and it does not force one application architecture. It creates a practical starting point that can support scripts, workers, scheduled jobs, APIs, and internal tools.
 
@@ -55,7 +55,7 @@ An Equipment project includes:
 - `database/` for SQLite and Alembic migrations;
 - `storage/` for local files and logs;
 - `tests/` with a `unittest.TestCase` base class and Faker support;
-- `main.py`, `queues.py`, `scheduler.py`, and `web.py` entry points;
+- `main.py`, `queues.py`, `scheduler.py`, `web.py`, and `mcpserver.py` entry points;
 - `pyproject.toml`, `.env.example`, and `README.md`.
 
 ## Core Concepts
@@ -87,7 +87,7 @@ Most Equipment entry points follow the same flow:
 4. Use framework services such as `application.log()`, `application.storage()`, `application.database()`, or `application.queue()`.
 5. Delegate business logic to application services registered on the generated `App` class.
 
-For example, `main.py`, `web.py`, `scheduler.py`, and `queues.py` all start by creating an application context. That keeps scripts, web routes, scheduled jobs, and workers aligned around the same configuration and dependency graph.
+For example, `main.py`, `web.py`, `mcpserver.py`, `scheduler.py`, and `queues.py` all start by creating an application context. That keeps scripts, web routes, MCP tools, scheduled jobs, and workers aligned around the same configuration and dependency graph.
 
 ## What Equipment Owns
 
@@ -127,7 +127,7 @@ After generating a project, common first edits are:
 - replace `app/Inspire.py` with your first domain service;
 - register that service in `app/__init__.py`;
 - add tests under `tests/`;
-- choose whether `web.py`, `queues.py`, or `scheduler.py` are needed;
+- choose whether `web.py`, `mcpserver.py`, `queues.py`, or `scheduler.py` are needed;
 - remove optional generated dependencies from `pyproject.toml` if a feature will not be used.
 
 ## Reading Order

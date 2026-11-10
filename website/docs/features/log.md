@@ -85,6 +85,18 @@ except RuntimeError:
     application.log().error("Operation failed", exc_info=True)
 ```
 
+## Python Logger
+
+`application.log().get_logger()` returns the underlying standard library `logging.Logger`, named after `APP_NAME`. Use it when a library or setting needs a real `Logger` object, instead of calling `logging.getLogger()` with the application name yourself:
+
+```python
+# Keep application logs on the handlers from config/log.yaml only,
+# even when another library adds handlers to the root logger.
+application.log().get_logger().propagate = False
+```
+
+Prefer `application.log().info(...)` and the other level methods for everyday logging.
+
 ## Log Levels
 
 - `debug`: detailed developer diagnostics.
@@ -154,6 +166,8 @@ from equipment.Log.NullLogger import NullLogger
 
 self.app.log.override(NullLogger())
 ```
+
+`NullLogger().get_logger()` returns a disabled standalone `Logger`, so code that calls `get_logger()` keeps working under the override and discards every record.
 
 Tests that assert file logs should close handlers before reading or deleting files. This matters on Windows because open file handles can block cleanup.
 

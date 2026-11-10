@@ -57,9 +57,12 @@ class NewProjectCommandTest(unittest.TestCase):
         self.assertTrue((project_path / 'queues.py').is_file())
         self.assertTrue((project_path / 'scheduler.py').is_file())
         self.assertTrue((project_path / 'web.py').is_file())
+        self.assertTrue((project_path / 'mcpserver.py').is_file())
         self.assertTrue((project_path / 'app' / 'Inspire.py').is_file())
         self.assertTrue((project_path / 'config' / 'app.yaml').is_file())
+        self.assertTrue((project_path / 'config' / 'mcp.yaml').is_file())
         self.assertTrue((project_path / 'tests' / 'TestCase.py').is_file())
+        self.assertTrue((project_path / 'tests' / 'test_mcpserver.py').is_file())
         self.assertTrue((project_path / 'README.md').is_file())
         self.assertTrue((project_path / '.env').is_file())
         self.assertEqual(

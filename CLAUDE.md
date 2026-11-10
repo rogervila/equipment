@@ -8,7 +8,7 @@
 
 **Equipment** is a Python project scaffolding framework published to PyPI as `equipment`.
 
-Running `equipment new my-app` downloads the project template from GitHub and creates a ready-to-run Python application directory. The generated project includes configuration loading, dependency injection, logging, SQLAlchemy database access, queues, scheduling, local/S3 storage, unittest-based tests, and optional FastAPI serving.
+Running `equipment new my-app` downloads the project template from GitHub and creates a ready-to-run Python application directory. The generated project includes configuration loading, dependency injection, logging, SQLAlchemy database access, queues, scheduling, local/S3 storage, unittest-based tests, optional FastAPI serving, and an optional MCP server.
 
 - **Author**: Roger Vilà (`rogervila@me.com`)
 - **License**: MIT
@@ -62,6 +62,7 @@ project/                      ← Generated project TEMPLATE (source of truth)
     database.yaml             ← DB_CONNECTION, SQLite/MySQL/PostgreSQL settings
     inspiring.json            ← Example JSON data for Inspire service
     log.yaml                  ← LOG_CHANNEL, LOG_LEVEL, handlers, formatters
+    mcp.yaml                  ← MCP_TRANSPORT, MCP_HOST, MCP_PORT, MCP_PATH
     queue.yaml                ← QUEUE_CONNECTION, Redis settings
     storage.yaml              ← FILESYSTEM_DISK, local path, S3 settings
     web.yaml                  ← WEB_HOST, PORT
@@ -72,9 +73,11 @@ project/                      ← Generated project TEMPLATE (source of truth)
     logs/                     ← File log output directory
   tests/
     TestCase.py               ← Base class: app instance + Faker + testing env
+    test_mcpserver.py         ← MCP tests with the FastMCP in-memory client
     app/test_Inspire.py       ← Example test for the Inspire service
   .env.example                ← All environment variable defaults, copy to .env
   main.py                     ← Script entry point with feature usage examples
+  mcpserver.py                ← MCP server entry point (FastMCP)
   queues.py                   ← RQ Worker entry point
   scheduler.py                ← Scheduler process entry point
   web.py                      ← FastAPI + Uvicorn entry point
@@ -106,7 +109,7 @@ website/                      ← Docusaurus documentation site
     getting-started/          ← Installation, structure, common workflows
     features/                 ← DI, config, database, log, queue, scheduler, storage, tests, compile
     reference/                ← CLI, environment variables, maintenance guide
-    examples/                 ← FastAPI example
+    examples/                 ← FastAPI and MCP server examples
   docusaurus.config.js        ← Site config + docusaurus-plugin-llms root content
   package.json / package-lock.json ← npm dependencies (committed for Vercel)
   vercel.json                 ← Vercel routing + MIME type config
@@ -264,6 +267,8 @@ Both return `True`/`False`. Exceptions are caught, logged, and result in `False`
 
 JSON formatting uses `pythonjsonlogger.JsonFormatter`. All methods set `stacklevel=2` so log records show the caller's file and line, not the `LoggerFactory` wrapper.
 
+`get_logger()` (part of `AbstractLogger`) returns the underlying `logging.Logger` named after `APP_NAME`. `NullLogger.get_logger()` returns a disabled standalone `Logger`, so callers keep working when tests override `log` with `NullLogger`.
+
 ### Scheduler
 
 `equipment.Scheduler.Scheduler` wraps the `schedule` library:
@@ -284,6 +289,20 @@ Generated project `app/Scheduler.py` subclasses it, registers jobs, then calls `
 | `postgresql` | `postgresql+psycopg2://user:pass@host:port/db` |
 
 MySQL and PostgreSQL drivers are **optional** and must be installed separately. Tests skip with `self.skipTest(...)` when the driver is unavailable.
+
+### MCP Server (Generated Project)
+
+`project/mcpserver.py` mirrors `web.py`: it lives only in the template, not in the `equipment/` package. It uses FastMCP (`fastmcp>=4.1.7,<5`, built on the MCP Python SDK v2), declared in `project/pyproject.toml` only. Do not add `fastmcp` to `requirements.txt`.
+
+- API: `from fastmcp import FastMCP`, bare decorators `@mcp.tool` / `@mcp.resource(uri)` / `@mcp.prompt`. The SDK's `mcp.server.mcpserver.MCPServer` and v1 `mcp.server.fastmcp` are different APIs.
+- Never name the entry point `mcp.py` (or add an `mcp` package to the project root): it shadows the SDK package that FastMCP imports, and `python mcp.py` / unittest fail with a misleading `ImportError: FastMCP server support is not installed`. Only the FastMCP CLI tolerates it.
+- `config/mcp.yaml` selects `stdio` (default, the client starts the process from the project root) or `http` (Streamable HTTP; `host`, `port`, `path`, default `127.0.0.1:8001/mcp`).
+- `mcp.run(...)` passes `show_banner=False` (the banner duplicates the welcome log and checks PyPI on startup) and `host_origin_protection='auto'` (FastMCP defaults to no Host/Origin validation; `auto` validates requests that arrive on a loopback address).
+- `FastMCP(..., mask_error_details=True)`: clients only see `ToolError` messages; full tracebacks still go to stderr.
+- With `stdio`, stdout carries the protocol. Never `print()` in tools or services; log with `app.log()` (console channel writes to stderr). FastMCP logs through its own `fastmcp` logger and leaves the root logger alone.
+- FastMCP reads `FASTMCP_*` settings from the environment and `.env`.
+- `project/tests/test_mcpserver.py` uses the FastMCP in-memory `Client(mcp)` through `asyncio.run()` in a sync `TestCase`, and skips when `fastmcp` is not installed. Avoid `IsolatedAsyncioTestCase` there: its asyncio debug mode prints slow-callback warnings.
+- Check the server without a client: `fastmcp list mcpserver.py --resources --prompts`, `fastmcp call mcpserver.py inspire`.
 
 ---
 
@@ -440,6 +459,10 @@ All environment variables with their defaults:
 | `S3_PREFIX` | `null` | `config/storage.yaml` |
 | `WEB_HOST` | `0.0.0.0` | `config/web.yaml` |
 | `PORT` | `8000` | `config/web.yaml` |
+| `MCP_TRANSPORT` | `stdio` | `config/mcp.yaml` |
+| `MCP_HOST` | `127.0.0.1` | `config/mcp.yaml` |
+| `MCP_PORT` | `8001` | `config/mcp.yaml` |
+| `MCP_PATH` | `/mcp` | `config/mcp.yaml` |
 
 ---
 
@@ -534,6 +557,8 @@ Dev-only (install separately, not in `requirements.txt`):
 12. **Mixing dependency upgrades with other work.** Keep them in dedicated commits.
 13. **Interpreting `equipment compile` as dependency bundling.** It only compiles `.py` → `.pyc` and copies assets; dependencies must be installed separately at the target.
 14. **Using `run_pending()` in scheduler tests without patching sleep.** Tests that sleep are fragile; patch `time.sleep` and `schedule.Scheduler.run_pending`.
+15. **Writing to stdout in MCP tools.** With the `stdio` transport it corrupts the protocol stream. Use `app.log()`.
+16. **Naming a project file `mcp.py`.** It shadows the MCP SDK package that FastMCP depends on. The entry point is `mcpserver.py`.
 
 ---
 
@@ -666,6 +691,7 @@ python3.13 -m coverage run -m unittest discover -s tests
 | Testing | `website/docs/features/tests.md` |
 | Compilation | `website/docs/features/compilation.md` |
 | FastAPI example | `website/docs/examples/fastapi.md` |
+| MCP server example | `website/docs/examples/mcp.md` |
 | CLI reference | `website/docs/reference/cli.md` |
 | Environment variables | `website/docs/reference/environment-variables.md` |
 | Maintenance guide | `website/docs/reference/maintenance.md` |

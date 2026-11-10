@@ -5,7 +5,7 @@ const {themes} = require('prism-react-renderer');
 const lightCodeTheme = themes.github;
 const darkCodeTheme = themes.dracula;
 
-const llmsRootContent = `Equipment is a Python project scaffolding framework for building applications with configuration, dependency injection, logging, database access, queues, scheduling, storage, tests, compilation, and optional FastAPI serving.
+const llmsRootContent = `Equipment is a Python project scaffolding framework for building applications with configuration, dependency injection, logging, database access, queues, scheduling, storage, tests, compilation, optional FastAPI serving, and an optional MCP server built on FastMCP.
 
 Use this file as an LLM-oriented index. For complete offline documentation content, use https://equipment-python.vercel.app/llms-full.txt.
 
@@ -18,7 +18,7 @@ Important constraints:
 
 const llmsFullRootContent = `Complete LLM-oriented documentation bundle for Equipment.
 
-Equipment is a Python project scaffolding framework. It generates a ready-to-run project with application structure, configuration, dependency injection, logging, SQLAlchemy database access, queues, scheduling, local/S3 storage, unittest-based tests, bytecode compilation support, and an optional FastAPI entry point.
+Equipment is a Python project scaffolding framework. It generates a ready-to-run project with application structure, configuration, dependency injection, logging, SQLAlchemy database access, queues, scheduling, local/S3 storage, unittest-based tests, bytecode compilation support, an optional FastAPI entry point, and an optional MCP server entry point (mcpserver.py, built on FastMCP).
 
 Read this file when you need enough context to build applications using Equipment or maintain the Equipment repository. Preserve Python 3.13, 3.14, and 3.15 support, keep Unix and Windows behavior in mind, and keep README, website docs, and generated LLM outputs consistent.`;
 

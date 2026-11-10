@@ -137,9 +137,10 @@ Run optional entry points only when their dependencies are configured:
 python scheduler.py
 python queues.py
 python web.py
+python mcpserver.py
 ```
 
-`queues.py` expects Redis. `web.py` expects the FastAPI and Uvicorn dependencies from the generated `pyproject.toml`.
+`queues.py` expects Redis. `web.py` expects the FastAPI and Uvicorn dependencies from the generated `pyproject.toml`. `mcpserver.py` expects the `fastmcp` dependency from the generated `pyproject.toml`; with the default `stdio` transport, an MCP client starts it for you (see the [MCP Server Example](../examples/mcp.md)).
 
 ## Post-install Checklist
 

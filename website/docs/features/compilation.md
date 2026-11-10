@@ -51,6 +51,7 @@ dist/
 ├── database/
 ├── storage/
 ├── main.pyc
+├── mcpserver.pyc
 ├── queues.pyc
 ├── scheduler.pyc
 ├── web.pyc

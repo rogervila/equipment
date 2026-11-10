@@ -169,6 +169,32 @@ WEB_HOST=0.0.0.0
 PORT=8000
 ```
 
+## MCP Variables
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `MCP_TRANSPORT` | `stdio` | `stdio` (the MCP client starts `mcpserver.py`) or `http` (`mcpserver.py` serves Streamable HTTP). |
+| `MCP_HOST` | `127.0.0.1` | HTTP bind host. Only used by `http`. |
+| `MCP_PORT` | `8001` | HTTP port. Only used by `http`. |
+| `MCP_PATH` | `/mcp` | HTTP endpoint path. Only used by `http`. |
+
+Local MCP client (Claude Code, Claude Desktop, Cursor, VS Code):
+
+```env
+MCP_TRANSPORT=stdio
+```
+
+Remote MCP server in a container:
+
+```env
+MCP_TRANSPORT=http
+MCP_HOST=0.0.0.0
+MCP_PORT=8001
+MCP_PATH=/mcp
+```
+
+See the [MCP Server Example](../examples/mcp.md) before exposing an MCP server on `0.0.0.0`.
+
 ## Recommended `.env` Profiles
 
 Local script or web development:

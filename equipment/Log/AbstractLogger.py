@@ -1,4 +1,5 @@
 import abc
+from logging import Logger
 
 
 class AbstractLogger(abc.ABC):
@@ -15,4 +16,7 @@ class AbstractLogger(abc.ABC):
         raise NotImplementedError
 
     def critical(self, *args, **kwargs) -> None:
+        raise NotImplementedError
+
+    def get_logger(self) -> Logger:
         raise NotImplementedError

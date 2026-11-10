@@ -62,6 +62,7 @@ debug = str(application.config.app.debug()).lower() == "true"
 | `config/queue.yaml` | `sync` or `redis` queue driver settings. |
 | `config/storage.yaml` | `local` or `s3` storage disk settings. |
 | `config/web.yaml` | FastAPI host and port. |
+| `config/mcp.yaml` | MCP server transport, host, port, and path. |
 | `config/inspiring.json` | Example quote data used by `app/Inspire.py`. |
 
 ## Environment Variable Reference
@@ -94,6 +95,10 @@ debug = str(application.config.app.debug()).lower() == "true"
 | `S3_PREFIX` | `null` | `config/storage.yaml` | Optional object key prefix. |
 | `WEB_HOST` | `0.0.0.0` | `config/web.yaml` | Host passed to Uvicorn. |
 | `PORT` | `8000` | `config/web.yaml` | Port passed to Uvicorn. |
+| `MCP_TRANSPORT` | `stdio` | `config/mcp.yaml` | MCP server transport: `stdio` or `http` (Streamable HTTP). |
+| `MCP_HOST` | `127.0.0.1` | `config/mcp.yaml` | MCP HTTP bind host (`http` only). |
+| `MCP_PORT` | `8001` | `config/mcp.yaml` | MCP HTTP port (`http` only). |
+| `MCP_PATH` | `/mcp` | `config/mcp.yaml` | MCP HTTP endpoint path (`http` only). |
 
 ## App Settings
 

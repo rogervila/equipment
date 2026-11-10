@@ -17,6 +17,7 @@ my-app/
 │   ├── database.yaml
 │   ├── inspiring.json
 │   ├── log.yaml
+│   ├── mcp.yaml
 │   ├── queue.yaml
 │   ├── storage.yaml
 │   └── web.yaml
@@ -28,6 +29,7 @@ my-app/
 │   └── logs/
 ├── tests/
 │   ├── TestCase.py
+│   ├── test_mcpserver.py
 │   └── app/test_Inspire.py
 ├── .coveragerc
 ├── .editorconfig
@@ -35,6 +37,7 @@ my-app/
 ├── .gitignore
 ├── README.md
 ├── main.py
+├── mcpserver.py
 ├── pyproject.toml
 ├── queues.py
 ├── scheduler.py
@@ -60,6 +63,7 @@ my-app/
 | `config/database.yaml` | You | SQLAlchemy connection configuration. |
 | `config/inspiring.json` | You | Example data for `Inspire`; safe to remove with the example service. |
 | `config/log.yaml` | You | Log channels, handlers, levels, and formatters. |
+| `config/mcp.yaml` | You | Transport, host, port, and path used by `mcpserver.py`. |
 | `config/queue.yaml` | You | Queue driver selection and Redis connection values. |
 | `config/storage.yaml` | You | Local/S3 storage driver settings. |
 | `config/web.yaml` | You | Host and port used by `web.py`. |
@@ -67,7 +71,9 @@ my-app/
 | `storage/app/` | Runtime | Local storage root for application-managed files. |
 | `storage/logs/` | Runtime | Log output directory for file-based handlers. |
 | `tests/TestCase.py` | You | Shared test setup with Faker and an application container. |
+| `tests/test_mcpserver.py` | You | MCP tool, resource, and prompt tests with the in-memory MCP client. |
 | `main.py` | You | Script entry point and examples. |
+| `mcpserver.py` | You | MCP server entry point. |
 | `queues.py` | You | Redis worker entry point. |
 | `scheduler.py` | You | Scheduler process entry point. |
 | `web.py` | You | FastAPI entry point. |
@@ -88,12 +94,14 @@ Use `${ENV_NAME:default}` syntax to let `.env` or system environment variables o
 - `scheduler.py`: starts the schedule loop defined in `app/Scheduler.py`.
 - `queues.py`: starts an RQ worker for Redis-backed queues.
 - `web.py`: starts the FastAPI example using `config/web.yaml`.
+- `mcpserver.py`: starts the MCP server example using `config/mcp.yaml`.
 
 ## When To Remove Generated Files
 
 The scaffold includes several optional capabilities. You can remove them when a project does not use them:
 
 - Remove `web.py` and FastAPI/Uvicorn dependencies if the project is not a web app.
+- Remove `mcpserver.py`, `config/mcp.yaml`, `tests/test_mcpserver.py`, and the `fastmcp` dependency if the project does not expose an MCP server.
 - Remove `queues.py` and Redis configuration if the project never uses async workers.
 - Remove `scheduler.py` and `app/Scheduler.py` if there are no recurring jobs.
 - Remove Alembic dependencies and `database/migrations/` if the project does not own a relational schema.
