@@ -99,6 +99,20 @@
   flex-wrap: wrap;
 }
 
+.heroButtonSecondary {
+  color: #f5f6f7 !important;
+  border-color: #ebedf0 !important;
+  background-color: transparent !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.heroButtonSecondary:hover {
+  color: #1c1e21 !important;
+  background-color: #ebedf0 !important;
+  border-color: #ebedf0 !important;
+  text-decoration: none;
+}
+
 /* Quick Start Section */
 .quickstartSection {
   padding: 5rem 0 4rem;

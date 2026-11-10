@@ -35,12 +35,12 @@ function HomepageHeader() {
             Get Started
           </Link>
           <Link
-            className="button button--outline button--secondary button--lg"
+            className={clsx('button button--outline button--secondary button--lg', styles.heroButtonSecondary)}
             to="/docs/intro">
             Documentation
           </Link>
           <Link
-            className="button button--outline button--secondary button--lg"
+            className={clsx('button button--outline button--secondary button--lg', styles.heroButtonSecondary)}
             href="https://github.com/rogervila/equipment">
             GitHub
           </Link>
