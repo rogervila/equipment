@@ -227,4 +227,4 @@ The singleton may have already been created. Override config before first access
 - Pass framework services into constructors instead of importing a global app object inside business logic.
 - Reset or override providers in tests when a dependency touches the filesystem, network, database, or queue.
 - Keep singleton services stateless with respect to per-request data.
-- Put process entry-point logic in `main.py`, `web.py`, `queues.py`, or `scheduler.py`, and reusable behavior in registered services.
+- Put process entry-point logic in `main.py`, `web.py`, `mcpserver.py`, `queues.py`, or `scheduler.py`, and reusable behavior in registered services.

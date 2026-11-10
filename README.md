@@ -6,7 +6,7 @@
 
 # Equipment: Python Project Scaffolding Framework
 
-Equipment is a scaffolding framework for starting Python applications with a ready-to-use project layout. It creates a project that already has configuration loading, dependency injection, logging, storage, SQLAlchemy database access, queues, scheduling, tests, and optional FastAPI entry points.
+Equipment is a scaffolding framework for starting Python applications with a ready-to-use project layout. It creates a project that already has configuration loading, dependency injection, logging, storage, SQLAlchemy database access, queues, scheduling, tests, and optional FastAPI and MCP server entry points.
 
 Use Equipment when you want a practical application skeleton instead of a blank directory. It is most useful for scripts that may grow, backend services, queue workers, scheduled jobs, internal tools, and web APIs that need consistent structure from day one.
 
@@ -57,6 +57,7 @@ my-app/
 │   ├── database.yaml
 │   ├── inspiring.json
 │   ├── log.yaml
+│   ├── mcp.yaml
 │   ├── queue.yaml
 │   ├── storage.yaml
 │   └── web.yaml
@@ -65,6 +66,7 @@ my-app/
 ├── tests/                # unittest base class and example tests
 ├── .env.example          # Environment variable template
 ├── main.py               # Script entry point and feature examples
+├── mcpserver.py         # MCP server entry point
 ├── queues.py             # Redis queue worker entry point
 ├── scheduler.py          # Scheduler process entry point
 ├── web.py                # FastAPI entry point
@@ -104,6 +106,14 @@ Run the FastAPI example:
 python web.py
 ```
 
+Expose application services to MCP clients such as Claude Code, Claude Desktop, Cursor, or VS Code. With the default `stdio` transport, the client starts the server from the project root:
+
+```bash
+claude mcp add my-app -- python mcpserver.py
+```
+
+Set `MCP_TRANSPORT=http` to serve it over HTTP on `http://127.0.0.1:8001/mcp` with `python mcpserver.py`.
+
 Compile a project into bytecode and runtime assets:
 
 ```bash
@@ -126,6 +136,7 @@ Important generated settings:
 | `config/queue.yaml` | `sync` or `redis` queue driver. |
 | `config/storage.yaml` | `local` or `s3` storage driver. |
 | `config/web.yaml` | FastAPI host and port. |
+| `config/mcp.yaml` | MCP server transport, host, port, and path. |
 | `config/inspiring.json` | Example data consumed by the generated `Inspire` service. |
 
 ## Development And Maintenance

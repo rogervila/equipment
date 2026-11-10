@@ -11,7 +11,7 @@ This page collects practical workflows for building an application with Equipmen
 1. Add a service class under `app/`.
 2. Register it in `app/__init__.py` if it needs framework services or shared lifecycle management.
 3. Add tests under `tests/`.
-4. Call the service from `main.py`, `web.py`, a queue job, or a scheduled task.
+4. Call the service from `main.py`, `web.py`, `mcpserver.py`, a queue job, or a scheduled task.
 
 Example service:
 
@@ -196,6 +196,33 @@ web.include_router(router)
 
 Keep route functions thin. Put business logic in services registered on the `App` container.
 
+## Add An MCP Tool
+
+Add tools in `mcpserver.py`. The function name, type hints, and docstring become the tool definition the model reads.
+
+```python
+@mcp.tool
+def save_note(filename: str, content: str) -> bool:
+    """Save a note in the application storage."""
+    return app.storage().write(f'notes/{filename}', content)
+```
+
+Test it with the in-memory client helper from `tests/test_mcpserver.py`:
+
+```python
+result = self.mcp(lambda client: client.call_tool('save_note', {'filename': 'a.txt', 'content': 'hi'}))
+
+self.assertTrue(result.data)
+```
+
+Or call it from the terminal with the FastMCP CLI:
+
+```bash
+fastmcp call mcpserver.py save_note filename=a.txt content=hi
+```
+
+With the default `stdio` transport, never `print()` from tools: stdout carries the MCP protocol. Log with `app.log()`. See the [MCP Server Example](../examples/mcp.md).
+
 ## Add Tests For A Workflow
 
 Use the generated `TestCase` when a test needs an application container:
@@ -230,6 +257,7 @@ Before deployment, decide these values explicitly:
 - `QUEUE_CONNECTION`: `sync` or `redis`.
 - `FILESYSTEM_DISK`: `local` or `s3`.
 - `WEB_HOST` and `PORT`: web server binding values.
+- `MCP_TRANSPORT`, `MCP_HOST`, `MCP_PORT`, and `MCP_PATH`: MCP server transport and binding values.
 
 Run a deployment-style smoke test:
 
@@ -259,4 +287,4 @@ python -m pip install .
 python -m unittest discover -s tests
 ```
 
-Pay close attention to SQLAlchemy, boto3/botocore/moto, redis/rq, python-json-logger, dependency-injector, and FastAPI/Uvicorn upgrades because Equipment integrates directly with those packages.
+Pay close attention to SQLAlchemy, boto3/botocore/moto, redis/rq, python-json-logger, dependency-injector, FastAPI/Uvicorn, and FastMCP (`fastmcp`) upgrades because Equipment integrates directly with those packages.

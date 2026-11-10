@@ -1,3 +1,4 @@
+from logging import Logger
 from equipment.Log.AbstractLogger import AbstractLogger
 
 
@@ -16,3 +17,11 @@ class NullLogger(AbstractLogger):
 
     def critical(self, *args, **kwargs) -> None:
         pass
+
+    def get_logger(self) -> Logger:
+        if not hasattr(self, 'logger'):
+            # Standalone logger, not registered in logging's global registry, that discards every record
+            self.logger = Logger(self.__class__.__name__)
+            self.logger.disabled = True
+
+        return self.logger

@@ -2,7 +2,7 @@ from tempfile import gettempdir
 from os import sep
 import unittest
 from sqlite3 import connect
-from logging import StreamHandler, FileHandler, NullHandler, DEBUG
+from logging import StreamHandler, FileHandler, NullHandler, DEBUG, getLogger
 from logging.handlers import TimedRotatingFileHandler
 from random import randint
 from pythonjsonlogger.jsonlogger import JsonFormatter
@@ -15,6 +15,14 @@ class LoggerFactoryTest(unittest.TestCase):
         config = {'channel': None, 'level': ' dEbUg '}
         factory = LoggerFactory('', gettempdir(), config)
         self.assertEqual(DEBUG, factory.logger.getEffectiveLevel())
+
+    def test_get_logger_returns_configured_python_logger(self):
+        config = {'channel': None, 'level': 'debug'}
+        name = f'get-logger-{randint(9, 99999)}'
+        factory = LoggerFactory(name, gettempdir(), config)
+
+        self.assertIs(getLogger(name), factory.get_logger())
+        self.assertIs(factory.logger, factory.get_logger())
 
     def test_get_handlers_list_null(self):
         config = {'channel': None, 'level': 'debug'}

@@ -6,7 +6,7 @@ sidebar_position: 5
 
 Equipment uses the `schedule` library for recurring tasks. The generated `scheduler.py` entry point creates the app and calls `app.scheduler().run()`.
 
-Use the scheduler for periodic application-level work: reports, cleanup, polling, cache refreshes, and enqueueing background jobs. The scheduler is a long-running process and should be started separately from `main.py`, `web.py`, and `queues.py`.
+Use the scheduler for periodic application-level work: reports, cleanup, polling, cache refreshes, and enqueueing background jobs. The scheduler is a long-running process and should be started separately from `main.py`, `web.py`, `mcpserver.py`, and `queues.py`.
 
 ## Generated Scheduler
 

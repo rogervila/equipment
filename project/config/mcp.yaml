@@ -1,0 +1,7 @@
+mcp:
+  # "stdio": MCP clients (Claude Code, Claude Desktop, Cursor, VS Code...) launch the server themselves.
+  # "http": the server listens on http://HOST:PORT/PATH (Streamable HTTP).
+  transport: ${MCP_TRANSPORT:stdio}
+  host: ${MCP_HOST:127.0.0.1}
+  port: ${MCP_PORT:8001}
+  path: ${MCP_PATH:/mcp}
