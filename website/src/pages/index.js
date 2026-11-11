@@ -149,11 +149,65 @@ function CtaSection() {
 
 export default function Home() {
   const { siteConfig } = useDocusaurusContext();
+
+  const pageTitle = siteConfig.tagline;
+  const socialTitle = `${siteConfig.title} — Python project scaffolding`;
+  const pageDescription =
+    "Equipment scaffolds Python applications with configuration, dependency injection, logging, SQLAlchemy, queues, scheduling, storage, FastAPI, and FastMCP.";
+  const canonicalUrl = "https://equipment-python.vercel.app/";
+  const ogImage = "https://equipment-python.vercel.app/img/og-social-card.png";
+
+  /** JSON-LD: SoftwareApplication for the homepage — reinforces global schema */
+  const homepageJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Equipment",
+    "alternateName": "equipment-python",
+    "url": canonicalUrl,
+    "description": pageDescription,
+    "applicationCategory": "DeveloperApplication",
+    "applicationSubCategory": "Python application scaffolding",
+    "operatingSystem": "Linux, macOS, Windows",
+    "softwareRequirements": "Python 3.13, 3.14, or 3.15",
+    "programmingLanguage": {
+      "@type": "ComputerLanguage",
+      "name": "Python"
+    },
+    "downloadUrl": "https://pypi.org/project/equipment",
+    "installUrl": "https://pypi.org/project/equipment",
+    "codeRepository": "https://github.com/rogervila/equipment",
+    "license": "https://opensource.org/licenses/MIT",
+    "isAccessibleForFree": true,
+    "featureList": [
+      "Python project scaffolding with equipment new",
+      "Dependency injection, configuration, and logging",
+      "SQLAlchemy database access, queues, scheduling, and storage",
+      "Optional FastAPI and FastMCP entry points",
+      "Standard-library unittest support",
+      "Linux, macOS, and Windows support"
+    ],
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": {
+      "@type": "Person",
+      "name": "Roger Vilà",
+      "url": "https://github.com/rogervila"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Roger Vilà",
+      "url": "https://github.com/rogervila"
+    }
+  };
+
   return (
     <Layout
-      title={`${siteConfig.title} - ${siteConfig.tagline}`}
-      description="Equipment is a Python project scaffolding framework for building applications with configuration, dependency injection, logging, database access, queues, scheduling, storage, FastAPI serving, and FastMCP.">
+      title={pageTitle}
+      description={pageDescription}>
       <Head>
+        {/* Canonical URL */}
+        <link rel="canonical" href={canonicalUrl} />
+
+        {/* Favicons & app icons */}
         <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png" />
@@ -161,6 +215,32 @@ export default function Home() {
         <link rel="mask-icon" href="/img/safari-pinned-tab.svg" color="#5bbad5" />
         <meta name="msapplication-TileColor" content="#00aba9" />
         <meta name="theme-color" content="#ffffff" />
+
+        {/* Primary SEO */}
+        <meta name="description" content={pageDescription} />
+        <meta name="author" content="Roger Vilà" />
+
+        {/* Open Graph — homepage */}
+        <meta property="og:title" content={socialTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:alt" content="Equipment — Python Project Scaffolding" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+
+        {/* Twitter / X Card — homepage */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={socialTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+        <meta name="twitter:image" content={ogImage} />
+        <meta name="twitter:image:alt" content="Equipment — Python Project Scaffolding" />
+
+        {/* JSON-LD structured data for homepage */}
+        <script type="application/ld+json">
+          {JSON.stringify(homepageJsonLd)}
+        </script>
       </Head>
       <HomepageHeader />
       <main>
